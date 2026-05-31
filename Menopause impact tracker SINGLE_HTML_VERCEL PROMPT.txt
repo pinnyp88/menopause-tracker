@@ -1,0 +1,253 @@
+BUILD A MENOPAUSE IMPACT TRACKER - SINGLE HTML FILE
+====================================================
+
+This is a prompt to build a complete, working menopause impact tracker as a SINGLE HTML FILE with embedded CSS and vanilla JavaScript. No backend. No database. No complexity. Just one file.
+
+---
+
+## QUICK WINS (User gets these in first 60 seconds)
+✓ Sign up with email (instant)
+✓ Complete first daily check-in (30 seconds)
+✓ See dashboard update in real-time
+✓ Track how menopause affects work, relationships, energy, mental clarity
+✓ All data saved automatically to their browser (no login needed next time)
+
+---
+
+## TECH REQUIREMENTS
+- Single HTML file (index.html)
+- Embedded CSS (in <style> tag)
+- Vanilla JavaScript (in <script> tag)
+- Browser Local Storage for data persistence
+- Mobile-first responsive design
+- No external dependencies (no npm, no CDN imports)
+- Professional, clean, calming design (purples, blues, soft grays)
+
+---
+
+## FEATURES TO BUILD
+
+### 1. WELCOME / LOGIN PAGE (First screen)
+- Simple form: Email, Password
+- Button: "Sign Up" or "Log In"
+- Store user email in local storage
+- After login, show dashboard
+- Simple logout button in settings
+
+### 2. DAILY CHECK-IN PAGE
+Form fields (in this order):
+
+**Quick Scores (dropdowns or sliders)**
+- Mood: 1-5 (Terrible, Struggling, Average, Good, Great)
+- Brain Fog: 1-10 slider
+- Hours of Sleep Last Night: number input (decimal, e.g., 5.5, 6, 7)
+- Patience: 1-10 slider (1=Wanted to scream, 10=Very patient)
+- Bleeding: dropdown (None, Spotting, Light, Medium, Heavy)
+- HRT Taken Today?: Yes/No checkbox
+
+**Impact Scores (1-10 sliders - this is the differentiator)**
+- Work Impact: How much did menopause affect your work? (1-10)
+- Relationship Impact: How much did menopause affect your relationships? (1-10)
+- Energy Impact: How much did menopause affect your energy? (1-10)
+- Mental Clarity Impact: How much did menopause affect your mental clarity? (1-10)
+
+**Optional**
+- Notes: text area (optional)
+
+**Design:**
+- Auto-fill today's date
+- If user already checked in today, LOAD existing data and allow edit
+- Submit button: "Save Check-In"
+- Mobile-friendly (no horizontal scroll)
+- Should take 30 seconds to complete
+
+### 3. HRT TRACKER PAGE
+Form to add/view HRT regimen:
+
+**Fields:**
+- Medication Name (e.g., 'Estradot', 'Oestrogel')
+- Estrogen Dose (e.g., '50mcg', '1mg')
+- Progesterone Name (optional, e.g., 'Utrogestan')
+- Progesterone Dose (optional)
+- Administration Type: dropdown (Patch, Gel, Tablet, Spray)
+- Frequency (e.g., 'Daily', 'Every 3 days')
+- Start Date: date picker
+- Notes (optional)
+
+**Features:**
+- Show current regimen below form
+- Allow editing existing regimen
+- Show "Last Updated" date
+
+### 4. DASHBOARD PAGE
+Quick summary of user's data:
+
+**Today's Status Card:**
+- "Today's Check-In: [Mood] • [Brain Fog] • [Sleep X hrs]"
+- If not checked in today, show "Complete today's check-in" button
+
+**Last 7 Days Summary (simple cards with large numbers):**
+- Average Sleep: X hours
+- Average Brain Fog: X/10
+- Average Patience: X/10
+- Days with Bleeding: X
+- HRT Adherence: X% (days HRT taken / 7)
+
+**This Month:**
+- Total Bleeding Days: X
+- Total Check-Ins: X/[number of days in month]
+
+**Current HRT:**
+- Medication, dose, frequency
+
+**Design:**
+- Large readable numbers
+- Simple cards
+- Clean layout
+- Mobile responsive
+
+### 5. BLEEDING CALENDAR PAGE
+Simple calendar view showing bleeding days:
+
+**Features:**
+- Show current month calendar
+- Each day shows bleeding level: none (gray), spotting (light pink), light (pink), medium (dark pink), heavy (red)
+- Tap a day to edit bleeding level
+- Show cycle pattern (days between bleeding starts)
+- Show bleeding duration (how many days per episode)
+
+### 6. SETTINGS PAGE
+- Display user email
+- Change password option
+- Logout button
+- Delete all data option (warning: "This cannot be undone")
+
+---
+
+## DATA STRUCTURE (stored in browser local storage)
+
+```javascript
+{
+  user: {
+    email: "user@example.com",
+    password_hash: "hashed_password"
+  },
+  hrt_regimen: {
+    medication_name: "Estradot",
+    estrogen_dose: "50mcg",
+    progesterone_name: "Utrogestan",
+    progesterone_dose: "100mg",
+    frequency: "Daily",
+    administration_type: "Patch",
+    start_date: "2025-01-15",
+    notes: ""
+  },
+  daily_checkins: [
+    {
+      date: "2025-05-31",
+      mood: 4,
+      brain_fog: 6,
+      sleep_hours: 6.5,
+      patience: 7,
+      bleeding: "light",
+      hrt_taken: true,
+      work_impact: 5,
+      relationship_impact: 3,
+      energy_impact: 4,
+      mental_clarity_impact: 6,
+      notes: "Good day overall"
+    }
+  ]
+}
+```
+
+---
+
+## NAVIGATION
+- Simple top navigation bar or bottom navigation (mobile-friendly)
+- Links: Dashboard, Daily Check-In, HRT Tracker, Bleeding Calendar, Settings
+- Active page highlighted
+- Hamburger menu on mobile if needed
+
+---
+
+## DESIGN REQUIREMENTS
+- **Colors:** Purples (#8b5cf6, #6d28d9), Blues (#3b82f6, #1e40af), Soft grays (#f3f4f6, #e5e7eb)
+- **Typography:** Clean sans-serif (system fonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto)
+- **Spacing:** Generous padding, clean whitespace
+- **Buttons:** Rounded corners (8px), clear hover states
+- **Mobile First:** Works perfectly on 375px width, scales up to desktop
+- **Accessibility:** Good contrast, readable text, touch-friendly buttons
+
+---
+
+## LOCAL STORAGE REQUIREMENTS
+- All user data stored in browser local storage
+- Data persists when browser closes
+- User stays logged in on next visit
+- No backend needed
+- No API calls
+- No database
+
+---
+
+## WHAT NOT TO BUILD
+❌ AI features
+❌ Backend/server
+❌ Database
+❌ User authentication API
+❌ Notifications
+❌ Community features
+❌ Wearable integration
+❌ PDF export (can add later)
+❌ Cloud sync
+
+Just the HTML file above. That's it.
+
+---
+
+## BUILD CHECKLIST
+✓ Single HTML file (index.html)
+✓ Embedded CSS (clean, professional, responsive)
+✓ Vanilla JavaScript (no libraries)
+✓ Local Storage for data
+✓ Login/Sign up working
+✓ Daily check-in form
+✓ HRT tracker
+✓ Dashboard with 7-day stats
+✓ Bleeding calendar
+✓ Settings page
+✓ Navigation working
+✓ Mobile responsive (test at 375px width)
+✓ Data persists after refresh
+✓ Professional styling
+
+---
+
+## SUCCESS CRITERIA
+- User can sign up with email
+- User can log in
+- User can complete daily check-in in under 30 seconds
+- User can see dashboard update in real-time
+- User can add/edit HRT regimen
+- User can view bleeding calendar
+- Works perfectly on mobile phone (375px width)
+- Data persists when browser closes and reopens
+- Professional, clean appearance
+- Calming color scheme
+
+---
+
+## FILE STRUCTURE (final output)
+```
+index.html (ONE file)
+├── <style> tag with all CSS
+├── <body> with all HTML
+└── <script> tag with all JavaScript
+```
+
+Build this as a single, complete, working HTML file that a user can download, open in their browser, and start using immediately.
+
+---
+
+END PROMPT
