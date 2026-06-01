@@ -5,22 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menopause Impact Tracker</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #f3f4f6 0%, #ede9fe 100%);
             min-height: 100vh;
             color: #1f2937;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
         .navbar {
             background: white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -37,20 +29,11 @@
             margin: 0 auto;
             padding: 0 16px;
         }
-        .nav-brand {
-            font-size: 20px;
-            font-weight: 700;
-            color: #6d28d9;
-        }
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+        .nav-brand { font-size: 20px; font-weight: 700; color: #6d28d9; }
+        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .nav-btn {
             padding: 8px 16px;
-            border: none;
+            border: 1px solid #e5e7eb;
             background: white;
             color: #6d28d9;
             border-radius: 6px;
@@ -58,32 +41,13 @@
             font-size: 14px;
             font-weight: 500;
             transition: all 0.2s;
-            border: 1px solid #e5e7eb;
         }
-        .nav-btn.active {
-            background: #6d28d9;
-            color: white;
-            border-color: #6d28d9;
-        }
-        .nav-btn:hover {
-            background: #ede9fe;
-            border-color: #6d28d9;
-        }
-        .logout-btn {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-        .logout-btn:hover {
-            background: #dc2626;
-        }
-        .page {
-            display: none;
-            padding: 32px 0;
-        }
-        .page.active {
-            display: block;
-        }
+        .nav-btn.active { background: #6d28d9; color: white; border-color: #6d28d9; }
+        .nav-btn:hover { background: #ede9fe; border-color: #6d28d9; }
+        .logout-btn { background: #ef4444; color: white; border-color: #ef4444; }
+        .logout-btn:hover { background: #dc2626; }
+        .page { display: none; padding: 32px 0; }
+        .page.active { display: block; }
         .login-page {
             display: flex;
             align-items: center;
@@ -98,19 +62,9 @@
             width: 100%;
             max-width: 400px;
         }
-        .login-card h1 {
-            font-size: 28px;
-            margin-bottom: 12px;
-            color: #1f2937;
-        }
-        .login-card p {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 32px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .login-card h1 { font-size: 28px; margin-bottom: 12px; }
+        .login-card p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
+        .form-group { margin-bottom: 20px; }
         .form-group label {
             display: block;
             font-size: 14px;
@@ -130,7 +84,7 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: #6d28d9;
-            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+            box-shadow: 0 0 0 3px rgba(109,40,217,0.1);
         }
         .btn {
             width: 100%;
@@ -142,22 +96,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-primary {
-            background: #6d28d9;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #5b21b6;
-        }
-        .btn-secondary {
-            background: white;
-            color: #6d28d9;
-            border: 1px solid #6d28d9;
-            margin-top: 12px;
-        }
-        .btn-secondary:hover {
-            background: #ede9fe;
-        }
+        .btn-primary { background: #6d28d9; color: white; }
+        .btn-primary:hover { background: #5b21b6; }
+        .btn-secondary { background: white; color: #6d28d9; border: 1px solid #6d28d9; margin-top: 12px; }
+        .btn-secondary:hover { background: #ede9fe; }
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -178,25 +120,11 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .card-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #6d28d9;
-            margin-bottom: 8px;
-        }
-        .card-subtitle {
-            font-size: 13px;
-            color: #9ca3af;
-        }
-        .card.accent-blue .card-value {
-            color: #3b82f6;
-        }
-        .card.accent-pink .card-value {
-            color: #ec4899;
-        }
-        .card.accent-amber .card-value {
-            color: #f59e0b;
-        }
+        .card-value { font-size: 36px; font-weight: 700; color: #6d28d9; margin-bottom: 8px; }
+        .card-subtitle { font-size: 13px; color: #9ca3af; }
+        .card.accent-blue .card-value { color: #3b82f6; }
+        .card.accent-pink .card-value { color: #ec4899; }
+        .card.accent-amber .card-value { color: #f59e0b; }
         .form-section {
             background: white;
             padding: 32px;
@@ -211,25 +139,37 @@
             border-bottom: 2px solid #6d28d9;
             padding-bottom: 12px;
         }
+        .hormone-section {
+            background: #f9f7ff;
+            border: 1px solid #ede9fe;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .hormone-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6d28d9;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd6fe;
+        }
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 24px;
         }
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .slider-container {
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+
+        /* Slider */
+        .slider-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
-        .slider-container input[type="range"] {
+        .slider-row input[type="range"] {
             flex: 1;
             height: 6px;
             border-radius: 3px;
@@ -237,41 +177,82 @@
             outline: none;
             -webkit-appearance: none;
             appearance: none;
+            padding: 0;
+            border: none;
         }
-        .slider-container input[type="range"]::-webkit-slider-thumb {
+        .slider-row input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             border-radius: 50%;
             background: #6d28d9;
             cursor: pointer;
         }
-        .slider-container input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+        .slider-row input[type="range"]::-moz-range-thumb {
+            width: 20px; height: 20px;
             border-radius: 50%;
             background: #6d28d9;
             cursor: pointer;
             border: none;
         }
         .slider-value {
-            min-width: 40px;
+            min-width: 32px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 700;
             color: #6d28d9;
             font-size: 16px;
         }
-        .checkbox-group {
-            display: flex;
-            gap: 12px;
+        /* Info icon */
+        .info-icon {
+            display: inline-flex;
             align-items: center;
-        }
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+            justify-content: center;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: #6d28d9;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
             cursor: pointer;
+            margin-left: 6px;
+            flex-shrink: 0;
+            user-select: none;
+            position: relative;
         }
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 999;
+            font-weight: 400;
+            line-height: 1.5;
+            text-align: left;
+            min-width: 200px;
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #1f2937;
+        }
+        .info-icon:hover .tooltip,
+        .info-icon:focus .tooltip { display: block; }
+
+        /* Checkbox */
+        .checkbox-group { display: flex; gap: 12px; align-items: center; }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+
+        /* Calendar */
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -290,61 +271,24 @@
             border: 2px solid transparent;
             transition: all 0.2s;
         }
-        .calendar-day.header {
-            cursor: default;
-            background: #f3f4f6;
-            color: #6b7280;
-            font-weight: 700;
-        }
-        .calendar-day.empty {
-            cursor: default;
-        }
-        .calendar-day.none {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-        .calendar-day.spotting {
-            background: #fecaca;
-            color: #991b1b;
-        }
-        .calendar-day.light {
-            background: #fca5a5;
-            color: #7f1d1d;
-        }
-        .calendar-day.medium {
-            background: #f87171;
-            color: #7f1d1d;
-        }
-        .calendar-day.heavy {
-            background: #ef4444;
-            color: white;
-        }
-        .calendar-day:hover:not(.header):not(.empty) {
-            transform: scale(1.1);
-            border-color: #6d28d9;
-        }
+        .calendar-day.header { cursor: default; background: #f3f4f6; color: #6b7280; font-weight: 700; }
+        .calendar-day.empty { cursor: default; }
+        .calendar-day.none { background: #f3f4f6; color: #6b7280; }
+        .calendar-day.spotting { background: #fecaca; color: #991b1b; }
+        .calendar-day.light { background: #fca5a5; color: #7f1d1d; }
+        .calendar-day.medium { background: #f87171; color: #7f1d1d; }
+        .calendar-day.heavy { background: #ef4444; color: white; }
+        .calendar-day:hover:not(.header):not(.empty) { transform: scale(1.1); border-color: #6d28d9; }
+
         .success-message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
+            background: #dcfce7; color: #166534;
+            padding: 16px; border-radius: 6px;
+            margin-bottom: 20px; display: none;
         }
-        .success-message.show {
-            display: block;
-        }
-        .settings-section {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        .settings-section h3 {
-            font-size: 16px;
-            margin-bottom: 16px;
-            color: #1f2937;
-        }
+        .success-message.show { display: block; }
+
+        .settings-section { background: white; padding: 24px; border-radius: 12px; margin-bottom: 20px; }
+        .settings-section h3 { font-size: 16px; margin-bottom: 16px; }
         .settings-item {
             display: flex;
             justify-content: space-between;
@@ -352,558 +296,628 @@
             padding: 12px 0;
             border-bottom: 1px solid #e5e7eb;
         }
-        .settings-item:last-child {
-            border-bottom: none;
-        }
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-            width: auto;
-        }
-        .btn-danger:hover {
-            background: #dc2626;
-        }
+        .settings-item:last-child { border-bottom: none; }
+        .btn-danger { background: #ef4444; color: white; width: auto; }
+        .btn-danger:hover { background: #dc2626; }
+
+        .other-field { display: none; margin-top: 10px; }
+        .other-field.show { display: block; }
+
         @media (max-width: 640px) {
-            .nav-links {
-                gap: 4px;
-            }
-            .nav-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-            .form-section {
-                padding: 20px;
-            }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .card-value {
-                font-size: 28px;
-            }
-            .login-card {
-                padding: 32px 24px;
-            }
+            .nav-links { gap: 4px; }
+            .nav-btn { padding: 6px 10px; font-size: 12px; }
+            .form-section { padding: 20px; }
+            .hormone-section { padding: 16px; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .card-value { font-size: 28px; }
+            .login-card { padding: 32px 24px; }
+            .tooltip { min-width: 160px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="nav-content">
-            <div class="nav-brand">🩺 Menopause Impact Tracker</div>
-            <div class="nav-links" id="navLinks" style="display: none;">
-                <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
-                <button class="nav-btn" onclick="showPage('checkin')">Daily Log</button>
-                <button class="nav-btn" onclick="showPage('hrt')">HRT Tracker</button>
-                <button class="nav-btn" onclick="showPage('calendar')">Bleeding Calendar</button>
-                <button class="nav-btn" onclick="showPage('settings')">Settings</button>
-                <button class="nav-btn logout-btn" onclick="logout()">Logout</button>
+
+<div class="navbar">
+    <div class="nav-content">
+        <div class="nav-brand">🩺 Menopause Impact Tracker</div>
+        <div class="nav-links" id="navLinks" style="display:none;">
+            <button class="nav-btn active" onclick="showPage('dashboard', this)">Dashboard</button>
+            <button class="nav-btn" onclick="showPage('checkin', this)">Daily Log</button>
+            <button class="nav-btn" onclick="showPage('hrt', this)">HRT Tracker</button>
+            <button class="nav-btn" onclick="showPage('calendar', this)">Bleeding Calendar</button>
+            <button class="nav-btn" onclick="showPage('settings', this)">Settings</button>
+            <button class="nav-btn logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <div id="loginPage" class="page active login-page">
+        <div class="login-card">
+            <h1>Menopause Companion</h1>
+            <p>Track your symptoms, understand your patterns, prepare for appointments.</p>
+            <div class="form-group">
+                <label>Email (optional)</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com">
             </div>
+            <div class="form-group">
+                <label>Password (optional)</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" onclick="login()">Sign In / Sign Up</button>
+            <p style="text-align:center;margin-top:16px;font-size:12px;color:#9ca3af;">No account needed. Your data stays on your device.</p>
         </div>
     </div>
 
-    <div class="container">
-        <div id="loginPage" class="page active login-page">
-            <div class="login-card">
-                <h1>Menopause Companion</h1>
-                <p>Track your symptoms, understand your patterns, prepare for appointments.</p>
+    <!-- DASHBOARD -->
+    <div id="dashboardPage" class="page">
+        <h2 style="font-size:28px;margin-bottom:24px;">Dashboard</h2>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Today's Check-In</h3>
+                <div id="todayStatus" style="color:#9ca3af;font-size:14px;">Not logged yet</div>
+                <button class="btn btn-primary" style="margin-top:16px;width:auto;" onclick="document.querySelectorAll('.nav-btn')[1].click()">Log Today</button>
+            </div>
+            <div class="card accent-blue">
+                <h3>Avg Sleep (7 days)</h3>
+                <div class="card-value" id="avgSleep">—</div>
+                <div class="card-subtitle">hours per night</div>
+            </div>
+            <div class="card accent-pink">
+                <h3>Avg Patience (7 days)</h3>
+                <div class="card-value" id="avgPatience">—</div>
+                <div class="card-subtitle">out of 10</div>
+            </div>
+            <div class="card accent-amber">
+                <h3>Avg Brain Fog (7 days)</h3>
+                <div class="card-value" id="avgBrainFog">—</div>
+                <div class="card-subtitle">out of 10</div>
+            </div>
+            <div class="card">
+                <h3>Bleeding Days (This Month)</h3>
+                <div class="card-value" id="bleedingDays">—</div>
+                <div class="card-subtitle">days with bleeding/spotting</div>
+            </div>
+            <div class="card">
+                <h3>HRT Adherence (7 days)</h3>
+                <div class="card-value" id="hrtAdherence">—</div>
+                <div class="card-subtitle">% of days taken</div>
+            </div>
+            <div class="card accent-blue">
+                <h3>Work Impact (7 days)</h3>
+                <div class="card-value" id="avgWorkImpact">—</div>
+                <div class="card-subtitle">1 = not affected | 10 = severely affected</div>
+            </div>
+            <div class="card accent-pink">
+                <h3>Relationship Impact (7 days)</h3>
+                <div class="card-value" id="avgRelImpact">—</div>
+                <div class="card-subtitle">1 = not affected | 10 = severely affected</div>
+            </div>
+            <div class="card accent-amber">
+                <h3>Energy Impact (7 days)</h3>
+                <div class="card-value" id="avgEnergyImpact">—</div>
+                <div class="card-subtitle">1 = not affected | 10 = severely affected</div>
+            </div>
+            <div class="card">
+                <h3>Mental Clarity (7 days)</h3>
+                <div class="card-value" id="avgMentalClarity">—</div>
+                <div class="card-subtitle">1 = not affected | 10 = severely affected</div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>Current HRT Regimen</h2>
+            <div id="hrtSummary" style="color:#9ca3af;font-size:14px;">No HRT regimen recorded yet.</div>
+        </div>
+    </div>
+
+    <!-- DAILY LOG -->
+    <div id="checkinPage" class="page">
+        <div class="form-section">
+            <h2>Daily Check-In</h2>
+            <div class="success-message" id="checkinSuccess">✓ Check-in saved!</div>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" placeholder="you@example.com">
+                    <label>Date</label>
+                    <input type="date" id="checkinDate">
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••">
+                    <label>Mood</label>
+                    <select id="mood">
+                        <option value="">Select mood</option>
+                        <option value="1">1 – Terrible</option>
+                        <option value="2">2 – Struggling</option>
+                        <option value="3">3 – Average</option>
+                        <option value="4">4 – Good</option>
+                        <option value="5">5 – Great</option>
+                    </select>
                 </div>
-                <button class="btn btn-primary" onclick="login()">Sign In / Sign Up</button>
-                <p style="text-align: center; margin-top: 16px; font-size: 12px; color: #9ca3af;">No account needed. Email is optional.</p>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;">
+                        Brain Fog: <span id="brainFogVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10
+                        <span class="info-icon" tabindex="0">i
+                            <span class="tooltip">1 = no brain fog at all<br>10 = severely affected,<br>can't think clearly</span>
+                        </span>
+                    </label>
+                    <div class="slider-row">
+                        <input type="range" id="brainFog" min="1" max="10" value="5" oninput="document.getElementById('brainFogVal').textContent=this.value">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Hours of Sleep Last Night</label>
+                    <input type="number" id="sleep" min="0" max="14" step="0.5" value="7">
+                </div>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;">
+                        Patience: <span id="patienceVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10
+                        <span class="info-icon" tabindex="0">i
+                            <span class="tooltip">1 = very impatient,<br>losing it completely<br>10 = very patient,<br>completely unaffected</span>
+                        </span>
+                    </label>
+                    <div class="slider-row">
+                        <input type="range" id="patience" min="1" max="10" value="5" oninput="document.getElementById('patienceVal').textContent=this.value">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Bleeding Level</label>
+                    <select id="bleeding">
+                        <option value="none">None</option>
+                        <option value="spotting">Spotting</option>
+                        <option value="light">Light</option>
+                        <option value="medium">Medium</option>
+                        <option value="heavy">Heavy</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>HRT Taken Today?</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="hrtTaken">
+                        <label style="margin:0;font-weight:400;">Yes</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;">
+                        Work Impact: <span id="workVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10
+                        <span class="info-icon" tabindex="0">i
+                            <span class="tooltip">1 = not affected at all<br>10 = severely affected,<br>couldn't function at work</span>
+                        </span>
+                    </label>
+                    <div class="slider-row">
+                        <input type="range" id="workImpact" min="1" max="10" value="5" oninput="document.getElementById('workVal').textContent=this.value">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;">
+                        Relationship Impact: <span id="relVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10
+                        <span class="info-icon" tabindex="0">i
+                            <span class="tooltip">1 = not affected at all<br>10 = severely affected,<br>major strain on relationships</span>
+                        </span>
+                    </label>
+                    <div class="slider-row">
+                        <input type="range" id="relImpact" min="1" max="10" value="5" oninput="document.getElementById('relVal').textContent=this.value">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;">
+                        Energy Impact: <span id="energyVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10
+                        <span class="info-icon" tabindex="0">i
+                            <span class="tooltip">1 = not affected at all<br>10 = severely affected,<br>completely exhausted</span>
+                        </span>
+                    </label>
+                    <div class="slider-row">
+                        <input type="range" id="energyImpact" min="1" max="10" value="5" oninput="document.getElementById('energyVal').textContent=this.value">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;">
+                        Mental Clarity Impact: <span id="mentalVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10
+                        <span class="info-icon" tabindex="0">i
+                            <span class="tooltip">1 = not affected at all<br>10 = severely affected,<br>can't think or concentrate</span>
+                        </span>
+                    </label>
+                    <div class="slider-row">
+                        <input type="range" id="mentalClarity" min="1" max="10" value="5" oninput="document.getElementById('mentalVal').textContent=this.value">
+                    </div>
+                </div>
+                <div class="form-group full">
+                    <label>Notes (Optional)</label>
+                    <textarea id="notes" placeholder="How are you feeling? Any observations?"></textarea>
+                </div>
             </div>
+            <button class="btn btn-primary" onclick="saveCheckin()">Save Check-In</button>
         </div>
+    </div>
 
-        <div id="dashboardPage" class="page">
-            <h2 style="font-size: 28px; margin-bottom: 24px; color: #1f2937;">Dashboard</h2>
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h3>Today's Check-In</h3>
-                    <div id="todayStatus" style="color: #9ca3af; font-size: 14px;">Not logged in yet</div>
-                    <button class="btn btn-primary" style="margin-top: 16px; width: auto;" onclick="showPage('checkin')">Log Today</button>
-                </div>
-                <div class="card accent-blue">
-                    <h3>Average Sleep (7 days)</h3>
-                    <div class="card-value" id="avgSleep">-</div>
-                    <div class="card-subtitle">hours per night</div>
-                </div>
-                <div class="card accent-pink">
-                    <h3>Average Patience (7 days)</h3>
-                    <div class="card-value" id="avgPatience">-</div>
-                    <div class="card-subtitle">out of 10</div>
-                </div>
-                <div class="card accent-amber">
-                    <h3>Average Brain Fog (7 days)</h3>
-                    <div class="card-value" id="avgBrainFog">-</div>
-                    <div class="card-subtitle">out of 10</div>
-                </div>
-                <div class="card">
-                    <h3>Bleeding Days (This Month)</h3>
-                    <div class="card-value" id="bleedingDays">-</div>
-                    <div class="card-subtitle">days</div>
-                </div>
-                <div class="card">
-                    <h3>HRT Adherence (7 days)</h3>
-                    <div class="card-value" id="hrtAdherence">-</div>
-                    <div class="card-subtitle">% of days taken</div>
-                </div>
-                <div class="card accent-blue">
-                    <h3>Work Impact (7 days)</h3>
-                    <div class="card-value" id="avgWorkImpact">-</div>
-                    <div class="card-subtitle">out of 10</div>
-                </div>
-                <div class="card accent-pink">
-                    <h3>Relationship Impact (7 days)</h3>
-                    <div class="card-value" id="avgRelationshipImpact">-</div>
-                    <div class="card-subtitle">out of 10</div>
-                </div>
-                <div class="card accent-amber">
-                    <h3>Energy Impact (7 days)</h3>
-                    <div class="card-value" id="avgEnergyImpact">-</div>
-                    <div class="card-subtitle">out of 10</div>
-                </div>
-                <div class="card">
-                    <h3>Mental Clarity Impact (7 days)</h3>
-                    <div class="card-value" id="avgMentalClarity">-</div>
-                    <div class="card-subtitle">out of 10</div>
-                </div>
-            </div>
-            <div class="form-section">
-                <h2>Current HRT Regimen</h2>
-                <div id="hrtSummary" style="color: #9ca3af;">No HRT regimen recorded</div>
-            </div>
-        </div>
+    <!-- HRT TRACKER -->
+    <div id="hrtPage" class="page">
+        <div class="form-section">
+            <h2>HRT Regimen</h2>
 
-        <div id="checkinPage" class="page">
-            <div class="form-section">
-                <h2>Daily Check-In</h2>
-                <div class="success-message" id="checkinSuccess">✓ Check-in saved successfully!</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="date" id="checkinDate">
-                    </div>
-                    <div class="form-group">
-                        <label>Mood</label>
-                        <select id="mood">
-                            <option value="">Select mood</option>
-                            <option value="1">Terrible</option>
-                            <option value="2">Struggling</option>
-                            <option value="3">Average</option>
-                            <option value="4">Good</option>
-                            <option value="5">Great</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Brain Fog: <span id="brainFogValue">5</span>/10</label>
-                        <div class="slider-container">
-                            <input type="range" id="brainFog" min="1" max="10" value="5" oninput="updateValue('brainFogValue', this.value)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Hours of Sleep Last Night</label>
-                        <input type="number" id="sleep" min="0" max="12" step="0.5" value="7">
-                    </div>
-                    <div class="form-group">
-                        <label>Patience: <span id="patienceValue">5</span>/10</label>
-                        <div class="slider-container">
-                            <input type="range" id="patience" min="1" max="10" value="5" oninput="updateValue('patienceValue', this.value)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Bleeding Level</label>
-                        <select id="bleeding">
-                            <option value="none">None</option>
-                            <option value="spotting">Spotting</option>
-                            <option value="light">Light</option>
-                            <option value="medium">Medium</option>
-                            <option value="heavy">Heavy</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>HRT Taken Today?</label>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="hrtTaken">
-                            <label style="margin: 0;">Yes</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Work Impact: <span id="workImpactValue">5</span>/10</label>
-                        <div class="slider-container">
-                            <input type="range" id="workImpact" min="1" max="10" value="5" oninput="updateValue('workImpactValue', this.value)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Relationship Impact: <span id="relationshipImpactValue">5</span>/10</label>
-                        <div class="slider-container">
-                            <input type="range" id="relationshipImpact" min="1" max="10" value="5" oninput="updateValue('relationshipImpactValue', this.value)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Energy Impact: <span id="energyImpactValue">5</span>/10</label>
-                        <div class="slider-container">
-                            <input type="range" id="energyImpact" min="1" max="10" value="5" oninput="updateValue('energyImpactValue', this.value)">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Mental Clarity Impact: <span id="mentalClarityValue">5</span>/10</label>
-                        <div class="slider-container">
-                            <input type="range" id="mentalClarity" min="1" max="10" value="5" oninput="updateValue('mentalClarityValue', this.value)">
-                        </div>
-                    </div>
-                    <div class="form-group full">
-                        <label>Notes (Optional)</label>
-                        <textarea id="notes" placeholder="How are you feeling? Any observations?"></textarea>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="saveCheckin()">Save Check-In</button>
-            </div>
-        </div>
-
-        <div id="hrtPage" class="page">
-            <div class="form-section">
-                <h2>HRT Regimen</h2>
+            <!-- ESTROGEN -->
+            <div class="hormone-section">
+                <h3>💊 Estrogen</h3>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Medication Name</label>
-                        <input type="text" id="medName" placeholder="e.g., Estradot, Oestrogel">
+                        <input type="text" id="estrogenName" placeholder="e.g., Estradot, Oestrogel, Zumenon">
                     </div>
                     <div class="form-group">
-                        <label>Estrogen Dose</label>
-                        <input type="text" id="estrogenDose" placeholder="e.g., 50mcg, 1mg">
+                        <label>Dose</label>
+                        <input type="text" id="estrogenDose" placeholder="e.g., 50mcg, 1mg, 2 pumps">
                     </div>
                     <div class="form-group">
-                        <label>Progesterone Name (Optional)</label>
-                        <input type="text" id="progName" placeholder="e.g., Utrogestan">
-                    </div>
-                    <div class="form-group">
-                        <label>Progesterone Dose (Optional)</label>
-                        <input type="text" id="progDose" placeholder="e.g., 100mg">
-                    </div>
-                    <div class="form-group">
-                        <label>Administration Type</label>
-                        <select id="adminType">
+                        <label>Admin Type</label>
+                        <select id="estrogenAdmin" onchange="toggleOther('estrogenAdmin', 'estrogenOther')">
                             <option value="">Select type</option>
                             <option value="patch">Patch</option>
                             <option value="gel">Gel</option>
                             <option value="tablet">Tablet</option>
                             <option value="spray">Spray</option>
+                            <option value="vaginal">Vaginal</option>
+                            <option value="injection">Injection</option>
+                            <option value="other">Other</option>
                         </select>
+                        <div class="other-field" id="estrogenOther">
+                            <input type="text" id="estrogenOtherText" placeholder="Please describe your admin type">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Frequency</label>
-                        <input type="text" id="frequency" placeholder="e.g., Daily, Every 3 days">
+                        <input type="text" id="estrogenFreq" placeholder="e.g., Daily, Every 3 days, Twice weekly">
+                    </div>
+                    <div class="form-group">
+                        <label>Schedule</label>
+                        <select id="estrogenSchedule">
+                            <option value="">Select schedule</option>
+                            <option value="continuous">Continuous</option>
+                            <option value="cyclical">Cyclical</option>
+                            <option value="intermittent">Intermittent</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Start Date</label>
-                        <input type="date" id="startDate">
+                        <input type="date" id="estrogenStart">
                     </div>
-                    <div class="form-group full">
-                        <label>Notes (Optional)</label>
-                        <textarea id="hrtNotes" placeholder="Any additional notes..."></textarea>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="saveHRT()">Save HRT Regimen</button>
-                <div id="hrtCurrent" style="margin-top: 32px; padding-top: 32px; border-top: 1px solid #e5e7eb; display: none;">
-                    <h3 style="margin-bottom: 16px;">Current Regimen</h3>
-                    <div id="hrtDisplay"></div>
                 </div>
             </div>
-        </div>
 
-        <div id="calendarPage" class="page">
-            <div class="form-section">
-                <h2>Bleeding Calendar</h2>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 14px; color: #6b7280;">
-                        Month: 
-                        <select id="calendarMonth" onchange="updateCalendar()" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px;">
-                            <option value="0">January</option>
-                            <option value="1">February</option>
-                            <option value="2">March</option>
-                            <option value="3">April</option>
-                            <option value="4">May</option>
-                            <option value="5">June</option>
-                            <option value="6">July</option>
-                            <option value="7">August</option>
-                            <option value="8">September</option>
-                            <option value="9">October</option>
-                            <option value="10">November</option>
-                            <option value="11">December</option>
+            <!-- PROGESTERONE -->
+            <div class="hormone-section">
+                <h3>💊 Progesterone</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Medication Name</label>
+                        <input type="text" id="progName" placeholder="e.g., Utrogestan, Prometrium">
+                    </div>
+                    <div class="form-group">
+                        <label>Dose</label>
+                        <input type="text" id="progDose" placeholder="e.g., 100mg, 200mg">
+                    </div>
+                    <div class="form-group">
+                        <label>Admin Type</label>
+                        <select id="progAdmin" onchange="toggleOther('progAdmin', 'progOther')">
+                            <option value="">Select type</option>
+                            <option value="tablet">Tablet</option>
+                            <option value="oral-transmucosal">Oral Transmucosal</option>
+                            <option value="vaginal-suppository">Vaginal Suppository</option>
+                            <option value="cream">Cream</option>
+                            <option value="injection">Injection</option>
+                            <option value="patch">Patch (combined)</option>
+                            <option value="other">Other</option>
                         </select>
-                        <select id="calendarYear" onchange="updateCalendar()" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; margin-left: 8px;">
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
+                        <div class="other-field" id="progOther">
+                            <input type="text" id="progOtherText" placeholder="Please describe your admin type">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Frequency</label>
+                        <input type="text" id="progFreq" placeholder="e.g., Daily, 10 days per cycle">
+                    </div>
+                    <div class="form-group">
+                        <label>Schedule</label>
+                        <select id="progSchedule">
+                            <option value="">Select schedule</option>
+                            <option value="continuous">Continuous</option>
+                            <option value="cyclical">Cyclical</option>
+                            <option value="intermittent">Intermittent</option>
                         </select>
-                    </label>
-                </div>
-                <div class="calendar" id="calendar"></div>
-                <div style="margin-top: 24px; padding: 16px; background: #f3f4f6; border-radius: 6px;">
-                    <p style="font-size: 12px; color: #6b7280;">Legend:</p>
-                    <div style="display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; font-size: 12px;">
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <div style="width: 20px; height: 20px; background: #f3f4f6; border-radius: 4px;"></div> None
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <div style="width: 20px; height: 20px; background: #fecaca; border-radius: 4px;"></div> Spotting
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <div style="width: 20px; height: 20px; background: #fca5a5; border-radius: 4px;"></div> Light
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <div style="width: 20px; height: 20px; background: #f87171; border-radius: 4px;"></div> Medium
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <div style="width: 20px; height: 20px; background: #ef4444; border-radius: 4px;"></div> Heavy
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="progStart">
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="settingsPage" class="page">
-            <h2 style="font-size: 28px; margin-bottom: 24px; color: #1f2937;">Settings</h2>
-            <div class="settings-section">
-                <h3>Account</h3>
-                <div class="settings-item">
-                    <div>
-                        <p style="font-weight: 500;">Email</p>
-                        <p style="font-size: 14px; color: #6b7280;" id="settingsEmail">-</p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label>Additional Notes</label>
+                <textarea id="hrtNotes" placeholder="Other medications, supplements, or notes about your HRT..."></textarea>
             </div>
-            <div class="settings-section">
-                <h3>Data Management</h3>
-                <div class="settings-item">
-                    <div>
-                        <p style="font-weight: 500; margin-bottom: 8px;">Export Your Data</p>
-                        <p style="font-size: 14px; color: #6b7280;">Download all your data as a JSON file</p>
-                    </div>
-                    <button class="btn btn-secondary" style="width: auto;" onclick="exportData()">Export</button>
-                </div>
-                <div class="settings-item">
-                    <div>
-                        <p style="font-weight: 500; margin-bottom: 8px;">Delete All Data</p>
-                        <p style="font-size: 14px; color: #6b7280;">This cannot be undone</p>
-                    </div>
-                    <button class="btn btn-danger" style="width: auto;" onclick="deleteAllData()">Delete</button>
+            <button class="btn btn-primary" onclick="saveHRT()">Save HRT Regimen</button>
+        </div>
+    </div>
+
+    <!-- BLEEDING CALENDAR -->
+    <div id="calendarPage" class="page">
+        <div class="form-section">
+            <h2>Bleeding Calendar</h2>
+            <div style="margin-bottom:20px;">
+                <select id="calendarMonth" onchange="updateCalendar()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;">
+                    <option value="0">January</option><option value="1">February</option>
+                    <option value="2">March</option><option value="3">April</option>
+                    <option value="4">May</option><option value="5">June</option>
+                    <option value="6">July</option><option value="7">August</option>
+                    <option value="8">September</option><option value="9">October</option>
+                    <option value="10">November</option><option value="11">December</option>
+                </select>
+                <select id="calendarYear" onchange="updateCalendar()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;margin-left:8px;">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+            </div>
+            <div class="calendar" id="calendar"></div>
+            <div style="margin-top:24px;padding:16px;background:#f3f4f6;border-radius:6px;">
+                <p style="font-size:12px;color:#6b7280;margin-bottom:10px;">Legend (tap a day to update):</p>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;">
+                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#f3f4f6;border-radius:4px;border:1px solid #ddd;"></div> None</div>
+                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#fecaca;border-radius:4px;"></div> Spotting</div>
+                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#fca5a5;border-radius:4px;"></div> Light</div>
+                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#f87171;border-radius:4px;"></div> Medium</div>
+                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#ef4444;border-radius:4px;"></div> Heavy</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('checkinDate').value = today;
-        document.getElementById('calendarMonth').value = new Date().getMonth();
-        document.getElementById('calendarYear').value = new Date().getFullYear();
+    <!-- SETTINGS -->
+    <div id="settingsPage" class="page">
+        <h2 style="font-size:28px;margin-bottom:24px;">Settings</h2>
+        <div class="settings-section">
+            <h3>Account</h3>
+            <div class="settings-item">
+                <div>
+                    <p style="font-weight:500;">Email</p>
+                    <p style="font-size:14px;color:#6b7280;" id="settingsEmail">—</p>
+                </div>
+            </div>
+        </div>
+        <div class="settings-section">
+            <h3>Data Management</h3>
+            <div class="settings-item">
+                <div>
+                    <p style="font-weight:500;">Export Your Data</p>
+                    <p style="font-size:14px;color:#6b7280;">Download all your data as a JSON file</p>
+                </div>
+                <button class="btn btn-secondary" style="width:auto;" onclick="exportData()">Export</button>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <p style="font-weight:500;">Delete All Data</p>
+                    <p style="font-size:14px;color:#6b7280;">This cannot be undone</p>
+                </div>
+                <button class="btn btn-danger" onclick="deleteAllData()">Delete</button>
+            </div>
+        </div>
+    </div>
 
-        function loadUser() {
-            const user = localStorage.getItem('user');
-            if (user) {
-                const userData = JSON.parse(user);
-                document.getElementById('loginPage').classList.remove('active');
-                document.getElementById('dashboardPage').classList.add('active');
-                document.getElementById('navLinks').style.display = 'flex';
-                document.getElementById('settingsEmail').textContent = userData.email;
-                updateDashboard();
-                updateCalendar();
-            }
-        }
+</div>
 
-        function login() {
-            const email = document.getElementById('loginEmail').value.trim() || 'guest@menopause.local';
-            localStorage.setItem('user', JSON.stringify({ email }));
-            loadUser();
-        }
+<script>
+    // Init dates
+    document.getElementById('checkinDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('calendarMonth').value = new Date().getMonth();
+    document.getElementById('calendarYear').value = new Date().getFullYear();
 
-        function logout() {
-            if (confirm('Are you sure you want to log out?')) {
-                localStorage.removeItem('user');
-                document.getElementById('loginPage').classList.add('active');
-                document.getElementById('navLinks').style.display = 'none';
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById('loginEmail').value = '';
-                document.getElementById('loginPassword').value = '';
-            }
-        }
-
-        function showPage(pageName) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageName + 'Page').classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            if (pageName === 'dashboard') {
-                updateDashboard();
-            }
-        }
-
-        function updateValue(id, value) {
-            document.getElementById(id).textContent = value;
-        }
-
-        function saveCheckin() {
-            const checkin = {
-                date: document.getElementById('checkinDate').value,
-                mood: parseInt(document.getElementById('mood').value) || 0,
-                brainFog: parseInt(document.getElementById('brainFog').value),
-                sleep: parseFloat(document.getElementById('sleep').value),
-                patience: parseInt(document.getElementById('patience').value),
-                bleeding: document.getElementById('bleeding').value,
-                hrtTaken: document.getElementById('hrtTaken').checked,
-                workImpact: parseInt(document.getElementById('workImpact').value),
-                relationshipImpact: parseInt(document.getElementById('relationshipImpact').value),
-                energyImpact: parseInt(document.getElementById('energyImpact').value),
-                mentalClarity: parseInt(document.getElementById('mentalClarity').value),
-                notes: document.getElementById('notes').value
-            };
-            let checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
-            const existingIndex = checkins.findIndex(c => c.date === checkin.date);
-            if (existingIndex >= 0) {
-                checkins[existingIndex] = checkin;
-            } else {
-                checkins.push(checkin);
-            }
-            localStorage.setItem('checkins', JSON.stringify(checkins));
-            const msg = document.getElementById('checkinSuccess');
-            msg.classList.add('show');
-            setTimeout(() => msg.classList.remove('show'), 3000);
+    function loadUser() {
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userData = JSON.parse(user);
+            document.getElementById('loginPage').classList.remove('active');
+            document.getElementById('dashboardPage').classList.add('active');
+            document.getElementById('navLinks').style.display = 'flex';
+            document.getElementById('settingsEmail').textContent = userData.email || 'Guest';
             updateDashboard();
+            updateCalendar();
+            loadHRTForm();
         }
+    }
 
-        function saveHRT() {
-            const hrt = {
-                medName: document.getElementById('medName').value,
-                estrogenDose: document.getElementById('estrogenDose').value,
-                progName: document.getElementById('progName').value,
-                progDose: document.getElementById('progDose').value,
-                adminType: document.getElementById('adminType').value,
-                frequency: document.getElementById('frequency').value,
-                startDate: document.getElementById('startDate').value,
-                notes: document.getElementById('hrtNotes').value
-            };
-            localStorage.setItem('hrt', JSON.stringify(hrt));
-            alert('HRT regimen saved!');
-            updateDashboard();
-        }
-
-        function updateDashboard() {
-            const checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
-            const hrt = JSON.parse(localStorage.getItem('hrt') || '{}');
-            const today = new Date().toISOString().split('T')[0];
-            const todayCheckin = checkins.find(c => c.date === today);
-            if (todayCheckin) {
-                document.getElementById('todayStatus').innerHTML = `<strong>Mood:</strong> ${todayCheckin.mood}/5 • <strong>Brain Fog:</strong> ${todayCheckin.brainFog}/10 • <strong>Sleep:</strong> ${todayCheckin.sleep} hrs`;
-            }
-            const last7 = checkins.filter(c => {
-                const d = new Date(c.date);
-                const now = new Date();
-                return (now - d) <= 7 * 24 * 60 * 60 * 1000;
-            });
-            if (last7.length > 0) {
-                document.getElementById('avgSleep').textContent = (last7.reduce((sum, c) => sum + c.sleep, 0) / last7.length).toFixed(1);
-                document.getElementById('avgPatience').textContent = Math.round(last7.reduce((sum, c) => sum + c.patience, 0) / last7.length);
-                document.getElementById('avgBrainFog').textContent = Math.round(last7.reduce((sum, c) => sum + c.brainFog, 0) / last7.length);
-                document.getElementById('avgWorkImpact').textContent = Math.round(last7.reduce((sum, c) => sum + c.workImpact, 0) / last7.length);
-                document.getElementById('avgRelationshipImpact').textContent = Math.round(last7.reduce((sum, c) => sum + c.relationshipImpact, 0) / last7.length);
-                document.getElementById('avgEnergyImpact').textContent = Math.round(last7.reduce((sum, c) => sum + c.energyImpact, 0) / last7.length);
-                document.getElementById('avgMentalClarity').textContent = Math.round(last7.reduce((sum, c) => sum + c.mentalClarity, 0) / last7.length);
-                const hrtDays = last7.filter(c => c.hrtTaken).length;
-                document.getElementById('hrtAdherence').textContent = Math.round((hrtDays / last7.length) * 100);
-            }
-            const now = new Date();
-            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-            const monthCheckins = checkins.filter(c => {
-                const d = new Date(c.date);
-                return d >= monthStart && d <= now;
-            });
-            const bleedingDays = monthCheckins.filter(c => c.bleeding !== 'none').length;
-            document.getElementById('bleedingDays').textContent = bleedingDays;
-            if (hrt.medName) {
-                document.getElementById('hrtSummary').innerHTML = `<strong>${hrt.medName}</strong> - ${hrt.estrogenDose}<br>${hrt.progName ? `<strong>${hrt.progName}</strong> - ${hrt.progDose}<br>` : ''}<strong>Frequency:</strong> ${hrt.frequency}<br><strong>Started:</strong> ${hrt.startDate}`;
-            }
-        }
-
-        function updateCalendar() {
-            const month = parseInt(document.getElementById('calendarMonth').value);
-            const year = parseInt(document.getElementById('calendarYear').value);
-            const checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const daysInMonth = lastDay.getDate();
-            const startingDayOfWeek = firstDay.getDay();
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            daysOfWeek.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'calendar-day header';
-                dayHeader.textContent = day;
-                calendar.appendChild(dayHeader);
-            });
-            for (let i = 0; i < startingDayOfWeek; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                calendar.appendChild(emptyDay);
-            }
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(year, month, day).toISOString().split('T')[0];
-                const checkin = checkins.find(c => c.date === date);
-                const bleeding = checkin ? checkin.bleeding : 'none';
-                const dayEl = document.createElement('div');
-                dayEl.className = `calendar-day ${bleeding}`;
-                dayEl.textContent = day;
-                dayEl.onclick = () => {
-                    const newBleeding = prompt('Bleeding level for ' + date + ':\nnone, spotting, light, medium, heavy', bleeding);
-                    if (newBleeding && ['none', 'spotting', 'light', 'medium', 'heavy'].includes(newBleeding)) {
-                        let checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
-                        let existing = checkins.find(c => c.date === date);
-                        if (existing) {
-                            existing.bleeding = newBleeding;
-                        } else {
-                            checkins.push({ date, bleeding: newBleeding, mood: 0, brainFog: 0, sleep: 0, patience: 0, hrtTaken: false, workImpact: 0, relationshipImpact: 0, energyImpact: 0, mentalClarity: 0 });
-                        }
-                        localStorage.setItem('checkins', JSON.stringify(checkins));
-                        updateCalendar();
-                    }
-                };
-                calendar.appendChild(dayEl);
-            }
-        }
-
-        function exportData() {
-            const data = {
-                user: localStorage.getItem('user'),
-                checkins: localStorage.getItem('checkins'),
-                hrt: localStorage.getItem('hrt'),
-                exportDate: new Date().toISOString()
-            };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `menopause-tracker-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-        }
-
-        function deleteAllData() {
-            if (confirm('Are you absolutely sure? This will delete all your data and cannot be undone.')) {
-                if (confirm('Click OK again to confirm')) {
-                    localStorage.clear();
-                    alert('All data deleted');
-                    logout();
-                }
-            }
-        }
-
+    function login() {
+        const email = document.getElementById('loginEmail').value.trim() || 'Guest';
+        localStorage.setItem('user', JSON.stringify({ email }));
         loadUser();
-    </script>
+    }
+
+    function logout() {
+        if (confirm('Log out?')) {
+            localStorage.removeItem('user');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('loginPage').classList.add('active');
+            document.getElementById('navLinks').style.display = 'none';
+        }
+    }
+
+    function showPage(name, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(name + 'Page').classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        if (name === 'dashboard') updateDashboard();
+    }
+
+    function toggleOther(selectId, otherId) {
+        const sel = document.getElementById(selectId);
+        const otherDiv = document.getElementById(otherId);
+        if (sel.value === 'other') {
+            otherDiv.classList.add('show');
+        } else {
+            otherDiv.classList.remove('show');
+        }
+    }
+
+    function saveCheckin() {
+        const checkin = {
+            date: document.getElementById('checkinDate').value,
+            mood: parseInt(document.getElementById('mood').value) || 0,
+            brainFog: parseInt(document.getElementById('brainFog').value),
+            sleep: parseFloat(document.getElementById('sleep').value),
+            patience: parseInt(document.getElementById('patience').value),
+            bleeding: document.getElementById('bleeding').value,
+            hrtTaken: document.getElementById('hrtTaken').checked,
+            workImpact: parseInt(document.getElementById('workImpact').value),
+            relImpact: parseInt(document.getElementById('relImpact').value),
+            energyImpact: parseInt(document.getElementById('energyImpact').value),
+            mentalClarity: parseInt(document.getElementById('mentalClarity').value),
+            notes: document.getElementById('notes').value
+        };
+        let checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
+        const idx = checkins.findIndex(c => c.date === checkin.date);
+        if (idx >= 0) { checkins[idx] = checkin; } else { checkins.push(checkin); }
+        localStorage.setItem('checkins', JSON.stringify(checkins));
+        const msg = document.getElementById('checkinSuccess');
+        msg.classList.add('show');
+        setTimeout(() => msg.classList.remove('show'), 3000);
+        updateDashboard();
+    }
+
+    function saveHRT() {
+        const eAdmin = document.getElementById('estrogenAdmin').value;
+        const pAdmin = document.getElementById('progAdmin').value;
+        const hrt = {
+            estrogenName: document.getElementById('estrogenName').value,
+            estrogenDose: document.getElementById('estrogenDose').value,
+            estrogenAdmin: eAdmin === 'other' ? document.getElementById('estrogenOtherText').value : eAdmin,
+            estrogenFreq: document.getElementById('estrogenFreq').value,
+            estrogenSchedule: document.getElementById('estrogenSchedule').value,
+            estrogenStart: document.getElementById('estrogenStart').value,
+            progName: document.getElementById('progName').value,
+            progDose: document.getElementById('progDose').value,
+            progAdmin: pAdmin === 'other' ? document.getElementById('progOtherText').value : pAdmin,
+            progFreq: document.getElementById('progFreq').value,
+            progSchedule: document.getElementById('progSchedule').value,
+            progStart: document.getElementById('progStart').value,
+            notes: document.getElementById('hrtNotes').value
+        };
+        localStorage.setItem('hrt', JSON.stringify(hrt));
+        alert('HRT regimen saved!');
+        updateDashboard();
+    }
+
+    function loadHRTForm() {
+        const hrt = JSON.parse(localStorage.getItem('hrt') || '{}');
+        if (!hrt.estrogenName) return;
+        document.getElementById('estrogenName').value = hrt.estrogenName || '';
+        document.getElementById('estrogenDose').value = hrt.estrogenDose || '';
+        document.getElementById('estrogenFreq').value = hrt.estrogenFreq || '';
+        document.getElementById('estrogenSchedule').value = hrt.estrogenSchedule || '';
+        document.getElementById('estrogenStart').value = hrt.estrogenStart || '';
+        document.getElementById('progName').value = hrt.progName || '';
+        document.getElementById('progDose').value = hrt.progDose || '';
+        document.getElementById('progFreq').value = hrt.progFreq || '';
+        document.getElementById('progSchedule').value = hrt.progSchedule || '';
+        document.getElementById('progStart').value = hrt.progStart || '';
+        document.getElementById('hrtNotes').value = hrt.notes || '';
+    }
+
+    function updateDashboard() {
+        const checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
+        const hrt = JSON.parse(localStorage.getItem('hrt') || '{}');
+        const today = new Date().toISOString().split('T')[0];
+        const todayLog = checkins.find(c => c.date === today);
+        if (todayLog) {
+            document.getElementById('todayStatus').innerHTML =
+                `<strong>Mood:</strong> ${todayLog.mood}/5 &nbsp;|&nbsp; <strong>Brain Fog:</strong> ${todayLog.brainFog}/10 &nbsp;|&nbsp; <strong>Sleep:</strong> ${todayLog.sleep}hrs`;
+        }
+        const now = new Date();
+        const last7 = checkins.filter(c => (now - new Date(c.date)) <= 7 * 86400000);
+        if (last7.length > 0) {
+            const avg = (field) => (last7.reduce((s, c) => s + (c[field] || 0), 0) / last7.length).toFixed(1);
+            document.getElementById('avgSleep').textContent = avg('sleep');
+            document.getElementById('avgPatience').textContent = avg('patience');
+            document.getElementById('avgBrainFog').textContent = avg('brainFog');
+            document.getElementById('avgWorkImpact').textContent = avg('workImpact');
+            document.getElementById('avgRelImpact').textContent = avg('relImpact');
+            document.getElementById('avgEnergyImpact').textContent = avg('energyImpact');
+            document.getElementById('avgMentalClarity').textContent = avg('mentalClarity');
+            const hrtDays = last7.filter(c => c.hrtTaken).length;
+            document.getElementById('hrtAdherence').textContent = Math.round((hrtDays / last7.length) * 100) + '%';
+        }
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const bleedingDays = checkins.filter(c => new Date(c.date) >= monthStart && c.bleeding !== 'none').length;
+        document.getElementById('bleedingDays').textContent = bleedingDays;
+        if (hrt.estrogenName) {
+            document.getElementById('hrtSummary').innerHTML =
+                `<strong>Estrogen:</strong> ${hrt.estrogenName} ${hrt.estrogenDose} — ${hrt.estrogenAdmin} — ${hrt.estrogenFreq} — ${hrt.estrogenSchedule}<br>
+                 <strong>Progesterone:</strong> ${hrt.progName || '—'} ${hrt.progDose || ''} — ${hrt.progAdmin || ''} — ${hrt.progFreq || ''} — ${hrt.progSchedule || ''}`;
+        }
+    }
+
+    function updateCalendar() {
+        const month = parseInt(document.getElementById('calendarMonth').value);
+        const year = parseInt(document.getElementById('calendarYear').value);
+        const checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const cal = document.getElementById('calendar');
+        cal.innerHTML = '';
+        ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+            const el = document.createElement('div');
+            el.className = 'calendar-day header';
+            el.textContent = d;
+            cal.appendChild(el);
+        });
+        for (let i = 0; i < firstDay; i++) {
+            const el = document.createElement('div');
+            el.className = 'calendar-day empty';
+            cal.appendChild(el);
+        }
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const checkin = checkins.find(c => c.date === date);
+            const bleeding = checkin ? checkin.bleeding : 'none';
+            const el = document.createElement('div');
+            el.className = `calendar-day ${bleeding}`;
+            el.textContent = day;
+            el.onclick = () => {
+                const levels = ['none','spotting','light','medium','heavy'];
+                const next = levels[(levels.indexOf(bleeding) + 1) % levels.length];
+                let arr = JSON.parse(localStorage.getItem('checkins') || '[]');
+                let existing = arr.find(c => c.date === date);
+                if (existing) { existing.bleeding = next; }
+                else { arr.push({ date, bleeding: next, mood:0, brainFog:0, sleep:0, patience:0, hrtTaken:false, workImpact:0, relImpact:0, energyImpact:0, mentalClarity:0 }); }
+                localStorage.setItem('checkins', JSON.stringify(arr));
+                updateCalendar();
+            };
+            cal.appendChild(el);
+        }
+    }
+
+    function exportData() {
+        const data = {
+            checkins: JSON.parse(localStorage.getItem('checkins') || '[]'),
+            hrt: JSON.parse(localStorage.getItem('hrt') || '{}'),
+            exportDate: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `menopause-tracker-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+    }
+
+    function deleteAllData() {
+        if (confirm('Delete ALL your data? This cannot be undone.')) {
+            if (confirm('Are you absolutely sure?')) {
+                localStorage.clear();
+                alert('All data deleted.');
+                logout();
+            }
+        }
+    }
+
+    loadUser();
+</script>
 </body>
 </html>
