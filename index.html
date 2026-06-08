@@ -262,6 +262,29 @@
         .info-icon:hover .tooltip, .info-icon:focus .tooltip { display: block; }
         .checkbox-group { display: flex; gap: 12px; align-items: center; }
         input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+
+        /* Trigger checkboxes grid */
+        .trigger-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .trigger-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f9f7ff;
+            border: 1px solid #ede9fe;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .trigger-item:hover { background: #ede9fe; border-color: #6d28d9; }
+        .trigger-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+        .trigger-item label { font-size: 13px; cursor: pointer; margin: 0; font-weight: 400; color: #374151; }
+
         .section-divider {
             font-size: 13px;
             font-weight: 700;
@@ -272,6 +295,11 @@
             padding-bottom: 8px;
             border-bottom: 1px solid #ede9fe;
             grid-column: 1 / -1;
+        }
+        .flush-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
         .calendar {
             display: grid;
@@ -348,6 +376,8 @@
             .login-card { padding: 32px 24px; }
             .tooltip { min-width: 160px; font-size: 11px; }
             .clinical-footer { font-size: 10px; padding: 6px 12px; }
+            .flush-row { grid-template-columns: 1fr; }
+            .trigger-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -418,7 +448,7 @@
             <div class="card">
                 <h3>Hot Flushes (7 days)</h3>
                 <div class="card-value" id="avgHotFlush">—</div>
-                <div class="card-subtitle">avg severity per day</div>
+                <div class="card-subtitle">avg severity | avg count per day: <span id="avgHotFlushCount">—</span></div>
                 <div id="trendHotFlush"></div>
             </div>
             <div class="card">
@@ -461,6 +491,10 @@
                 <div class="card-subtitle">1 = not affected | 10 = severely affected</div>
                 <div id="trendMental"></div>
             </div>
+            <div class="card">
+                <h3>Top Triggers (7 days)</h3>
+                <div id="topTriggers" style="color:#9ca3af;font-size:14px;">No data yet</div>
+            </div>
         </div>
         <div class="form-section">
             <h2>Current HRT Regimen</h2>
@@ -474,6 +508,7 @@
             <h2>Daily Check-In</h2>
             <div class="success-message" id="checkinSuccess">✓ Check-in saved!</div>
             <div class="form-grid">
+
                 <div class="form-group">
                     <label>Date</label>
                     <input type="date" id="checkinDate">
@@ -512,16 +547,20 @@
                     </div>
                 </div>
 
-                <!-- NEW: Hot Flushes & Night Sweats -->
+                <!-- VASOMOTOR -->
                 <div class="section-divider">🔥 Vasomotor Symptoms</div>
                 <div class="form-group">
-                    <label>Hot Flushes Today</label>
+                    <label>Hot Flush Severity Today</label>
                     <select id="hotFlush">
                         <option value="0">None</option>
                         <option value="1">Mild (1–2, barely noticeable)</option>
                         <option value="2">Moderate (3–5, uncomfortable)</option>
                         <option value="3">Severe (5+, disruptive)</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Hot Flush Count Today (how many?)</label>
+                    <input type="number" id="hotFlushCount" min="0" max="30" step="1" value="0" placeholder="0">
                 </div>
                 <div class="form-group">
                     <label>Night Sweats Last Night</label>
@@ -533,7 +572,21 @@
                     </select>
                 </div>
 
-                <!-- Bleeding & HRT -->
+                <!-- URINARY -->
+                <div class="section-divider">🚿 Urinary Symptoms</div>
+                <div class="form-group">
+                    <label>Urinary Issues Today</label>
+                    <select id="urinary">
+                        <option value="none">None</option>
+                        <option value="mild-urgency">Mild urgency (occasional)</option>
+                        <option value="frequent">Frequent urination</option>
+                        <option value="urgency-incontinence">Urgency incontinence (couldn't hold it)</option>
+                        <option value="nocturia">Nocturia (woke to urinate at night)</option>
+                        <option value="multiple">Multiple issues</option>
+                    </select>
+                </div>
+
+                <!-- BLEEDING & HRT -->
                 <div class="section-divider">🩸 Bleeding &amp; HRT</div>
                 <div class="form-group">
                     <label>Bleeding Level</label>
@@ -553,7 +606,7 @@
                     </div>
                 </div>
 
-                <!-- Impact Scores -->
+                <!-- IMPACT SCORES -->
                 <div class="section-divider">📊 Daily Impact Scores</div>
                 <div class="form-group">
                     <label style="display:flex;align-items:center;">
@@ -591,6 +644,24 @@
                         <input type="range" id="mentalClarity" min="1" max="10" value="5" oninput="document.getElementById('mentalVal').textContent=this.value">
                     </div>
                 </div>
+
+                <!-- TRIGGERS -->
+                <div class="section-divider">⚡ Today's Triggers (tick all that apply)</div>
+                <div class="form-group full">
+                    <div class="trigger-grid">
+                        <div class="trigger-item"><input type="checkbox" id="trig-stress"><label for="trig-stress">😰 Stress</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-alcohol"><label for="trig-alcohol">🍷 Alcohol</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-caffeine"><label for="trig-caffeine">☕ Caffeine</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-poorsleep"><label for="trig-poorsleep">😴 Poor Sleep</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-misseddose"><label for="trig-misseddose">💊 Missed HRT Dose</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-exercise"><label for="trig-exercise">🏃 Exercise</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-illness"><label for="trig-illness">🤒 Illness</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-spicyfood"><label for="trig-spicyfood">🌶️ Spicy Food</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-hotweather"><label for="trig-hotweather">☀️ Hot Weather</label></div>
+                        <div class="trigger-item"><input type="checkbox" id="trig-other"><label for="trig-other">➕ Other</label></div>
+                    </div>
+                </div>
+
                 <div class="form-group full">
                     <label>Notes (Optional)</label>
                     <textarea id="notes" placeholder="How are you feeling? Any observations?"></textarea>
@@ -604,18 +675,11 @@
     <div id="hrtPage" class="page">
         <div class="form-section">
             <h2>HRT Regimen</h2>
-
             <div class="hormone-section">
                 <h3>💊 Estrogen</h3>
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>Medication Name</label>
-                        <input type="text" id="estrogenName" placeholder="e.g., Estradot, Oestrogel, Zumenon">
-                    </div>
-                    <div class="form-group">
-                        <label>Dose</label>
-                        <input type="text" id="estrogenDose" placeholder="e.g., 50mcg, 1mg, 2 pumps">
-                    </div>
+                    <div class="form-group"><label>Medication Name</label><input type="text" id="estrogenName" placeholder="e.g., Estradot, Oestrogel, Zumenon"></div>
+                    <div class="form-group"><label>Dose</label><input type="text" id="estrogenDose" placeholder="e.g., 50mcg, 1mg, 2 pumps"></div>
                     <div class="form-group">
                         <label>Admin Type</label>
                         <select id="estrogenAdmin" onchange="toggleOther('estrogenAdmin','estrogenOther')">
@@ -628,14 +692,9 @@
                             <option value="Injection">Injection</option>
                             <option value="other">Other</option>
                         </select>
-                        <div class="other-field" id="estrogenOther">
-                            <input type="text" id="estrogenOtherText" placeholder="Please describe your admin type">
-                        </div>
+                        <div class="other-field" id="estrogenOther"><input type="text" id="estrogenOtherText" placeholder="Please describe your admin type"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Frequency</label>
-                        <input type="text" id="estrogenFreq" placeholder="e.g., Daily, Every 3 days">
-                    </div>
+                    <div class="form-group"><label>Frequency</label><input type="text" id="estrogenFreq" placeholder="e.g., Daily, Every 3 days"></div>
                     <div class="form-group">
                         <label>Schedule</label>
                         <select id="estrogenSchedule">
@@ -645,24 +704,14 @@
                             <option value="Intermittent">Intermittent</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Start Date</label>
-                        <input type="date" id="estrogenStart">
-                    </div>
+                    <div class="form-group"><label>Start Date</label><input type="date" id="estrogenStart"></div>
                 </div>
             </div>
-
             <div class="hormone-section">
                 <h3>💊 Progesterone</h3>
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>Medication Name</label>
-                        <input type="text" id="progName" placeholder="e.g., Utrogestan, Prometrium">
-                    </div>
-                    <div class="form-group">
-                        <label>Dose</label>
-                        <input type="text" id="progDose" placeholder="e.g., 100mg, 200mg">
-                    </div>
+                    <div class="form-group"><label>Medication Name</label><input type="text" id="progName" placeholder="e.g., Utrogestan, Prometrium"></div>
+                    <div class="form-group"><label>Dose</label><input type="text" id="progDose" placeholder="e.g., 100mg, 200mg"></div>
                     <div class="form-group">
                         <label>Admin Type</label>
                         <select id="progAdmin" onchange="toggleOther('progAdmin','progOther')">
@@ -675,14 +724,9 @@
                             <option value="Patch (combined)">Patch (combined)</option>
                             <option value="other">Other</option>
                         </select>
-                        <div class="other-field" id="progOther">
-                            <input type="text" id="progOtherText" placeholder="Please describe your admin type">
-                        </div>
+                        <div class="other-field" id="progOther"><input type="text" id="progOtherText" placeholder="Please describe your admin type"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Frequency</label>
-                        <input type="text" id="progFreq" placeholder="e.g., Daily, 10 days per cycle">
-                    </div>
+                    <div class="form-group"><label>Frequency</label><input type="text" id="progFreq" placeholder="e.g., Daily, 10 days per cycle"></div>
                     <div class="form-group">
                         <label>Schedule</label>
                         <select id="progSchedule">
@@ -692,25 +736,14 @@
                             <option value="Intermittent">Intermittent</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Start Date</label>
-                        <input type="date" id="progStart">
-                    </div>
+                    <div class="form-group"><label>Start Date</label><input type="date" id="progStart"></div>
                 </div>
             </div>
-
-            <!-- DOSE CHANGE HISTORY -->
             <div class="dose-change-section">
                 <h3>📋 Most Recent Dose Change</h3>
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>Date of Change</label>
-                        <input type="date" id="doseChangeDate">
-                    </div>
-                    <div class="form-group">
-                        <label>What Changed</label>
-                        <input type="text" id="doseChangeWhat" placeholder="e.g., Estradot increased from 50 to 75mcg">
-                    </div>
+                    <div class="form-group"><label>Date of Change</label><input type="date" id="doseChangeDate"></div>
+                    <div class="form-group"><label>What Changed</label><input type="text" id="doseChangeWhat" placeholder="e.g., Estradot increased from 50 to 75mcg"></div>
                     <div class="form-group">
                         <label>Reason for Change</label>
                         <select id="doseChangeReason">
@@ -725,15 +758,11 @@
                     </div>
                     <div class="form-group full">
                         <label>Symptoms / Side Effects After Change</label>
-                        <textarea id="doseChangeSideEffects" placeholder="What did you notice after the change? e.g., bleeding stopped after 2 weeks, mood improved, headaches started..."></textarea>
+                        <textarea id="doseChangeSideEffects" placeholder="What did you notice after the change?"></textarea>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label>Additional Notes</label>
-                <textarea id="hrtNotes" placeholder="Other medications, supplements, or general notes..."></textarea>
-            </div>
+            <div class="form-group"><label>Additional Notes</label><textarea id="hrtNotes" placeholder="Other medications, supplements, or general notes..."></textarea></div>
             <button class="btn btn-primary" onclick="saveHRT()">Save HRT Regimen</button>
         </div>
     </div>
@@ -744,17 +773,12 @@
             <h2>Bleeding Calendar</h2>
             <div style="margin-bottom:20px;">
                 <select id="calendarMonth" onchange="updateCalendar()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;">
-                    <option value="0">January</option><option value="1">February</option>
-                    <option value="2">March</option><option value="3">April</option>
-                    <option value="4">May</option><option value="5">June</option>
-                    <option value="6">July</option><option value="7">August</option>
-                    <option value="8">September</option><option value="9">October</option>
-                    <option value="10">November</option><option value="11">December</option>
+                    <option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option>
+                    <option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option>
+                    <option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option>
                 </select>
                 <select id="calendarYear" onchange="updateCalendar()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;margin-left:8px;">
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
+                    <option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option>
                 </select>
             </div>
             <div class="calendar" id="calendar"></div>
@@ -777,18 +801,9 @@
         <div class="settings-section">
             <h3>Patient Profile</h3>
             <div class="form-grid" style="padding:0;">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="profileName" placeholder="As it appears on your Medicare card">
-                </div>
-                <div class="form-group">
-                    <label>Date of Birth</label>
-                    <input type="date" id="profileDOB">
-                </div>
-                <div class="form-group">
-                    <label>Date of Last Period</label>
-                    <input type="date" id="profileLastPeriod">
-                </div>
+                <div class="form-group"><label>Full Name</label><input type="text" id="profileName" placeholder="As it appears on your Medicare card"></div>
+                <div class="form-group"><label>Date of Birth</label><input type="date" id="profileDOB"></div>
+                <div class="form-group"><label>Date of Last Period</label><input type="date" id="profileLastPeriod"></div>
                 <div class="form-group">
                     <label>Menstrual Status</label>
                     <select id="profileMenstrualStatus">
@@ -805,10 +820,7 @@
         <div class="settings-section">
             <h3>Account</h3>
             <div class="settings-item">
-                <div>
-                    <p style="font-weight:500;">Email</p>
-                    <p style="font-size:14px;color:#6b7280;" id="settingsEmail">—</p>
-                </div>
+                <div><p style="font-weight:500;">Email</p><p style="font-size:14px;color:#6b7280;" id="settingsEmail">—</p></div>
             </div>
         </div>
         <div class="settings-section">
@@ -821,10 +833,7 @@
                 <button class="btn btn-primary" style="width:auto;" onclick="exportData()">Generate Report</button>
             </div>
             <div class="settings-item">
-                <div>
-                    <p style="font-weight:500;">Delete All Data</p>
-                    <p style="font-size:14px;color:#6b7280;">This cannot be undone</p>
-                </div>
+                <div><p style="font-weight:500;">Delete All Data</p><p style="font-size:14px;color:#6b7280;">This cannot be undone</p></div>
                 <button class="btn btn-danger" onclick="deleteAllData()">Delete</button>
             </div>
         </div>
@@ -834,10 +843,17 @@
 
 <!-- CLINICAL FOOTER -->
 <div class="clinical-footer" id="clinicalFooter" style="display:none;">
-    Disclaimer: This application is a clinical symptom tracking journal. It does not provide medical advice, diagnosis, or treatment. All data is securely isolated on your local device. Please present your exported summary sheet to your consulting physician to discuss HRT adjustments. &nbsp;|&nbsp; Clinic Engine v1.1.0
+    Disclaimer: This application is a clinical symptom tracking journal. It does not provide medical advice, diagnosis, or treatment. All data is securely isolated on your local device. Please present your exported summary sheet to your consulting physician to discuss HRT adjustments. &nbsp;|&nbsp; Clinic Engine v1.2.0
 </div>
 
 <script>
+    const TRIGGERS = ['stress','alcohol','caffeine','poorsleep','misseddose','exercise','illness','spicyfood','hotweather','other'];
+    const TRIGGER_LABELS = {
+        stress:'Stress', alcohol:'Alcohol', caffeine:'Caffeine', poorsleep:'Poor Sleep',
+        misseddose:'Missed HRT Dose', exercise:'Exercise', illness:'Illness',
+        spicyfood:'Spicy Food', hotweather:'Hot Weather', other:'Other'
+    };
+
     document.getElementById('checkinDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('calendarMonth').value = new Date().getMonth();
     document.getElementById('calendarYear').value = new Date().getFullYear();
@@ -851,10 +867,7 @@
             document.getElementById('navLinks').style.display = 'flex';
             document.getElementById('clinicalFooter').style.display = 'block';
             document.getElementById('settingsEmail').textContent = u.email || 'Guest';
-            loadProfile();
-            updateDashboard();
-            updateCalendar();
-            loadHRTForm();
+            loadProfile(); updateDashboard(); updateCalendar(); loadHRTForm();
         }
     }
 
@@ -906,6 +919,7 @@
     }
 
     function saveCheckin() {
+        const triggers = TRIGGERS.filter(t => document.getElementById('trig-' + t).checked);
         const checkin = {
             date: document.getElementById('checkinDate').value,
             mood: parseInt(document.getElementById('mood').value) || 0,
@@ -913,13 +927,16 @@
             sleep: parseFloat(document.getElementById('sleep').value),
             patience: parseInt(document.getElementById('patience').value),
             hotFlush: parseInt(document.getElementById('hotFlush').value),
+            hotFlushCount: parseInt(document.getElementById('hotFlushCount').value) || 0,
             nightSweat: parseInt(document.getElementById('nightSweat').value),
+            urinary: document.getElementById('urinary').value,
             bleeding: document.getElementById('bleeding').value,
             hrtTaken: document.getElementById('hrtTaken').checked,
             workImpact: parseInt(document.getElementById('workImpact').value),
             relImpact: parseInt(document.getElementById('relImpact').value),
             energyImpact: parseInt(document.getElementById('energyImpact').value),
             mentalClarity: parseInt(document.getElementById('mentalClarity').value),
+            triggers: triggers,
             notes: document.getElementById('notes').value
         };
         let checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
@@ -928,6 +945,8 @@
         localStorage.setItem('checkins', JSON.stringify(checkins));
         document.getElementById('checkinSuccess').classList.add('show');
         setTimeout(() => document.getElementById('checkinSuccess').classList.remove('show'), 3000);
+        // Reset triggers
+        TRIGGERS.forEach(t => document.getElementById('trig-' + t).checked = false);
         updateDashboard();
     }
 
@@ -961,13 +980,12 @@
     function loadHRTForm() {
         const h = JSON.parse(localStorage.getItem('hrt') || '{}');
         if (!h.estrogenName) return;
-        const fields = ['estrogenName','estrogenDose','estrogenFreq','estrogenSchedule','estrogenStart',
-                        'progName','progDose','progFreq','progSchedule','progStart',
-                        'doseChangeDate','doseChangeWhat','doseChangeReason','doseChangeSideEffects','hrtNotes'];
-        const map = { hrtNotes: 'notes' };
-        fields.forEach(f => {
+        const map = { hrtNotes:'notes' };
+        ['estrogenName','estrogenDose','estrogenFreq','estrogenSchedule','estrogenStart',
+         'progName','progDose','progFreq','progSchedule','progStart',
+         'doseChangeDate','doseChangeWhat','doseChangeReason','doseChangeSideEffects','hrtNotes'].forEach(f => {
             const el = document.getElementById(f);
-            if (el) el.value = h[map[f] || f] || '';
+            if (el) el.value = h[map[f]||f] || '';
         });
     }
 
@@ -976,24 +994,32 @@
         let sample = checkins.filter(c => (now - new Date(c.date)) <= 7 * 86400000);
         let label = 'Showing trends from your last 7 calendar days.';
         if (sample.length === 0 && checkins.length > 0) {
-            sample = [...checkins].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 7);
-            label = 'Showing trends from your last ' + sample.length + ' active logging ' + (sample.length === 1 ? 'day.' : 'days.');
+            sample = [...checkins].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,7);
+            label = 'Showing trends from your last ' + sample.length + ' active logging ' + (sample.length===1?'day.':'days.');
         }
         return { sample, label };
     }
 
     function trendBadge(sample, field, higherIsBetter) {
         if (sample.length < 4) return '';
-        const mid = Math.floor(sample.length / 2);
-        const sorted = [...sample].sort((a,b) => new Date(a.date) - new Date(b.date));
-        const first = sorted.slice(0, mid).reduce((s,c) => s + (parseFloat(c[field])||0), 0) / mid;
-        const second = sorted.slice(mid).reduce((s,c) => s + (parseFloat(c[field])||0), 0) / (sorted.length - mid);
+        const sorted = [...sample].sort((a,b) => new Date(a.date)-new Date(b.date));
+        const mid = Math.floor(sorted.length/2);
+        const first = sorted.slice(0,mid).reduce((s,c)=>s+(parseFloat(c[field])||0),0)/mid;
+        const second = sorted.slice(mid).reduce((s,c)=>s+(parseFloat(c[field])||0),0)/(sorted.length-mid);
         const diff = second - first;
         if (Math.abs(diff) < 0.3) return '<span class="trend-indicator trend-stable">→ Stable</span>';
         const improving = higherIsBetter ? diff > 0 : diff < 0;
         return improving
             ? '<span class="trend-indicator trend-up">↑ Improving</span>'
             : '<span class="trend-indicator trend-down">↓ Worsening</span>';
+    }
+
+    function getTopTriggers(sample) {
+        const counts = {};
+        sample.forEach(c => {
+            if (c.triggers) c.triggers.forEach(t => { counts[t] = (counts[t]||0)+1; });
+        });
+        return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t,n])=>TRIGGER_LABELS[t]+' ('+n+'x)');
     }
 
     function updateDashboard() {
@@ -1003,43 +1029,47 @@
         const todayLog = checkins.find(c => c.date === todayStr);
         if (todayLog) {
             document.getElementById('todayStatus').innerHTML =
-                '<strong>Mood:</strong> ' + todayLog.mood + '/5 &nbsp;|&nbsp; <strong>Brain Fog:</strong> ' + todayLog.brainFog + '/10 &nbsp;|&nbsp; <strong>Sleep:</strong> ' + todayLog.sleep + 'hrs';
+                '<strong>Mood:</strong> '+todayLog.mood+'/5 &nbsp;|&nbsp; <strong>Brain Fog:</strong> '+todayLog.brainFog+'/10 &nbsp;|&nbsp; <strong>Sleep:</strong> '+todayLog.sleep+'hrs';
         }
         const { sample, label } = getSample(checkins);
         document.getElementById('dashboardNotice').textContent = label;
         if (sample.length > 0) {
-            const avg = f => (sample.reduce((s,c) => s + (parseFloat(c[f])||0), 0) / sample.length).toFixed(1);
+            const avg = f => (sample.reduce((s,c)=>s+(parseFloat(c[f])||0),0)/sample.length).toFixed(1);
             document.getElementById('avgSleep').textContent = avg('sleep');
             document.getElementById('avgPatience').textContent = avg('patience');
             document.getElementById('avgBrainFog').textContent = avg('brainFog');
             document.getElementById('avgHotFlush').textContent = avg('hotFlush');
+            document.getElementById('avgHotFlushCount').textContent = avg('hotFlushCount');
             document.getElementById('avgNightSweat').textContent = avg('nightSweat');
             document.getElementById('avgWorkImpact').textContent = avg('workImpact');
             document.getElementById('avgRelImpact').textContent = avg('relImpact');
             document.getElementById('avgEnergyImpact').textContent = avg('energyImpact');
             document.getElementById('avgMentalClarity').textContent = avg('mentalClarity');
-            const hrtDays = sample.filter(c => c.hrtTaken).length;
-            document.getElementById('hrtAdherence').textContent = Math.round((hrtDays / sample.length) * 100) + '%';
-            // Trend indicators
-            document.getElementById('trendSleep').innerHTML = trendBadge(sample, 'sleep', true);
-            document.getElementById('trendPatience').innerHTML = trendBadge(sample, 'patience', true);
-            document.getElementById('trendBrainFog').innerHTML = trendBadge(sample, 'brainFog', false);
-            document.getElementById('trendHotFlush').innerHTML = trendBadge(sample, 'hotFlush', false);
-            document.getElementById('trendNightSweat').innerHTML = trendBadge(sample, 'nightSweat', false);
-            document.getElementById('trendWork').innerHTML = trendBadge(sample, 'workImpact', false);
-            document.getElementById('trendRel').innerHTML = trendBadge(sample, 'relImpact', false);
-            document.getElementById('trendEnergy').innerHTML = trendBadge(sample, 'energyImpact', false);
-            document.getElementById('trendMental').innerHTML = trendBadge(sample, 'mentalClarity', false);
+            const hrtDays = sample.filter(c=>c.hrtTaken).length;
+            document.getElementById('hrtAdherence').textContent = Math.round((hrtDays/sample.length)*100)+'%';
+            document.getElementById('trendSleep').innerHTML = trendBadge(sample,'sleep',true);
+            document.getElementById('trendPatience').innerHTML = trendBadge(sample,'patience',true);
+            document.getElementById('trendBrainFog').innerHTML = trendBadge(sample,'brainFog',false);
+            document.getElementById('trendHotFlush').innerHTML = trendBadge(sample,'hotFlush',false);
+            document.getElementById('trendNightSweat').innerHTML = trendBadge(sample,'nightSweat',false);
+            document.getElementById('trendWork').innerHTML = trendBadge(sample,'workImpact',false);
+            document.getElementById('trendRel').innerHTML = trendBadge(sample,'relImpact',false);
+            document.getElementById('trendEnergy').innerHTML = trendBadge(sample,'energyImpact',false);
+            document.getElementById('trendMental').innerHTML = trendBadge(sample,'mentalClarity',false);
+            const topT = getTopTriggers(sample);
+            document.getElementById('topTriggers').innerHTML = topT.length > 0
+                ? topT.map(t=>'<div style="font-size:14px;padding:3px 0;">⚡ '+t+'</div>').join('')
+                : '<span style="color:#9ca3af;">No triggers logged</span>';
         }
         const now = new Date();
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        document.getElementById('bleedingDays').textContent = checkins.filter(c => new Date(c.date) >= monthStart && c.bleeding !== 'none').length;
+        document.getElementById('bleedingDays').textContent = checkins.filter(c=>new Date(c.date)>=monthStart&&c.bleeding!=='none').length;
         if (hrt.estrogenName) {
             document.getElementById('hrtSummary').innerHTML =
-                '<strong>Estrogen:</strong> ' + (hrt.estrogenName||'—') + ' ' + (hrt.estrogenDose||'') + ' — ' + (hrt.estrogenAdmin||'—') + ' — ' + (hrt.estrogenFreq||'—') + ' — ' + (hrt.estrogenSchedule||'—') +
-                '<br><strong>Progesterone:</strong> ' + (hrt.progName||'—') + ' ' + (hrt.progDose||'') + ' — ' + (hrt.progAdmin||'—') + ' — ' + (hrt.progFreq||'—') + ' — ' + (hrt.progSchedule||'—') +
-                (hrt.doseChangeDate ? '<br><strong>Last dose change:</strong> ' + hrt.doseChangeDate + ' — ' + (hrt.doseChangeWhat||'') : '') +
-                (hrt.notes ? '<br><strong>Notes:</strong> ' + hrt.notes : '');
+                '<strong>Estrogen:</strong> '+(hrt.estrogenName||'—')+' '+(hrt.estrogenDose||'')+' — '+(hrt.estrogenAdmin||'—')+' — '+(hrt.estrogenFreq||'—')+' — '+(hrt.estrogenSchedule||'—')+
+                '<br><strong>Progesterone:</strong> '+(hrt.progName||'—')+' '+(hrt.progDose||'')+' — '+(hrt.progAdmin||'—')+' — '+(hrt.progFreq||'—')+' — '+(hrt.progSchedule||'—')+
+                (hrt.doseChangeDate?'<br><strong>Last dose change:</strong> '+hrt.doseChangeDate+' — '+(hrt.doseChangeWhat||''):'')+
+                (hrt.notes?'<br><strong>Notes:</strong> '+hrt.notes:'');
         }
     }
 
@@ -1048,32 +1078,27 @@
         const year = parseInt(document.getElementById('calendarYear').value);
         const checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
         const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInMonth = new Date(year, month+1, 0).getDate();
         const cal = document.getElementById('calendar');
         cal.innerHTML = '';
         ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
-            const el = document.createElement('div');
-            el.className = 'calendar-day header';
-            el.textContent = d;
-            cal.appendChild(el);
+            const el = document.createElement('div'); el.className='calendar-day header'; el.textContent=d; cal.appendChild(el);
         });
-        for (let i = 0; i < firstDay; i++) {
-            const el = document.createElement('div'); el.className = 'calendar-day empty'; cal.appendChild(el);
-        }
-        for (let day = 1; day <= daysInMonth; day++) {
-            const date = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
-            const checkin = checkins.find(c => c.date === date);
-            const bleeding = checkin ? checkin.bleeding : 'none';
+        for (let i=0; i<firstDay; i++) { const el=document.createElement('div'); el.className='calendar-day empty'; cal.appendChild(el); }
+        for (let day=1; day<=daysInMonth; day++) {
+            const date = year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+            const checkin = checkins.find(c=>c.date===date);
+            const bleeding = checkin?checkin.bleeding:'none';
             const el = document.createElement('div');
-            el.className = 'calendar-day ' + bleeding;
+            el.className = 'calendar-day '+bleeding;
             el.textContent = day;
             el.onclick = () => {
-                const levels = ['none','spotting','light','medium','heavy'];
-                const next = levels[(levels.indexOf(bleeding) + 1) % levels.length];
-                let arr = JSON.parse(localStorage.getItem('checkins') || '[]');
-                let ex = arr.find(c => c.date === date);
-                if (ex) { ex.bleeding = next; }
-                else { arr.push({ date, bleeding: next, mood:0, brainFog:0, sleep:0, patience:0, hotFlush:0, nightSweat:0, hrtTaken:false, workImpact:0, relImpact:0, energyImpact:0, mentalClarity:0 }); }
+                const levels=['none','spotting','light','medium','heavy'];
+                const next = levels[(levels.indexOf(bleeding)+1)%levels.length];
+                let arr = JSON.parse(localStorage.getItem('checkins')||'[]');
+                let ex = arr.find(c=>c.date===date);
+                if (ex) { ex.bleeding=next; }
+                else { arr.push({date,bleeding:next,mood:0,brainFog:0,sleep:0,patience:0,hotFlush:0,hotFlushCount:0,nightSweat:0,urinary:'none',hrtTaken:false,workImpact:0,relImpact:0,energyImpact:0,mentalClarity:0,triggers:[]}); }
                 localStorage.setItem('checkins', JSON.stringify(arr));
                 updateCalendar();
             };
@@ -1081,35 +1106,28 @@
         }
     }
 
-    // GP REPORT
     function exportData() {
-        const checkins = JSON.parse(localStorage.getItem('checkins') || '[]');
-        const hrt = JSON.parse(localStorage.getItem('hrt') || '{}');
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const profile = JSON.parse(localStorage.getItem('profile') || '{}');
+        const checkins = JSON.parse(localStorage.getItem('checkins')||'[]');
+        const hrt = JSON.parse(localStorage.getItem('hrt')||'{}');
+        const user = JSON.parse(localStorage.getItem('user')||'{}');
+        const profile = JSON.parse(localStorage.getItem('profile')||'{}');
         const now = new Date();
-        const reportDate = now.toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'});
-
-        const { sample: s7 } = getSample(checkins);
-        const s30 = checkins.filter(c => (now - new Date(c.date)) <= 30 * 86400000);
-
-        const avg = (arr, f) => arr.length > 0
-            ? (arr.reduce((s,c) => s + (parseFloat(c[f])||0), 0) / arr.length).toFixed(1)
-            : 'N/A';
-
-        const bleedingDays30 = s30.filter(c => c.bleeding !== 'none').length;
-        const bleedingDays7 = s7.filter(c => c.bleeding !== 'none').length;
-        const adherence7 = s7.length > 0 ? Math.round((s7.filter(c=>c.hrtTaken).length / s7.length)*100) + '%' : 'N/A';
-        const adherence30 = s30.length > 0 ? Math.round((s30.filter(c=>c.hrtTaken).length / s30.length)*100) + '%' : 'N/A';
-
-        const range = (arr) => {
-            if (!arr.length) return 'N/A';
-            const sorted = [...arr].sort((a,b) => new Date(a.date)-new Date(b.date));
-            return sorted[0].date + ' to ' + sorted[sorted.length-1].date;
+        const reportDate = now.toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
+        const { sample:s7 } = getSample(checkins);
+        const s30 = checkins.filter(c=>(now-new Date(c.date))<=30*86400000);
+        const avg = (arr,f) => arr.length>0?(arr.reduce((s,c)=>s+(parseFloat(c[f])||0),0)/arr.length).toFixed(1):'N/A';
+        const bleedingDays7 = s7.filter(c=>c.bleeding!=='none').length;
+        const bleedingDays30 = s30.filter(c=>c.bleeding!=='none').length;
+        const adherence7 = s7.length>0?Math.round((s7.filter(c=>c.hrtTaken).length/s7.length)*100)+'%':'N/A';
+        const adherence30 = s30.length>0?Math.round((s30.filter(c=>c.hrtTaken).length/s30.length)*100)+'%':'N/A';
+        const range = arr => { if(!arr.length) return 'N/A'; const s=[...arr].sort((a,b)=>new Date(a.date)-new Date(b.date)); return s[0].date+' to '+s[s.length-1].date; };
+        const topT7 = getTopTriggers(s7);
+        const topT30 = getTopTriggers(s30);
+        const urinaryCount = (arr) => {
+            const c={};
+            arr.forEach(e=>{ if(e.urinary&&e.urinary!=='none') c[e.urinary]=(c[e.urinary]||0)+1; });
+            return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+' ('+v+' days)').join(', ')||'None reported';
         };
-
-        const flushLabel = v => ['None','Mild','Moderate','Severe'][parseInt(v)] || v;
-        const nightLabel = v => ['None','Mild','Moderate','Severe (drenching)'][parseInt(v)] || v;
 
         const r = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>GP Clinical Report</title><style>' +
             'body{font-family:Arial,Helvetica,sans-serif;max-width:820px;margin:40px auto;padding:40px;color:#111;background:#fff;font-size:13px;}' +
@@ -1124,84 +1142,44 @@
             '.info-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;font-size:12px;}' +
             '.label{color:#555;font-weight:600;}' +
             '.footer{margin-top:36px;padding-top:12px;border-top:1px solid #ccc;font-size:10px;color:#888;text-align:center;}' +
-            '.trend-up{color:#166534;font-weight:700;} .trend-down{color:#991b1b;font-weight:700;} .trend-stable{color:#555;}' +
             '@media print{body{margin:10px;padding:20px;}}' +
             '</style></head><body>' +
             '<h1>Menopause Impact Tracker — GP Clinical Summary Report</h1>' +
-            '<div class="subtitle">Report Date: ' + reportDate + ' &nbsp;|&nbsp; Patient: ' + (profile.name || user.email || 'Not recorded') + '</div>' +
-
+            '<div class="subtitle">Report Date: '+reportDate+' &nbsp;|&nbsp; Patient: '+(profile.name||user.email||'Not recorded')+'</div>' +
             '<h2>Patient Details</h2>' +
             '<div class="two-col">' +
-            '<div>' +
-            '<div class="info-row"><span class="label">Full Name:</span><span>' + (profile.name||'Not recorded') + '</span></div>' +
-            '<div class="info-row"><span class="label">Date of Birth:</span><span>' + (profile.dob||'Not recorded') + '</span></div>' +
-            '<div class="info-row"><span class="label">Email/ID:</span><span>' + (user.email||'Guest') + '</span></div>' +
-            '</div><div>' +
-            '<div class="info-row"><span class="label">Menstrual Status:</span><span>' + (profile.menstrualStatus||'Not recorded') + '</span></div>' +
-            '<div class="info-row"><span class="label">Last Period:</span><span>' + (profile.lastPeriod||'Not recorded') + '</span></div>' +
-            '<div class="info-row"><span class="label">Report Generated:</span><span>' + reportDate + '</span></div>' +
-            '</div></div>' +
-
+            '<div><div class="info-row"><span class="label">Full Name:</span><span>'+(profile.name||'Not recorded')+'</span></div>' +
+            '<div class="info-row"><span class="label">Date of Birth:</span><span>'+(profile.dob||'Not recorded')+'</span></div>' +
+            '<div class="info-row"><span class="label">Email/ID:</span><span>'+(user.email||'Guest')+'</span></div></div>' +
+            '<div><div class="info-row"><span class="label">Menstrual Status:</span><span>'+(profile.menstrualStatus||'Not recorded')+'</span></div>' +
+            '<div class="info-row"><span class="label">Last Period:</span><span>'+(profile.lastPeriod||'Not recorded')+'</span></div>' +
+            '<div class="info-row"><span class="label">Report Generated:</span><span>'+reportDate+'</span></div></div></div>' +
             '<h2>Current HRT Regimen</h2>' +
             '<table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr>' +
-            '<tr><td>Estrogen</td><td>' + (hrt.estrogenName||'—') + '</td><td>' + (hrt.estrogenDose||'—') + '</td><td>' + (hrt.estrogenAdmin||'—') + '</td><td>' + (hrt.estrogenFreq||'—') + '</td><td>' + (hrt.estrogenSchedule||'—') + '</td><td>' + (hrt.estrogenStart||'—') + '</td></tr>' +
-            '<tr><td>Progesterone</td><td>' + (hrt.progName||'—') + '</td><td>' + (hrt.progDose||'—') + '</td><td>' + (hrt.progAdmin||'—') + '</td><td>' + (hrt.progFreq||'—') + '</td><td>' + (hrt.progSchedule||'—') + '</td><td>' + (hrt.progStart||'—') + '</td></tr>' +
+            '<tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr>' +
+            '<tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr>' +
             '</table>' +
-            (hrt.doseChangeDate ? '<p style="font-size:12px;"><strong>Most Recent Dose Change (' + hrt.doseChangeDate + '):</strong> ' + (hrt.doseChangeWhat||'') + ' — Reason: ' + (hrt.doseChangeReason||'') + '</p>' +
-            (hrt.doseChangeSideEffects ? '<p style="font-size:12px;color:#555;"><em>Post-change observations: ' + hrt.doseChangeSideEffects + '</em></p>' : '') : '') +
-
-            '<h2>Symptom Summary — 7-Day Average &nbsp;<span style="font-weight:400;font-size:11px;color:#777;">(' + range(s7) + ', n=' + s7.length + ')</span></h2>' +
-            '<table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr>' +
-            '<tr><td>Sleep</td><td>' + avg(s7,'sleep') + ' hrs</td><td>Hours per night</td></tr>' +
-            '<tr><td>Patience</td><td>' + avg(s7,'patience') + ' / 10</td><td>1 = very impatient | 10 = very patient</td></tr>' +
-            '<tr><td>Brain Fog</td><td>' + avg(s7,'brainFog') + ' / 10</td><td>1 = none | 10 = severe</td></tr>' +
-            '<tr><td>Hot Flushes</td><td>' + avg(s7,'hotFlush') + ' / 3</td><td>0 = none | 1 = mild | 2 = moderate | 3 = severe</td></tr>' +
-            '<tr><td>Night Sweats</td><td>' + avg(s7,'nightSweat') + ' / 3</td><td>0 = none | 1 = mild | 2 = moderate | 3 = drenching</td></tr>' +
-            '<tr><td>Work Impact</td><td>' + avg(s7,'workImpact') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Relationship Impact</td><td>' + avg(s7,'relImpact') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Energy Impact</td><td>' + avg(s7,'energyImpact') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Mental Clarity Impact</td><td>' + avg(s7,'mentalClarity') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Bleeding days</td><td>' + bleedingDays7 + ' days</td><td>Days with any bleeding or spotting</td></tr>' +
-            '<tr><td>HRT Adherence</td><td>' + adherence7 + '</td><td>% of logged days HRT was taken</td></tr>' +
+            (hrt.doseChangeDate?'<p style="font-size:12px;"><strong>Most Recent Dose Change ('+hrt.doseChangeDate+'):</strong> '+(hrt.doseChangeWhat||'')+' — Reason: '+(hrt.doseChangeReason||'')+'</p>'+(hrt.doseChangeSideEffects?'<p style="font-size:12px;color:#555;"><em>Post-change observations: '+hrt.doseChangeSideEffects+'</em></p>':''):'') +
+            '<h2>7-Day Symptom Summary &nbsp;<span style="font-weight:400;font-size:11px;color:#777;">('+range(s7)+', n='+s7.length+')</span></h2>' +
+            '<table><tr><th>Metric</th><th>Average</th><th>Scale / Notes</th></tr>' +
+            '<tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr>' +
+            '<tr><td>Patience</td><td>'+avg(s7,'patience')+' / 10</td><td>1 = very impatient | 10 = very patient</td></tr>' +
+            '<tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+' / 10</td><td>1 = none | 10 = severe</td></tr>' +
+            '<tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+' / 3</td><td>0 = none | 1 = mild | 2 = moderate | 3 = severe</td></tr>' +
+            '<tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+' per day</td><td>Average number of flushes per day</td></tr>' +
+            '<tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+' / 3</td><td>0 = none | 1 = mild | 2 = moderate | 3 = drenching</td></tr>' +
+            '<tr><td>Urinary Symptoms</td><td colspan="2">'+urinaryCount(s7)+'</td></tr>' +
+            '<tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
+            '<tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
+            '<tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
+            '<tr><td>Mental Clarity Impact</td><td>'+avg(s7,'mentalClarity')+' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
+            '<tr><td>Bleeding Days</td><td>'+bleedingDays7+' days</td><td>Days with any bleeding or spotting</td></tr>' +
+            '<tr><td>HRT Adherence</td><td>'+adherence7+'</td><td>% of logged days HRT was taken</td></tr>' +
+            '<tr><td>Top Triggers</td><td colspan="2">'+(topT7.length>0?topT7.join(', '):'None logged')+'</td></tr>' +
             '</table>' +
-
-            (s30.length > 0 ? '<h2>Symptom Summary — 30-Day Average &nbsp;<span style="font-weight:400;font-size:11px;color:#777;">(' + range(s30) + ', n=' + s30.length + ')</span></h2>' +
-            '<table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr>' +
-            '<tr><td>Sleep</td><td>' + avg(s30,'sleep') + ' hrs</td><td>Hours per night</td></tr>' +
-            '<tr><td>Patience</td><td>' + avg(s30,'patience') + ' / 10</td><td>1 = very impatient | 10 = very patient</td></tr>' +
-            '<tr><td>Brain Fog</td><td>' + avg(s30,'brainFog') + ' / 10</td><td>1 = none | 10 = severe</td></tr>' +
-            '<tr><td>Hot Flushes</td><td>' + avg(s30,'hotFlush') + ' / 3</td><td>0 = none | 3 = severe</td></tr>' +
-            '<tr><td>Night Sweats</td><td>' + avg(s30,'nightSweat') + ' / 3</td><td>0 = none | 3 = drenching</td></tr>' +
-            '<tr><td>Work Impact</td><td>' + avg(s30,'workImpact') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Relationship Impact</td><td>' + avg(s30,'relImpact') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Energy Impact</td><td>' + avg(s30,'energyImpact') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Mental Clarity Impact</td><td>' + avg(s30,'mentalClarity') + ' / 10</td><td>1 = not affected | 10 = severely affected</td></tr>' +
-            '<tr><td>Bleeding days</td><td>' + bleedingDays30 + ' days</td><td>Days with any bleeding or spotting</td></tr>' +
-            '<tr><td>HRT Adherence</td><td>' + adherence30 + '</td><td>% of logged days HRT was taken</td></tr>' +
-            '</table>' : '') +
-
-            (hrt.notes ? '<h2>Additional Notes</h2><p style="font-size:12px;">' + hrt.notes + '</p>' : '') +
-
-            '<div class="footer">Disclaimer: This report is a clinical symptom tracking journal export. It does not constitute medical advice, diagnosis, or treatment.<br>Generated by Menopause Impact Tracker — Clinic Engine v1.1.0 &nbsp;|&nbsp; ' + reportDate + '</div>' +
-            '<script>window.onload=function(){window.print();}<\/script>' +
-            '</body></html>';
-
-        const w = window.open('', '_blank');
-        w.document.write(r);
-        w.document.close();
-    }
-
-    function deleteAllData() {
-        if (confirm('Delete ALL your data? This cannot be undone.')) {
-            if (confirm('Are you absolutely sure?')) {
-                localStorage.clear();
-                alert('All data deleted.');
-                logout();
-            }
-        }
-    }
-
-    loadUser();
-</script>
-</body>
-</html>
+            (s30.length>0?'<h2>30-Day Symptom Summary &nbsp;<span style="font-weight:400;font-size:11px;color:#777;">('+range(s30)+', n='+s30.length+')</span></h2>' +
+            '<table><tr><th>Metric</th><th>Average</th><th>Scale / Notes</th></tr>' +
+            '<tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr>' +
+            '<tr><td>Patience</td><td>'+avg(s30,'patience')+' / 10</td><td>1 = very impatient | 10 = very patient</td></tr>' +
+            '<tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+' / 10</td><td>1 = none | 10 = severe</td></tr>' +
+            '<tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+' / 3</td><td>0 = n
