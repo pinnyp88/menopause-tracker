@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menopause Impact Tracker</title>
@@ -13,6 +16,360 @@
     <link rel="manifest" href='data:application/manifest+json,{"name":"Menopause Impact Tracker","short_name":"Menopause","display":"standalone","background_color":"#ffffff","theme_color":"#6d28d9","start_url":"/","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgcng9IjI0IiBmaWxsPSIjNmQyOGQ5Ii8+PHRleHQgeD0iNjAiIHk9Ijc4IiBmb250LXNpemU9IjY0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn6m0PC90ZXh0Pjwvc3ZnPg==","sizes":"120x120","type":"image/svg+xml"}]}'>
 
     <style>
+        /* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Design Tokens
+   Menopause Impact Tracker · v1.0
+   ───────────────────────────────────────────────────────────────
+   HOW TO USE:
+   Copy this entire block into the <style> tag of index.html,
+   above all other rules. Reference tokens with var(--token-name).
+   Never hardcode a hex value — always use a token.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ─── Primitive colour values ──────────────────────────────── */
+  /* These are the raw palette. Don't use them directly in UI.    */
+  /* Use the semantic tokens below instead.                        */
+  --_sage-deep:    #3A5C4E;
+  --_sage-mid:     #8FB5A3;
+  --_sage-light:   #E8F0EB;
+  --_white-warm:   #F4F0E8;
+  --_white-pure:   #FFFFFF;
+  --_gold:         #E8C87A;
+  --_gold-text:    #633806;
+  --_peach:        #D4836A;
+  --_peach-light:  #FAE8E3;
+  --_slate:        #7A8FA6;
+  --_slate-light:  #EBF0F5;
+  --_charcoal:     #1F2937;
+  --_muted:        #6B7280;
+
+
+  /* ─── Semantic colour tokens ───────────────────────────────── */
+  /* Use these everywhere in the app UI.                          */
+
+  /* Backgrounds */
+  --color-bg:           var(--_white-warm);   /* app background — warm, never pure white */
+  --color-surface:      var(--_white-pure);   /* card/input fills */
+  --color-surface-alt:  var(--_sage-light);   /* active chip/trigger backgrounds */
+
+  /* Brand */
+  --color-primary:      var(--_sage-deep);    /* buttons, active states, headlines */
+  --color-secondary:    var(--_sage-mid);     /* borders, labels, inactive icons */
+
+  /* Accent / feedback */
+  --color-accent:       var(--_gold);         /* streaks, rewards, weekly highlights only */
+  --color-accent-text:  var(--_gold-text);    /* text on gold backgrounds */
+  --color-alert:        var(--_peach);        /* hot flushes, warnings, attention */
+  --color-alert-light:  var(--_peach-light);  /* alert card background tint */
+  --color-clinical:     var(--_slate);        /* GP report, clinical screens only */
+  --color-clinical-light: var(--_slate-light);
+
+  /* Text */
+  --color-text-primary:   var(--_charcoal);  /* main body copy */
+  --color-text-secondary: var(--_muted);     /* helper text, subtitles */
+  --color-text-inverse:   var(--_white-warm);/* text on dark sage backgrounds */
+  --color-text-on-accent: var(--_gold-text); /* text on honey gold */
+
+  /* Card left-border accents */
+  --color-border-default:   var(--_sage-mid);  /* default card accent */
+  --color-border-accent:    var(--_gold);      /* reward/streak cards */
+  --color-border-alert:     var(--_peach);     /* hot flush / warning cards */
+  --color-border-clinical:  var(--_slate);     /* GP report cards */
+
+
+  /* ─── Typography ───────────────────────────────────────────── */
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Type scale */
+  --text-xs:   10px;   /* card labels (uppercase, tracked) */
+  --text-sm:   13px;   /* helper text, secondary info */
+  --text-base: 15px;   /* body copy */
+  --text-md:   18px;   /* section headings */
+  --text-lg:   24px;   /* screen titles (use --font-heading) */
+  --text-xl:   28px;   /* hero greetings (use --font-heading) */
+
+  --leading-tight:  1.25;
+  --leading-base:   1.6;
+  --tracking-label: 0.07em;  /* uppercase card labels */
+
+
+  /* ─── Border radius ─────────────────────────────────────────── */
+  --radius-card:  14px;   /* all cards */
+  --radius-input: 12px;   /* text inputs, selects, textareas */
+  --radius-pill:  9999px; /* all buttons — full pill always */
+  --radius-chip:  8px;    /* trigger chips, small badges */
+  --radius-badge: 50px;   /* streak badge */
+
+
+  /* ─── Spacing scale (8px base) ──────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;   /* card padding */
+  --space-5:  20px;   /* screen edge margin */
+  --space-6:  24px;
+  --space-8:  32px;   /* section spacing */
+  --space-10: 40px;
+
+
+  /* ─── Card specifics ─────────────────────────────────────────── */
+  --card-padding:      var(--space-4);
+  --card-gap:          var(--space-3);   /* gap between stacked cards */
+  --card-border-width: 3px;             /* left accent border thickness */
+  --card-shadow:       0 1px 4px rgba(58, 92, 78, 0.08); /* subtle sage-tinted shadow */
+
+
+  /* ─── Interactive / tap targets ─────────────────────────────── */
+  --tap-target-min: 44px;   /* WCAG minimum for touch targets */
+  --btn-height:     48px;   /* slightly above min for comfort */
+  --input-height:   48px;
+
+
+  /* ─── Transitions ────────────────────────────────────────────── */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+
+  /* ─── Z-index scale ──────────────────────────────────────────── */
+  --z-base:    0;
+  --z-card:    1;
+  --z-nav:     10;
+  --z-banner:  20;
+  --z-tooltip: 30;
+  --z-modal:   40;
+}
+
+
+/* ─── Google Fonts import ────────────────────────────────────────
+   Add this @import at the very top of the <style> block.
+   Fraunces: organic serif for headings.
+   Inter: clean sans-serif for body + UI.
+   ─────────────────────────────────────────────────────────────── */
+/*
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap');
+*/
+
+
+/* ─── Global resets that use the tokens ─────────────────────────
+   Apply after pasting tokens into index.html.
+   ─────────────────────────────────────────────────────────────── */
+/*
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  ...rest of your existing rules stay the same...
+}
+*/
+        /* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Card Component
+   Menopause Impact Tracker · v1.0
+   ───────────────────────────────────────────────────────────────
+   DEPENDS ON: design-tokens.css (tokens must be in scope first)
+
+   CLASS API:
+   .gs-card                    — base card (always include)
+   .gs-card--default           — sage left border (default)
+   .gs-card--reward            — honey gold left border (streaks)
+   .gs-card--alert             — warm peach left border (hot flushes)
+   .gs-card--clinical          — slate blue left border (GP report)
+
+   INNER ELEMENTS:
+   .gs-card__label             — small uppercase label at top
+   .gs-card__title             — main card heading (uses --font-heading)
+   .gs-card__body              — body copy / content area
+   .gs-card__footer            — optional bottom row (actions, stats)
+   .gs-card__value             — large stat number/value
+   ═══════════════════════════════════════════════════════════════ */
+
+
+/* ─── Base card ───────────────────────────────────────────────── */
+
+.gs-card {
+  background:    var(--color-surface);
+  border-radius: var(--radius-card);
+  border-left:   var(--card-border-width) solid var(--color-border-default);
+  padding:       var(--card-padding);
+  box-shadow:    var(--card-shadow);
+  margin-bottom: var(--card-gap);
+
+  /* Smooth border-color transitions when variant changes */
+  transition: border-color var(--transition-base);
+
+  /* Stack children vertically with consistent spacing */
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+/* Remove bottom margin when card is the last child */
+.gs-card:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ─── Variant: default (sage) — use for general symptom cards ── */
+
+.gs-card--default {
+  border-left-color: var(--color-border-default);
+}
+
+
+/* ─── Variant: reward (gold) — use for streaks, weekly wins ──── */
+
+.gs-card--reward {
+  border-left-color: var(--color-border-accent);
+}
+
+.gs-card--reward .gs-card__label {
+  color: var(--color-accent-text);
+}
+
+
+/* ─── Variant: alert (peach) — use for hot flushes, warnings ─── */
+
+.gs-card--alert {
+  border-left-color: var(--color-border-alert);
+}
+
+.gs-card--alert .gs-card__label {
+  color: var(--color-alert);
+}
+
+.gs-card--alert .gs-card__value {
+  color: var(--color-alert);
+}
+
+
+/* ─── Variant: clinical (slate) — GP report screens only ──────── */
+
+.gs-card--clinical {
+  border-left-color: var(--color-border-clinical);
+}
+
+.gs-card--clinical .gs-card__label {
+  color: var(--color-clinical);
+}
+
+.gs-card--clinical .gs-card__value {
+  color: var(--color-clinical);
+}
+
+
+/* ─── Inner elements ──────────────────────────────────────────── */
+
+/* Small uppercase label — always appears at the top */
+.gs-card__label {
+  font-family:    var(--font-body);
+  font-size:      var(--text-xs);
+  font-weight:    500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color:          var(--color-secondary);
+  margin:         0;
+  line-height:    1;
+}
+
+/* Main card heading — uses the editorial serif font */
+.gs-card__title {
+  font-family: var(--font-heading);
+  font-size:   var(--text-md);
+  font-weight: 500;
+  color:       var(--color-primary);
+  margin:      0;
+  line-height: var(--leading-tight);
+}
+
+/* Body copy */
+.gs-card__body {
+  font-family: var(--font-body);
+  font-size:   var(--text-base);
+  color:       var(--color-text-primary);
+  line-height: var(--leading-base);
+  margin:      0;
+}
+
+/* Large stat / number display */
+.gs-card__value {
+  font-family: var(--font-heading);
+  font-size:   36px;
+  font-weight: 500;
+  color:       var(--color-primary);
+  line-height: 1;
+  margin:      0;
+}
+
+.gs-card__value-unit {
+  font-family: var(--font-body);
+  font-size:   var(--text-sm);
+  font-weight: 400;
+  color:       var(--color-text-secondary);
+  margin-left: 4px;
+}
+
+/* Optional footer row — use for actions, sub-stats, trend badges */
+.gs-card__footer {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+  padding-top: var(--space-1);
+  border-top:  0.5px solid var(--color-bg);
+  margin-top:  var(--space-1);
+}
+
+
+/* ─── Trend indicator badge (used inside .gs-card__footer) ────── */
+
+.gs-trend {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           4px;
+  font-size:     var(--text-xs);
+  font-weight:   600;
+  padding:       3px 10px;
+  border-radius: var(--radius-badge);
+}
+
+.gs-trend--up {
+  background: #DCFCE7;
+  color:      #166534;
+}
+
+.gs-trend--down {
+  background: #FEE2E2;
+  color:      #991B1B;
+}
+
+.gs-trend--stable {
+  background: var(--color-bg);
+  color:      var(--color-text-secondary);
+}
+
+
+/* ─── Accessibility ───────────────────────────────────────────── */
+
+/* Ensure interactive cards meet tap target minimums */
+.gs-card[role="button"],
+.gs-card[tabindex] {
+  cursor:     pointer;
+  min-height: var(--tap-target-min);
+}
+
+.gs-card[role="button"]:focus-visible,
+.gs-card[tabindex]:focus-visible {
+  outline:        2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.gs-card[role="button"]:hover {
+  box-shadow: 0 2px 8px rgba(58, 92, 78, 0.14);
+  transform:  translateY(-1px);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #f3f4f6 0%, #ede9fe 100%); min-height: 100vh; color: #1f2937; padding-bottom: 60px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
@@ -318,6 +675,150 @@
     Disclaimer: This application is a clinical symptom tracking journal. It does not provide medical advice, diagnosis, or treatment. All data is securely isolated on your local device. Please present your exported summary sheet to your consulting physician to discuss HRT adjustments. | Clinic Engine v1.2.0
 </div>
 <script>
+    /* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Card Component (Vanilla JS Factory)
+   Menopause Impact Tracker · v1.0
+   ───────────────────────────────────────────────────────────────
+   DEPENDS ON: design-tokens.css + card-component.css
+ 
+   Provides a createCard() factory function for generating
+   card DOM elements programmatically in vanilla JavaScript.
+ 
+   For simple static cards, just use HTML classes directly.
+   Use this factory when generating cards from data (e.g.
+   dashboard metrics loop, trigger chips, GP report rows).
+   ═══════════════════════════════════════════════════════════════ */
+ 
+/**
+ * Card variants matching the CSS class API.
+ * @enum {string}
+ */
+var CardVariant = {
+  DEFAULT:  'default',   // sage border — general symptom cards
+  REWARD:   'reward',    // gold border — streaks, weekly wins
+  ALERT:    'alert',     // peach border — hot flushes, warnings
+  CLINICAL: 'clinical'   // slate border — GP report only
+};
+
+/**
+ * createCard(options) — factory function
+ *
+ * Creates and returns a .gs-card DOM element.
+ * 
+ 
+ * @param {object} options
+ * @param {string}  [options.variant='default']  — CardVariant value
+ * @param {string}  [options.label]              — small uppercase label
+ * @param {string}  [options.title]              — serif heading
+ * @param {string}  [options.body]               — body copy (plain text or HTML string)
+ * @param {string}  [options.value]              — large stat number/value
+ * @param {string}  [options.valueUnit]          — unit label next to value (e.g. 'hrs')
+ * @param {string}  [options.trend]              — 'up' | 'down' | 'stable' for badge
+ * @param {string}  [options.trendLabel]         — label for the trend badge
+ * @param {string}  [options.footerHTML]         — raw HTML for the footer slot
+ * @param {string}  [options.id]                 — optional id attribute
+ * @param {string}  [options.role]               — e.g. 'button' for interactive cards
+ * @param {number}  [options.tabIndex]           — if interactive, set tabIndex
+ * @param {Function}[options.onClick]            — click handler if interactive
+ *
+ * @returns {HTMLElement}
+ *
+ * @example
+ * var card = createCard({
+ *   variant: CardVariant.REWARD,
+ *   label: '🔥 Streak',
+ *   value: '7',
+ *   valueUnit: 'days',
+ *   trend: 'up',
+ *   trendLabel: 'Personal best'
+ * });
+ * document.getElementById('dashboardGrid').appendChild(card);
+ */
+function createCard(options) {
+  var opts = options || {};
+  var variant = opts.variant || CardVariant.DEFAULT;
+ 
+  // ── Root element ───────────────────────────────────────────────
+  var card = document.createElement('div');
+  card.className = 'gs-card gs-card--' + variant;
+ 
+  if (opts.id)       card.id = opts.id;
+  if (opts.role)     card.setAttribute('role', opts.role);
+  if (opts.tabIndex !== undefined) card.tabIndex = opts.tabIndex;
+  if (opts.onClick)  card.addEventListener('click', opts.onClick);
+ 
+  // ── Label ──────────────────────────────────────────────────────
+  if (opts.label) {
+    var label = document.createElement('p');
+    label.className = 'gs-card__label';
+    label.textContent = opts.label;
+    card.appendChild(label);
+  }
+ 
+  // ── Value (large stat) ─────────────────────────────────────────
+  if (opts.value !== undefined) {
+    var valueRow = document.createElement('div');
+    valueRow.style.display = 'flex';
+    valueRow.style.alignItems = 'baseline';
+    valueRow.style.gap = '4px';
+ 
+    var value = document.createElement('p');
+    value.className = 'gs-card__value';
+    value.textContent = opts.value;
+    valueRow.appendChild(value);
+ 
+    if (opts.valueUnit) {
+      var unit = document.createElement('span');
+      unit.className = 'gs-card__value-unit';
+      unit.textContent = opts.valueUnit;
+      valueRow.appendChild(unit);
+    }
+ 
+    card.appendChild(valueRow);
+  }
+ 
+  // ── Title ──────────────────────────────────────────────────────
+  if (opts.title) {
+    var title = document.createElement('p');
+    title.className = 'gs-card__title';
+    title.textContent = opts.title;
+    card.appendChild(title);
+  }
+ 
+  // ── Body ───────────────────────────────────────────────────────
+  if (opts.body) {
+    var body = document.createElement('p');
+    body.className = 'gs-card__body';
+    // Allow plain text or simple HTML (e.g. for insight sentences)
+    body.innerHTML = opts.body;
+    card.appendChild(body);
+  }
+ 
+  // ── Footer ─────────────────────────────────────────────────────
+  var hasFooter = opts.trend || opts.footerHTML;
+  if (hasFooter) {
+    var footer = document.createElement('div');
+    footer.className = 'gs-card__footer';
+ 
+    if (opts.trend) {
+      var badge = document.createElement('span');
+      badge.className = 'gs-trend gs-trend--' + opts.trend;
+      var arrows = { up: '↑', down: '↓', stable: '→' };
+      badge.textContent = (arrows[opts.trend] || '') + ' ' + (opts.trendLabel || opts.trend);
+      footer.appendChild(badge);
+    }
+ 
+    if (opts.footerHTML) {
+      var footerExtra = document.createElement('span');
+      footerExtra.innerHTML = opts.footerHTML;
+      footer.appendChild(footerExtra);
+    }
+ 
+    card.appendChild(footer);
+  }
+ 
+  return card;
+}
 // ═══════════════════════════════════════════════════════════════
 // IN-MEMORY STATE — parse localStorage once, not on every call
 // ═══════════════════════════════════════════════════════════════
