@@ -641,7 +641,7 @@ function updateDashboard() {
     setEl('avgEnergyImpact', avg('energyImpact'));
     setEl('avgMentalClarity', avg('mentalClarity'));
 
-    var formEntries = s.filter(function(c){ return c.loggedViaForm; });
+    var formEntries = s.filter(function(c){ return c.loggedViaForm !== false; }); // include legacy entries without flag
     var hd = formEntries.filter(function(c){ return c.hrtTaken; }).length;
     var hdTotal = formEntries.length || s.length;
     setEl('hrtAdherence', hdTotal > 0 ? Math.round((hd/hdTotal)*100) + '%' : '—');
@@ -770,8 +770,8 @@ function exportData() {
   var avg = function(a,f){ return a.length>0?(a.reduce(function(s,c){ return s+(parseFloat(c[f])||0); },0)/a.length).toFixed(1):'N/A'; };
   var b7=s7.filter(function(c){ return c.bleeding!=='none'; }).length;
   var b30=s30.filter(function(c){ return c.bleeding!=='none'; }).length;
-  var a7=s7.length>0?Math.round((s7.filter(function(c){ return c.hrtTaken&&c.loggedViaForm; }).length/Math.max(1,s7.filter(function(c){ return c.loggedViaForm; }).length))*100)+'%':'N/A';
-  var a30=s30.length>0?Math.round((s30.filter(function(c){ return c.hrtTaken&&c.loggedViaForm; }).length/Math.max(1,s30.filter(function(c){ return c.loggedViaForm; }).length))*100)+'%':'N/A';
+  var a7=s7.length>0?Math.round((s7.filter(function(c){ return c.hrtTaken&&c.loggedViaForm!==false; }).length/Math.max(1,s7.filter(function(c){ return c.loggedViaForm!==false; }).length))*100)+'%':'N/A';
+  var a30=s30.length>0?Math.round((s30.filter(function(c){ return c.hrtTaken&&c.loggedViaForm!==false; }).length/Math.max(1,s30.filter(function(c){ return c.loggedViaForm!==false; }).length))*100)+'%':'N/A';
   var rng=function(a){ if(!a.length)return'N/A'; var s=[].concat(a).sort(function(x,y){ return new Date(x.date)-new Date(y.date); }); return s[0].date+' to '+s[s.length-1].date; };
   var t7=getTopTriggers(s7);
   var t30=getTopTriggers(s30);
