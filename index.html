@@ -941,6 +941,479 @@ body {
         .other-field.show { display: block; }
         .dashboard-notice { font-size: 13px; color: #6b7280; font-style: italic; margin-bottom: 20px; margin-top: -16px; }
         .clinical-footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; padding: 8px 20px; font-size: 11px; color: #6b7280; text-align: center; z-index: 50; line-height: 1.5; }
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Component Set v2
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── BUTTONS ─────────────────────────────────────────────────── */
+.gs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--radius-pill, 50px);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.gs-btn:active { transform: scale(0.97); }
+.gs-btn[disabled] { opacity: 0.45; cursor: not-allowed; transform: none; }
+.gs-btn--full { width: 100%; }
+.gs-btn--sm { min-height: 36px; padding: 8px 20px; font-size: 13px; }
+
+.gs-btn--primary {
+  background: var(--color-primary, #3A5C4E);
+  color: var(--color-bg, #F4F0E8);
+  box-shadow: 0 2px 8px rgba(58,92,78,0.18);
+}
+.gs-btn--primary:hover:not([disabled]) {
+  opacity: 0.88;
+  box-shadow: 0 4px 14px rgba(58,92,78,0.28);
+}
+
+.gs-btn--secondary {
+  background: var(--color-surface, #FFFFFF);
+  color: var(--color-primary, #3A5C4E);
+  border: 1.5px solid var(--color-primary, #3A5C4E);
+}
+.gs-btn--secondary:hover:not([disabled]) {
+  background: #EEF3F1;
+}
+
+.gs-btn--clinical {
+  background: var(--color-clinical, #7A8FA6);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(122,143,166,0.18);
+}
+.gs-btn--clinical:hover:not([disabled]) {
+  opacity: 0.88;
+  box-shadow: 0 4px 14px rgba(122,143,166,0.28);
+}
+
+.gs-btn--danger {
+  background: #C0392B;
+  color: #FFFFFF;
+}
+.gs-btn--danger:hover:not([disabled]) { opacity: 0.88; }
+
+/* ─── FORM FIELDS ────────────────────────────────────────────── */
+.gs-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.gs-field__label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gs-field__label {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-primary, #3A5C4E);
+}
+
+.gs-field__input,
+.gs-field__select,
+.gs-field__textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 14px;
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-secondary, #8FB5A3);
+  border-radius: var(--radius-input, 12px);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 15px;
+  color: #2D2A26;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gs-field__input::placeholder,
+.gs-field__textarea::placeholder {
+  color: var(--color-secondary, #8FB5A3);
+}
+
+.gs-field__input:focus,
+.gs-field__select:focus,
+.gs-field__textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #3A5C4E);
+  box-shadow: 0 0 0 3px rgba(58,92,78,0.12);
+}
+
+.gs-field__select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238FB5A3' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.gs-field__textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.gs-field__helper {
+  font-size: 12px;
+  color: var(--color-secondary, #8FB5A3);
+  line-height: 1.4;
+}
+
+.gs-field--error .gs-field__input,
+.gs-field--error .gs-field__select,
+.gs-field--error .gs-field__textarea {
+  border-color: var(--color-alert, #D4836A);
+  box-shadow: 0 0 0 3px rgba(212,131,106,0.12);
+}
+.gs-field--error .gs-field__helper { color: var(--color-alert, #D4836A); }
+
+.gs-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-secondary, #8FB5A3);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  user-select: none;
+}
+.gs-info-icon .gs-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2D2A26;
+  color: #F4F0E8;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  min-width: 180px;
+  max-width: 240px;
+  white-space: normal;
+  z-index: 999;
+  pointer-events: none;
+}
+.gs-info-icon .gs-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #2D2A26;
+}
+.gs-info-icon:hover .gs-tooltip,
+.gs-info-icon:focus .gs-tooltip { display: block; }
+
+/* ─── SLIDER ──────────────────────────────────────────────────── */
+.gs-slider { margin-bottom: 20px; }
+
+.gs-slider__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.gs-slider__label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gs-slider__label {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-primary, #3A5C4E);
+}
+
+.gs-slider__value-badge {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #3A5C4E);
+  background: #EEF3F1;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.gs-slider--alert .gs-slider__value-badge {
+  color: var(--color-alert, #D4836A);
+  background: #FAF0ED;
+}
+
+.gs-slider__track-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.gs-slider__input {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: #E8E2D9;
+  outline: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.gs-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-surface, #FFFFFF);
+  border: 2px solid var(--color-primary, #3A5C4E);
+  box-shadow: 0 1px 4px rgba(58,92,78,0.2);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.gs-slider__input::-webkit-slider-thumb:active { transform: scale(1.15); }
+
+.gs-slider__input::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-surface, #FFFFFF);
+  border: 2px solid var(--color-primary, #3A5C4E);
+  box-shadow: 0 1px 4px rgba(58,92,78,0.2);
+  cursor: pointer;
+  border: none;
+  border: 2px solid var(--color-primary, #3A5C4E);
+}
+
+.gs-slider--alert .gs-slider__input::-webkit-slider-thumb {
+  border-color: var(--color-alert, #D4836A);
+}
+.gs-slider--alert .gs-slider__input::-moz-range-thumb {
+  border-color: var(--color-alert, #D4836A);
+}
+
+.gs-slider__word-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 2px 0;
+}
+.gs-slider__word-labels span {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 11px;
+  color: var(--color-secondary, #8FB5A3);
+}
+
+/* ─── EMOJI SELECTOR ──────────────────────────────────────────── */
+.gs-emoji-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.gs-emoji-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-height: 64px;
+  padding: 8px 4px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gs-emoji-btn__face {
+  font-size: 28px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.gs-emoji-btn__caption {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-secondary, #8FB5A3);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.gs-emoji-btn:hover .gs-emoji-btn__face { transform: scale(1.12); }
+
+.gs-emoji-btn--selected {
+  background: #EEF3F1;
+  border-color: var(--color-primary, #3A5C4E);
+}
+.gs-emoji-btn--selected .gs-emoji-btn__face { transform: scale(1.2); }
+.gs-emoji-btn--selected .gs-emoji-btn__caption {
+  color: var(--color-primary, #3A5C4E);
+  font-weight: 600;
+}
+
+/* ─── TRIGGER CHIP GRID ───────────────────────────────────────── */
+.gs-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.gs-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--color-surface, #FFFFFF);
+  border: 1.5px solid #E8E2D9;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: #4A4740;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.gs-chip:hover {
+  border-color: var(--color-secondary, #8FB5A3);
+  background: #F5F9F7;
+}
+
+.gs-chip--selected {
+  border-color: var(--color-primary, #3A5C4E);
+  background: #EEF3F1;
+  color: var(--color-primary, #3A5C4E);
+  font-weight: 600;
+}
+
+.gs-chip__emoji { font-size: 16px; line-height: 1; }
+
+/* ─── BOTTOM TAB BAR ──────────────────────────────────────────── */
+.gs-tab-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  background: var(--color-surface, #FFFFFF);
+  border-radius: 24px;
+  padding: 6px 8px;
+  gap: 4px;
+  box-shadow: 0 4px 24px rgba(58,92,78,0.14), 0 1px 6px rgba(0,0,0,0.08);
+  z-index: 100;
+  width: calc(100% - 40px);
+  max-width: 420px;
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+.gs-tab-bar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1;
+  min-height: 52px;
+  padding: 6px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--color-secondary, #8FB5A3);
+}
+
+.gs-tab-bar__item--active {
+  background: #EEF3F1;
+  color: var(--color-primary, #3A5C4E);
+}
+
+.gs-tab-bar__icon { font-size: 20px; line-height: 1; }
+
+.gs-tab-bar__label {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ─── STEP INDICATOR ──────────────────────────────────────────── */
+.gs-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0 20px;
+}
+
+.gs-steps__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #E8E2D9;
+  transition: all 0.2s ease;
+}
+
+.gs-steps__dot--complete {
+  background: var(--color-secondary, #8FB5A3);
+}
+
+.gs-steps__dot--active {
+  background: var(--color-primary, #3A5C4E);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* ─── SECTION LABEL ───────────────────────────────────────────── */
+.gs-section-label {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-secondary, #8FB5A3);
+  padding: 8px 0 12px;
+  border-bottom: 1px solid #E8E2D9;
+  margin-bottom: 16px;
+}
+
         @media (max-width: 640px) {
             .nav-links { gap: 4px; }
             .nav-btn { padding: 6px 10px; font-size: 12px; }
@@ -1304,6 +1777,35 @@ function createCard(options) {
  
   return card;
 }
+
+// ═══════════════════════════════════════════════════════════════
+// GARDEN SAGE — Component Set v2 (factory functions)
+// ═══════════════════════════════════════════════════════════════
+
+function createButton(opts) { opts = opts || {}; var btn = document.createElement('button'); btn.type = opts.type || 'button'; btn.className = ['gs-btn', 'gs-btn--' + (opts.variant || 'primary'), opts.full ? 'gs-btn--full' : '', opts.small ? 'gs-btn--sm' : ''].filter(Boolean).join(' '); btn.textContent = opts.label || ''; if (opts.disabled) btn.disabled = true; if (opts.onClick) btn.addEventListener('click', opts.onClick); return btn; }
+
+function createField(opts) { opts = opts || {}; var wrap = document.createElement('div'); wrap.className = 'gs-field'; var labelRow = document.createElement('div'); labelRow.className = 'gs-field__label-row'; var lbl = document.createElement('label'); lbl.className = 'gs-field__label'; lbl.htmlFor = opts.id || ''; lbl.textContent = opts.label || ''; labelRow.appendChild(lbl); if (opts.tooltip) labelRow.appendChild(_makeInfoIcon(opts.tooltip)); wrap.appendChild(labelRow); var input = document.createElement('input'); input.className = 'gs-field__input'; input.type = opts.type || 'text'; if (opts.id) input.id = opts.id; if (opts.placeholder) input.placeholder = opts.placeholder; if (opts.value !== undefined) input.value = opts.value; if (opts.required) input.required = true; if (opts.min !== undefined) input.min = opts.min; if (opts.max !== undefined) input.max = opts.max; if (opts.step !== undefined) input.step = opts.step; if (opts.onChange) input.addEventListener('input', opts.onChange); wrap.appendChild(input); if (opts.helper) wrap.appendChild(_makeHelper(opts.helper)); wrap.getValue = function() { return input.value; }; wrap.setValue = function(v) { input.value = v; }; wrap.setError = function(msg) { wrap.classList.add('gs-field--error'); if (!wrap._errEl) { wrap._errEl = _makeHelper(''); wrap.appendChild(wrap._errEl); } wrap._errEl.textContent = msg; }; wrap.clearError = function() { wrap.classList.remove('gs-field--error'); if (wrap._errEl) wrap._errEl.textContent = ''; }; return wrap; }
+
+function createSelect(opts) { opts = opts || {}; var wrap = document.createElement('div'); wrap.className = 'gs-field'; var labelRow = document.createElement('div'); labelRow.className = 'gs-field__label-row'; var lbl = document.createElement('label'); lbl.className = 'gs-field__label'; lbl.htmlFor = opts.id || ''; lbl.textContent = opts.label || ''; labelRow.appendChild(lbl); if (opts.tooltip) labelRow.appendChild(_makeInfoIcon(opts.tooltip)); wrap.appendChild(labelRow); var sel = document.createElement('select'); sel.className = 'gs-field__select'; if (opts.id) sel.id = opts.id; (opts.options || []).forEach(function(o) { var opt = document.createElement('option'); if (typeof o === 'string') { opt.value = o; opt.textContent = o; } else { opt.value = o.value; opt.textContent = o.label; } sel.appendChild(opt); }); if (opts.value !== undefined) sel.value = opts.value; if (opts.onChange) sel.addEventListener('change', opts.onChange); wrap.appendChild(sel); if (opts.helper) wrap.appendChild(_makeHelper(opts.helper)); wrap.getValue = function() { return sel.value; }; wrap.setValue = function(v) { sel.value = v; }; return wrap; }
+
+function createTextarea(opts) { opts = opts || {}; var wrap = document.createElement('div'); wrap.className = 'gs-field'; var lbl = document.createElement('label'); lbl.className = 'gs-field__label'; lbl.htmlFor = opts.id || ''; lbl.textContent = opts.label || ''; wrap.appendChild(lbl); var ta = document.createElement('textarea'); ta.className = 'gs-field__textarea'; if (opts.id) ta.id = opts.id; if (opts.placeholder) ta.placeholder = opts.placeholder; if (opts.value) ta.value = opts.value; if (opts.rows) ta.rows = opts.rows; if (opts.onChange) ta.addEventListener('input', opts.onChange); wrap.appendChild(ta); if (opts.helper) wrap.appendChild(_makeHelper(opts.helper)); wrap.getValue = function() { return ta.value; }; wrap.setValue = function(v) { ta.value = v; }; return wrap; }
+
+function createSlider(opts) { opts = opts || {}; var isAlert = opts.variant === 'alert'; var wrap = document.createElement('div'); wrap.className = 'gs-slider' + (isAlert ? ' gs-slider--alert' : ''); var min = opts.min !== undefined ? opts.min : 1; var max = opts.max !== undefined ? opts.max : 10; var initVal = opts.value !== undefined ? opts.value : Math.round((min + max) / 2); var header = document.createElement('div'); header.className = 'gs-slider__header'; var labelRow = document.createElement('div'); labelRow.className = 'gs-slider__label-row'; var lbl = document.createElement('span'); lbl.className = 'gs-slider__label'; lbl.textContent = opts.label || ''; labelRow.appendChild(lbl); if (opts.tooltip) labelRow.appendChild(_makeInfoIcon(opts.tooltip)); header.appendChild(labelRow); var badge = document.createElement('span'); badge.className = 'gs-slider__value-badge'; badge.textContent = initVal; header.appendChild(badge); wrap.appendChild(header); var trackRow = document.createElement('div'); trackRow.className = 'gs-slider__track-row'; var input = document.createElement('input'); input.type = 'range'; input.className = 'gs-slider__input'; if (opts.id) input.id = opts.id; input.min = min; input.max = max; input.value = initVal; input.addEventListener('input', function() { badge.textContent = this.value; if (opts.onChange) opts.onChange(parseInt(this.value), this); }); trackRow.appendChild(input); wrap.appendChild(trackRow); if (opts.labelStart || opts.labelEnd) { var wordRow = document.createElement('div'); wordRow.className = 'gs-slider__word-labels'; var s = document.createElement('span'); s.textContent = opts.labelStart || ''; var e = document.createElement('span'); e.textContent = opts.labelEnd || ''; wordRow.appendChild(s); wordRow.appendChild(e); wrap.appendChild(wordRow); } wrap.getValue = function() { return parseInt(input.value); }; wrap.setValue = function(v) { input.value = v; badge.textContent = v; }; return wrap; }
+
+function createEmojiSelector(opts) { opts = opts || {}; var emojis = opts.emojis || ['😢','😟','😐','🙂','😊']; var captions = opts.captions || ['Terrible','Struggling','Average','Good','Great']; var current = opts.value || null; var row = document.createElement('div'); row.className = 'gs-emoji-row'; if (opts.id) row.id = opts.id; emojis.forEach(function(em, i) { var val = i + 1; var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'gs-emoji-btn' + (current === val ? ' gs-emoji-btn--selected' : ''); btn.setAttribute('data-val', val); btn.setAttribute('aria-label', captions[i] || em); var face = document.createElement('span'); face.className = 'gs-emoji-btn__face'; face.textContent = em; var cap = document.createElement('span'); cap.className = 'gs-emoji-btn__caption'; cap.textContent = captions[i] || ''; btn.appendChild(face); btn.appendChild(cap); btn.addEventListener('click', function() { current = val; row.querySelectorAll('.gs-emoji-btn').forEach(function(b) { b.classList.toggle('gs-emoji-btn--selected', parseInt(b.getAttribute('data-val')) === val); }); if (opts.onChange) opts.onChange(val); }); row.appendChild(btn); }); row.getValue = function() { return current; }; row.setValue = function(v) { current = v; row.querySelectorAll('.gs-emoji-btn').forEach(function(b) { b.classList.toggle('gs-emoji-btn--selected', parseInt(b.getAttribute('data-val')) === v); }); }; return row; }
+
+function createChipGrid(opts) { opts = opts || {}; var chips = opts.chips || []; var selected = (opts.selected || []).slice(); var grid = document.createElement('div'); grid.className = 'gs-chip-grid'; if (opts.id) grid.id = opts.id; chips.forEach(function(chip) { var el = document.createElement('div'); el.className = 'gs-chip' + (selected.indexOf(chip.id) >= 0 ? ' gs-chip--selected' : ''); el.setAttribute('role', 'checkbox'); el.setAttribute('aria-checked', selected.indexOf(chip.id) >= 0 ? 'true' : 'false'); el.setAttribute('tabindex', '0'); var emojiEl = document.createElement('span'); emojiEl.className = 'gs-chip__emoji'; emojiEl.textContent = chip.emoji || ''; var labelEl = document.createElement('span'); labelEl.textContent = chip.label || ''; el.appendChild(emojiEl); el.appendChild(labelEl); function toggle() { var idx = selected.indexOf(chip.id); if (idx >= 0) { selected.splice(idx, 1); el.classList.remove('gs-chip--selected'); el.setAttribute('aria-checked', 'false'); } else { selected.push(chip.id); el.classList.add('gs-chip--selected'); el.setAttribute('aria-checked', 'true'); } if (opts.onChange) opts.onChange(selected.slice()); } el.addEventListener('click', toggle); el.addEventListener('keydown', function(e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } }); grid.appendChild(el); }); grid.getSelected = function() { return selected.slice(); }; grid.setSelected = function(arr) { selected = arr.slice(); var els = grid.querySelectorAll('.gs-chip'); chips.forEach(function(chip, i) { var isOn = selected.indexOf(chip.id) >= 0; els[i].classList.toggle('gs-chip--selected', isOn); els[i].setAttribute('aria-checked', isOn ? 'true' : 'false'); }); }; return grid; }
+
+function createTabBar(opts) { opts = opts || {}; var tabs = opts.tabs || []; var activeId = opts.activeId || (tabs[0] && tabs[0].id); var bar = document.createElement('nav'); bar.className = 'gs-tab-bar'; bar.setAttribute('role', 'tablist'); tabs.forEach(function(tab) { var item = document.createElement('button'); item.type = 'button'; item.className = 'gs-tab-bar__item' + (tab.id === activeId ? ' gs-tab-bar__item--active' : ''); item.setAttribute('role', 'tab'); item.setAttribute('aria-selected', tab.id === activeId ? 'true' : 'false'); item.setAttribute('data-tab', tab.id); var iconEl = document.createElement('span'); iconEl.className = 'gs-tab-bar__icon'; iconEl.textContent = tab.icon || ''; var lblEl = document.createElement('span'); lblEl.className = 'gs-tab-bar__label'; lblEl.textContent = tab.label || ''; item.appendChild(iconEl); item.appendChild(lblEl); item.addEventListener('click', function() { bar.setActive(tab.id); if (opts.onChange) opts.onChange(tab.id); }); bar.appendChild(item); }); bar.setActive = function(id) { activeId = id; bar.querySelectorAll('.gs-tab-bar__item').forEach(function(b) { var isActive = b.getAttribute('data-tab') === id; b.classList.toggle('gs-tab-bar__item--active', isActive); b.setAttribute('aria-selected', isActive ? 'true' : 'false'); }); }; return bar; }
+
+function createSteps(opts) { opts = opts || {}; var total = opts.total || 3; var current = opts.current || 1; var wrap = document.createElement('div'); wrap.className = 'gs-steps'; wrap.setAttribute('aria-label', 'Step ' + current + ' of ' + total); function _dotClass(step) { if (step < current) return 'gs-steps__dot gs-steps__dot--complete'; if (step === current) return 'gs-steps__dot gs-steps__dot--active'; return 'gs-steps__dot'; } for (var i = 1; i <= total; i++) { var dot = document.createElement('div'); dot.className = _dotClass(i); wrap.appendChild(dot); } wrap.setStep = function(n) { current = n; wrap.setAttribute('aria-label', 'Step ' + n + ' of ' + total); var dots = wrap.querySelectorAll('.gs-steps__dot'); dots.forEach(function(dot, idx) { dot.className = _dotClass(idx + 1); }); }; return wrap; }
+
+function createSectionLabel(opts) { opts = opts || {}; var el = document.createElement('div'); el.className = 'gs-section-label'; el.textContent = opts.text || ''; return el; }
+
+function _makeInfoIcon(tooltipHtml) { var icon = document.createElement('span'); icon.className = 'gs-info-icon'; icon.setAttribute('tabindex', '0'); icon.textContent = 'i'; var tip = document.createElement('span'); tip.className = 'gs-tooltip'; tip.innerHTML = tooltipHtml; icon.appendChild(tip); return icon; }
+
+function _makeHelper(text) { var el = document.createElement('span'); el.className = 'gs-field__helper'; el.textContent = text; return el; }
+
 // ═══════════════════════════════════════════════════════════════
 // IN-MEMORY STATE — parse localStorage once, not on every call
 // ═══════════════════════════════════════════════════════════════
