@@ -3031,6 +3031,20 @@ body {
 /* --- iOS banner → sage --- */
 #iosBanner { background: #3A5C4E !important; }
 
+/* --- Motivational quotes --- */
+.gs-motivational {
+  font-family: var(--font-heading); font-style: italic; font-size: 15px;
+  color: #8FB5A3; text-align: center; margin: 0 20px 12px; line-height: 1.5;
+}
+
+/* --- Review insight card --- */
+.gs-review-insight {
+  background: #FFFFFF; border-left: 3px solid #E8C87A; border-radius: 14px;
+  padding: 16px 20px; margin: 0 0 16px; box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+  font-family: var(--font-heading); font-style: italic; font-size: 16px;
+  color: #3A5C4E; line-height: 1.5;
+}
+
     </style>
 </head>
 <body>
@@ -3082,6 +3096,9 @@ body {
         <!-- Greeting -->
         <h1 class="gs-dashboard__greeting" id="dashGreeting">Hello.</h1>
         <p class="gs-dashboard__subtext" id="dashSubtext">Ready for today?</p>
+
+        <!-- Motivational prompt -->
+        <p class="gs-motivational" id="dashMotivational"></p>
 
         <!-- Primary CTA -->
         <button class="gs-btn gs-btn--primary gs-btn--full gs-dashboard__cta" onclick="showPage('checkin',null)">＋ Log today's check-in</button>
@@ -3174,6 +3191,7 @@ body {
         <span id="trendMental" style="display:none;"></span>
     </div>
     <div id="checkinPage" class="page gs-checkin">
+        <p class="gs-motivational" id="checkinMotivational"></p>
         <h1 class="gs-checkin__title">Daily Check-In</h1>
         <div class="success-message" id="checkinSuccess">Saved &mdash; see you tomorrow.</div>
 
@@ -3335,18 +3353,22 @@ body {
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workVal">5</span></div>
               <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="workImpact" min="1" max="10" value="5" oninput="document.getElementById('workVal').textContent=this.value"></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relVal">5</span></div>
               <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="relImpact" min="1" max="10" value="5" oninput="document.getElementById('relVal').textContent=this.value"></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyVal">5</span></div>
               <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="energyImpact" min="1" max="10" value="5" oninput="document.getElementById('energyVal').textContent=this.value"></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalVal">5</span></div>
               <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="mentalClarity" min="1" max="10" value="5" oninput="document.getElementById('mentalVal').textContent=this.value"></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
           </div>
 
@@ -3426,6 +3448,7 @@ body {
         </div>
     </div>
     <div id="trendsPage" class="page gs-trends">
+      <p class="gs-motivational" id="trendsMotivational"></p>
       <h1 class="gs-trends__title">Your Trends</h1>
       <div class="gs-trends__controls">
         <select id="trendsRange" class="gs-trends__range-select" onchange="renderTrends()">
@@ -3448,6 +3471,7 @@ body {
       </div>
     </div>
     <div id="notesPage" class="page gs-notes">
+      <p class="gs-motivational" id="notesMotivational">Your private space. Questions, worries, things to remember.</p>
       <h1 class="gs-notes__title">Notes &amp; Questions</h1>
       <p class="gs-notes__subtitle">A private space for questions, reminders, and things to mention.</p>
 
@@ -3807,8 +3831,8 @@ function showPage(n, b) {
   var activeTab = document.querySelector('.gs-tab[data-page="' + n + '"]');
   if (activeTab) activeTab.classList.add('gs-tab--active');
   if (n === 'dashboard') updateDashboard();
-  if (n === 'checkin') { loadCheckinForDate(); syncCheckinVisuals(); }
-  if (n === 'trends') renderTrends();
+  if (n === 'checkin') { loadCheckinForDate(); syncCheckinVisuals(); setMotivational('checkinMotivational', CHECKIN_PROMPTS[Math.floor(Math.random()*CHECKIN_PROMPTS.length)]); }
+  if (n === 'trends') { renderTrends(); var tc=getCheckins(); setMotivational('trendsMotivational', tc.length<7 ? 'Patterns take time to appear. Keep going.' : 'Here’s what your data is telling you.'); }
   if (n === 'reflection') renderReflection();
   if (n === 'report') renderReport();
   if (n === 'notes') renderNotes('all');
@@ -3972,7 +3996,9 @@ function saveCheckin() {
   document.getElementById('checkinSuccess').classList.add('show');
   setTimeout(function(){ document.getElementById('checkinSuccess').classList.remove('show'); }, 3000);
 
-  // Only update dashboard (always needed)
+  loadCheckinForDate();
+  syncCheckinVisuals();
+
   updateDashboard();
 
   // Only re-render calendar if bleeding changed for this date
@@ -4084,7 +4110,28 @@ function getTopTriggers(s) {
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD — selective updates, skip unchanged values
 // ═══════════════════════════════════════════════════════════════
+var CHECKIN_PROMPTS = [
+  'No wrong answers. Log what feels true today.',
+  'Be honest — this is just for you.',
+  'Even a rough day logged is useful data.',
+  'You’re building a picture your GP can use.',
+  'Thirty seconds. You’ve got this.'
+];
+
+function setMotivational(id, text) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function getDashPrompt() {
+  var h = new Date().getHours();
+  if (h < 12) return 'Small steps count. How are you feeling today?';
+  if (h < 17) return 'Checking in takes 30 seconds. You’ve got this.';
+  return 'End the day with a quick log — your GP will thank you.';
+}
+
 function updateDashboard() {
+  setMotivational('dashMotivational', getDashPrompt());
   var arr = getCheckins();
   var hrt = getHRT();
   var tod = localDate();
@@ -4200,8 +4247,9 @@ function updateDashboard() {
     var sl = avgFn('sleep');
     var bf = avgFn('brainFog');
     var pa = avgFn('patience');
-    var ha = s.filter(function(c){ return c.hrtTaken; }).length;
-    var haPct = Math.round((ha / s.length) * 100);
+    var haForm = s.filter(function(c){ return c.loggedViaForm !== false; });
+    var ha = haForm.filter(function(c){ return c.hrtTaken; }).length;
+    var haPct = haForm.length > 0 ? Math.round((ha / haForm.length) * 100) : 0;
     var tt = getTopTriggers(s);
     var insight = "You’re doing great. Keep logging daily.";
     if (sl < 5.5) insight = 'Sleep has been your biggest challenge.';
@@ -4953,8 +5001,9 @@ function renderTrends() {
 
   // Section 7: HRT Adherence
   html += '<div class="gs-trends__card gs-trends__card--sage"><h3 class="gs-trends__card-heading">HRT Adherence</h3>';
-  var hrtDays = filtered.filter(function(c) { return c.hrtTaken; }).length;
-  var totalLogged = filtered.length;
+  var hrtFormEntries = filtered.filter(function(c) { return c.loggedViaForm !== false; });
+  var hrtDays = hrtFormEntries.filter(function(c) { return c.hrtTaken; }).length;
+  var totalLogged = hrtFormEntries.length;
   var hrtPct = totalLogged > 0 ? Math.round((hrtDays / totalLogged) * 100) : 0;
   html += '<svg width="100%" height="24" style="margin:8px 0;" role="img" aria-label="HRT adherence ' + hrtPct + ' percent"><rect x="0" y="0" width="100%" height="24" rx="12" fill="#F4F0E8"/><rect x="0" y="0" width="' + hrtPct + '%" height="24" rx="12" fill="#3A5C4E"/></svg>';
   html += '<p class="gs-trends__card-body" style="font-size:13px;">' + hrtPct + '% — ' + hrtDays + ' of ' + totalLogged + ' logged days</p></div>';
@@ -5361,6 +5410,19 @@ function renderReflection() {
   html += '<p class="gs-reflect__subtitle">' + rangeStr + '</p>';
   html += '<p class="gs-reflect__logged">' + week.length + ' day' + (week.length !== 1 ? 's' : '') + ' logged this week</p>';
 
+  // Review insight card
+  var reviewInsight = 'Here\'s your week at a glance.';
+  if (week.length >= 3) {
+    var riSleep = wavg(week, 'sleep');
+    var riFog = wavg(week, 'brainFog');
+    var riForm = week.filter(function(c){ return c.loggedViaForm !== false; });
+    var riHrt = riForm.length > 0 ? Math.round((riForm.filter(function(c){ return c.hrtTaken; }).length / riForm.length) * 100) : 0;
+    if (riHrt === 100 && riForm.length > 0) reviewInsight = 'Perfect HRT adherence this week. Well done.';
+    else if (riSleep !== null && riSleep > 6.5) reviewInsight = 'Sleep is holding up well this week.';
+    else if (riFog !== null && riFog > 6) reviewInsight = 'A foggy week. That\'s worth telling your GP.';
+  }
+  html += '<div class="gs-review-insight">' + reviewInsight + '</div>';
+
   if (week.length < 3) {
     html += '<div class="reflection-card reflection-card--sage gs-reflect__empty" style="' + cardDelay() + '"><h2>Not enough data yet</h2><p>Log at least 3 days this week to see your weekly reflection.</p><button class="gs-reflect__empty-btn" onclick="showPage(\'checkin\',null)">Go to Daily Log</button></div>';
     container.innerHTML = html;
@@ -5495,8 +5557,9 @@ function renderReflection() {
   if ((avgHF !== null && avgHF >= 2) || (avgHFC !== null && avgHFC > 3)) gpItems.push('Hot flushes were frequent or moderate this week.');
   var bleedDays = week.filter(function(c) { return c.bleeding && c.bleeding !== 'none'; }).length;
   if (bleedDays > 0) gpItems.push('Bleeding or spotting occurred on ' + bleedDays + ' day' + (bleedDays !== 1 ? 's' : '') + '.');
-  var hrtTaken = week.filter(function(c) { return c.hrtTaken; }).length;
-  var hrtPct = week.length > 0 ? Math.round((hrtTaken / week.length) * 100) : 0;
+  var hrtFormWeek = week.filter(function(c) { return c.loggedViaForm !== false; });
+  var hrtTaken = hrtFormWeek.filter(function(c) { return c.hrtTaken; }).length;
+  var hrtPct = hrtFormWeek.length > 0 ? Math.round((hrtTaken / hrtFormWeek.length) * 100) : 0;
   if (hrtPct < 80) gpItems.push('HRT was missed on some days — ' + hrtPct + '% taken.');
   if (avgFog !== null && avgFog >= 7) gpItems.push('Significant brain fog reported most days.');
   if (avgSleep !== null && avgSleep < 6) gpItems.push('Sleep averaged under 6 hours.');
