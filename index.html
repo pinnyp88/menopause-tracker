@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Menopause Tracker">
-    <meta name="theme-color" content="#6d28d9">
+    <meta name="theme-color" content="#3A5C4E">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgcng9IjI0IiBmaWxsPSIjNmQyOGQ5Ii8+PHRleHQgeD0iNjAiIHk9Ijc4IiBmb250LXNpemU9IjY0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn6m0PC90ZXh0Pjwvc3ZnPg==">
     <link rel="manifest" href='data:application/manifest+json,{"name":"Menopause Impact Tracker","short_name":"Menopause","display":"standalone","background_color":"#ffffff","theme_color":"#6d28d9","start_url":"/","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgcng9IjI0IiBmaWxsPSIjNmQyOGQ5Ii8+PHRleHQgeD0iNjAiIHk9Ijc4IiBmb250LXNpemU9IjY0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn6m0PC90ZXh0Pjwvc3ZnPg==","sizes":"120x120","type":"image/svg+xml"}]}'>
 
@@ -856,7 +856,7 @@ body {
   margin-bottom: 16px;
 }    
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #f3f4f6 0%, #ede9fe 100%); min-height: 100vh; color: #1f2937; padding-bottom: 60px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #F4F0E8; min-height: 100vh; color: #1f2937; padding-bottom: 70px; padding-top: 52px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
         .navbar { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
         .nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 16px; }
@@ -869,7 +869,7 @@ body {
         .logout-btn:hover { background: #dc2626; }
         .page { display: none; padding: 32px 0; }
         .page.active { display: block; }
-        .login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 0 !important; }
+        .login-page.active { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 0 !important; }
         .login-card { background: white; padding: 48px 32px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
         .login-card h1 { font-size: 28px; margin-bottom: 12px; }
         .login-card p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
@@ -941,6 +941,434 @@ body {
         .other-field.show { display: block; }
         .dashboard-notice { font-size: 13px; color: #6b7280; font-style: italic; margin-bottom: 20px; margin-top: -16px; }
         .clinical-footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; padding: 8px 20px; font-size: 11px; color: #6b7280; text-align: center; z-index: 50; line-height: 1.5; }
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Dashboard Homepage
+   ═══════════════════════════════════════════════════════════════ */
+
+.gs-dashboard {
+  padding: var(--space-5) var(--space-5) 100px;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--color-bg);
+}
+
+.gs-dashboard__streak {
+  display: inline-flex;
+  padding: 6px 16px;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-badge);
+  background: #FDF8EE;
+  border-left: var(--card-border-width) solid var(--color-accent);
+}
+.gs-dashboard__streak .gs-card__label {
+  color: var(--color-text-on-accent);
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.gs-dashboard__greeting {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 2px;
+  line-height: var(--leading-tight);
+}
+
+.gs-dashboard__subtext {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-6);
+}
+
+.gs-dashboard__cta {
+  min-height: 52px;
+  font-size: 17px;
+  margin-bottom: var(--space-4);
+  letter-spacing: 0.01em;
+}
+
+.gs-dashboard__today-done {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-secondary);
+  margin: -8px 0 var(--space-4);
+}
+
+.gs-dashboard__snapshot {
+  margin-bottom: var(--space-3);
+}
+
+.gs-dashboard__stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.gs-dashboard__stat {
+  flex: 1;
+  text-align: center;
+}
+
+.gs-dashboard__stat-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.gs-dashboard__stat-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  margin-top: 2px;
+}
+
+.gs-dashboard__insight {
+  margin-bottom: var(--space-3);
+}
+.gs-dashboard__insight .gs-card__body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-on-accent);
+  font-style: italic;
+  line-height: var(--leading-base);
+}
+
+.gs-dashboard__impact {
+  margin-bottom: var(--space-3);
+}
+.gs-dashboard__impact .gs-card__body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  line-height: var(--leading-base);
+}
+
+.gs-dashboard__details {
+  margin-bottom: var(--space-8);
+}
+
+.gs-dashboard__details-toggle {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-secondary);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  list-style: none;
+  user-select: none;
+  min-height: var(--tap-target-min);
+  display: flex;
+  align-items: center;
+}
+.gs-dashboard__details-toggle::-webkit-details-marker { display: none; }
+.gs-dashboard__details-toggle::before {
+  content: '▸';
+  margin-right: 6px;
+  transition: transform var(--transition-fast);
+}
+.gs-dashboard__details[open] .gs-dashboard__details-toggle::before {
+  transform: rotate(90deg);
+}
+
+.gs-dashboard__detail-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.gs-dashboard__detail-cards .gs-card {
+  margin-bottom: 0;
+}
+.gs-dashboard__detail-cards .gs-card__value {
+  font-size: 24px;
+}
+.gs-dashboard__detail-cards .gs-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.gs-dashboard__hrt-quiet {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-base);
+  padding: var(--space-4) 0;
+  border-top: 1px solid #E8E2D9;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Daily Check-In
+   ═══════════════════════════════════════════════════════════════ */
+.gs-checkin {
+  padding: var(--space-4) var(--space-4) 100px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.gs-checkin__title {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0 0 var(--space-3);
+}
+.gs-checkin__date-row {
+  margin-bottom: var(--space-4);
+}
+.gs-checkin__date-input {
+  width: 100%;
+  max-width: 200px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  padding: 10px 14px;
+  border: 1px solid #D5CFC4;
+  border-radius: var(--radius-card);
+  background: #fff;
+  color: var(--color-text-primary);
+}
+.gs-checkin__section {
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+}
+.gs-checkin__field {
+  margin-bottom: var(--space-4);
+}
+.gs-checkin__field:last-child { margin-bottom: 0; }
+
+/* Sub-alert card (peach left border) */
+.gs-checkin__sub-alert {
+  background: #FFF9F5;
+  border-left: 3px solid var(--color-accent-peach);
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.gs-checkin__sub-alert:last-child { margin-bottom: 0; }
+
+/* Pill selectors */
+.gs-checkin__pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  margin-top: 8px;
+}
+.gs-checkin__pills--wrap { flex-wrap: wrap; }
+.gs-checkin__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1.5px solid #D5CFC4;
+  border-radius: var(--radius-pill, 50px);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.gs-checkin__pill:hover { border-color: var(--color-secondary); }
+.gs-checkin__pill--active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* Emoji mood row */
+.gs-emoji-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  justify-content: space-between;
+}
+.gs-emoji-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-card);
+  background: #fff;
+  cursor: pointer;
+  min-width: 56px;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.gs-emoji-btn:hover { border-color: var(--color-secondary); }
+.gs-emoji-btn--active {
+  border-color: var(--color-primary);
+  background: rgba(58,92,78,0.08);
+}
+.gs-emoji-btn__face { font-size: 28px; line-height: 1; }
+.gs-emoji-btn__caption {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* Chip grid (triggers) */
+.gs-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.gs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid #D5CFC4;
+  border-radius: var(--radius-pill, 50px);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.gs-chip:hover { border-color: var(--color-secondary); }
+.gs-chip--active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.gs-chip__emoji { font-size: 16px; }
+
+/* Sliders */
+.gs-slider {
+  margin-bottom: var(--space-4);
+}
+.gs-slider:last-child { margin-bottom: 0; }
+.gs-slider--compact { margin-bottom: var(--space-3); }
+.gs-slider__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.gs-slider__label-row { display: flex; align-items: center; gap: 4px; }
+.gs-slider__label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.gs-slider__value-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill, 50px);
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+}
+.gs-slider__track-row { padding: 0 2px; }
+.gs-slider__input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #E8E2D9;
+  outline: none;
+}
+.gs-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.gs-slider__input::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.gs-slider__word-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+/* Section label */
+.gs-section-label {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sleep input */
+.gs-checkin__sleep-input {
+  max-width: 120px;
+  margin-top: 8px;
+}
+
+/* Notes */
+.gs-checkin__notes { margin-top: var(--space-3); }
+.gs-checkin__notes-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: block;
+  margin-bottom: 8px;
+}
+.gs-checkin__notes-ta {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  padding: 12px 14px;
+  border: 1px solid #D5CFC4;
+  border-radius: var(--radius-card);
+  background: #fff;
+  color: var(--color-text-primary);
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Save button */
+.gs-checkin__save { margin-top: var(--space-3); }
+
 /* ═══════════════════════════════════════════════════════════════
    GARDEN SAGE — Component Set v2
    ═══════════════════════════════════════════════════════════════ */
@@ -1426,6 +1854,1035 @@ body {
             .clinical-footer { font-size: 10px; padding: 6px 12px; }
             .trigger-grid { grid-template-columns: 1fr 1fr; }
         }
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Trends Screen
+   ═══════════════════════════════════════════════════════════════ */
+.gs-trends {
+  padding: 20px 16px 100px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.gs-trends__title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 16px;
+}
+.gs-trends__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.gs-trends__range-select {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 10px 16px;
+  border: 1.5px solid #D5CFC4;
+  border-radius: 50px;
+  background: #fff;
+  color: var(--color-text-primary);
+  min-height: 44px;
+  cursor: pointer;
+}
+.gs-trends__coverage {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-secondary);
+}
+.gs-trends__card {
+  background: #fff;
+  border-radius: 14px;
+  border-left: 3px solid var(--color-secondary);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.gs-trends__card--gold { border-left-color: #E8C87A; }
+.gs-trends__card--peach { border-left-color: #D4836A; }
+.gs-trends__card--slate { border-left-color: #7A8FA6; }
+.gs-trends__card--sage { border-left-color: var(--color-primary); }
+.gs-trends__card-heading {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 8px;
+}
+.gs-trends__card-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+.gs-trends__card-sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #7A8FA6;
+  margin-top: 8px;
+}
+.gs-trends__metric-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-secondary);
+  margin: 0 0 4px;
+}
+.gs-trends__metric-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.gs-trends__metric-big {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-primary);
+  line-height: 1;
+}
+.gs-trends__trend-badge {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 50px;
+  display: inline-block;
+}
+.gs-trends__trend-badge--up { background: #E8F0EB; color: var(--color-primary); }
+.gs-trends__trend-badge--down { background: #FAE8E3; color: #D4836A; }
+.gs-trends__trend-badge--stable { background: #F0F0EC; color: var(--color-text-secondary); }
+.gs-trends__sparkline-wrap {
+  margin-top: 8px;
+}
+.gs-trends__no-data {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-secondary);
+  margin-top: 8px;
+}
+.gs-trends__empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+.gs-trends__empty h2 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 12px;
+}
+.gs-trends__empty p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px;
+}
+.gs-trends__empty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 50px;
+  background: var(--color-primary);
+  color: #F4F0E8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gs-trends__bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.gs-trends__bar-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text-primary);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+.gs-trends__bar-count {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  min-width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.gs-trends__pill-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 50px;
+  margin: 4px 4px 0 0;
+}
+.gs-trends__pill-badge--spotting { background: #fecaca; color: #7f1d1d; }
+.gs-trends__pill-badge--light { background: #fca5a5; color: #7f1d1d; }
+.gs-trends__pill-badge--medium { background: #f87171; color: #fff; }
+.gs-trends__pill-badge--heavy { background: #ef4444; color: #fff; }
+.gs-trends__hrt-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.gs-trends__hrt-date-pill {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: #EBF0F5;
+  color: #7A8FA6;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.gs-trends__hrt-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text-primary);
+}
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Weekly Reflection
+   ═══════════════════════════════════════════════════════════════ */
+.gs-reflect {
+  padding: 20px 16px 100px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.gs-reflect__title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 4px;
+}
+.gs-reflect__subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-secondary);
+  margin: 0 0 2px;
+}
+.gs-reflect__logged {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-secondary);
+  margin: 0 0 18px;
+}
+.reflection-card {
+  background: #fff;
+  border-radius: 14px;
+  border-left: 3px solid var(--color-secondary);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  opacity: 0;
+  transform: translateY(16px);
+  animation: reflectFadeUp 0.35s ease forwards;
+}
+@keyframes reflectFadeUp { to { opacity: 1; transform: translateY(0); } }
+.reflection-card--gold { border-left-color: #E8C87A; }
+.reflection-card--peach { border-left-color: #D4836A; }
+.reflection-card--sage { border-left-color: #8FB5A3; }
+.reflection-card--slate { border-left-color: #7A8FA6; }
+.gs-reflect__card-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #8FB5A3;
+  margin: 0 0 6px;
+}
+.gs-reflect__card-label--slate { color: #7A8FA6; }
+.gs-reflect__quote {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-primary);
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+.gs-reflect__closing {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #8FB5A3;
+  font-style: italic;
+  margin: 0;
+}
+.gs-reflect__section-heading {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 24px 0 12px;
+}
+.gs-reflect__insight-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #8FB5A3;
+  margin: 0 0 2px;
+}
+.gs-reflect__insight-val {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 2px;
+  line-height: 1.2;
+}
+.gs-reflect__insight-note {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+.gs-reflect__gp-heading {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 8px;
+}
+.gs-reflect__gp-list {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0 0 14px;
+}
+.gs-reflect__gp-list li {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+.gs-reflect__gp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  background: #7A8FA6;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gs-reflect__trig-heading {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 10px;
+}
+.gs-reflect__trig-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gs-reflect__trig-pill {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #D4836A;
+  border: 1px solid #D4836A;
+  background: #fff;
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+.gs-reflect__adh-heading {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 6px;
+}
+.gs-reflect__adh-big {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-primary);
+  line-height: 1;
+  margin: 0 0 4px;
+}
+.gs-reflect__adh-sub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #8FB5A3;
+  margin: 0 0 10px;
+}
+.gs-reflect__adh-med {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #8FB5A3;
+  margin-top: 8px;
+}
+.gs-reflect__empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+.gs-reflect__empty h2 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 12px;
+}
+.gs-reflect__empty p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px;
+}
+.gs-reflect__empty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 50px;
+  background: var(--color-primary);
+  color: #F4F0E8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gs-reflect__card-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — GP Report Screen
+   ═══════════════════════════════════════════════════════════════ */
+.gs-report {
+  padding: 20px 16px 140px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.gs-report__title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 4px;
+}
+.gs-report__subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #8FB5A3;
+  margin: 0 0 2px;
+}
+.gs-report__date {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #8FB5A3;
+  margin: 0 0 14px;
+}
+.gs-report__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  background: var(--color-primary);
+  color: #F4F0E8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 18px;
+}
+.gs-report__card {
+  background: #fff;
+  border-radius: 14px;
+  border-left: 3px solid #8FB5A3;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.gs-report__card--slate { border-left-color: #7A8FA6; }
+.gs-report__card--peach { border-left-color: #D4836A; }
+.gs-report__card--gold { border-left-color: #E8C87A; }
+.gs-report__card--sage { border-left-color: #8FB5A3; }
+.gs-report__card-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #8FB5A3;
+  margin: 0 0 8px;
+}
+.gs-report__card-label--slate { color: #7A8FA6; }
+.gs-report__card-label--peach { color: #D4836A; }
+.gs-report__card-heading {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 8px;
+}
+.gs-report__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid #F0EDE6;
+}
+.gs-report__row:last-child { border-bottom: none; }
+.gs-report__row-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #8FB5A3;
+}
+.gs-report__row-val {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+.gs-report__row-val--alert { color: #D4836A; }
+.gs-report__text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+}
+.gs-report__text--sm {
+  font-size: 13px;
+}
+.gs-report__text--muted {
+  color: #8FB5A3;
+  font-style: italic;
+}
+.gs-report__text--sub {
+  font-size: 13px;
+  color: #8FB5A3;
+  margin-top: 4px;
+}
+.gs-report__flags-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.gs-report__flags-list li {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #374151;
+  padding: 4px 0;
+  line-height: 1.5;
+}
+.gs-report__flags-list li::before {
+  content: '●';
+  color: #D4836A;
+  margin-right: 8px;
+  font-size: 10px;
+}
+.gs-report__note-date {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: #8FB5A3;
+  margin-right: 6px;
+}
+.gs-report__note-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #374151;
+}
+.gs-report__note-row {
+  padding: 6px 0;
+  border-bottom: 1px solid #F0EDE6;
+}
+.gs-report__note-row:last-child { border-bottom: none; }
+.gs-report__footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+.gs-report__footer-btn {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.gs-report__footer-btn--primary {
+  background: var(--color-primary);
+  color: #F4F0E8;
+}
+.gs-report__footer-btn--secondary {
+  background: #fff;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+.gs-report__empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+.gs-report__empty h2 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 12px;
+}
+.gs-report__empty p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px;
+}
+.gs-report__empty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 50px;
+  background: var(--color-primary);
+  color: #F4F0E8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Top Bar & Bottom Tab Bar
+   ═══════════════════════════════════════════════════════════════ */
+.gs-topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 200;
+  border-bottom: 1px solid #e5e7eb;
+}
+.gs-topbar__brand {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.gs-tabbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  z-index: 200;
+}
+.gs-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+.gs-tab__icon { font-size: 20px; line-height: 1; }
+.gs-tab__label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  color: #8FB5A3;
+  transition: color 0.15s;
+}
+.gs-tab--active .gs-tab__label { color: var(--color-primary); font-weight: 600; }
+.gs-tab--active::after {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-primary);
+  margin-top: 1px;
+}
+.gs-more-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 300;
+}
+.gs-more-sheet {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 20px 32px;
+  z-index: 301;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+.gs-more-sheet__close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6B7280;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+.gs-more-sheet__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #F0EDE6;
+  padding: 14px 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: #374151;
+  cursor: pointer;
+  min-height: 44px;
+}
+.gs-more-sheet__item:last-child { border-bottom: none; }
+.gs-more-sheet__item--danger { color: #D4836A; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Notes & Questions Screen
+   ═══════════════════════════════════════════════════════════════ */
+.gs-notes {
+  padding: 20px 16px 100px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.gs-notes__title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 4px;
+}
+.gs-notes__subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #8FB5A3;
+  margin: 0 0 16px;
+}
+.gs-notes__add-card {
+  background: #fff;
+  border-radius: 14px;
+  border-left: 3px solid #E8C87A;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.gs-notes__add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  background: var(--color-primary);
+  color: #F4F0E8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gs-notes__form { display: none; }
+.gs-notes__add-card--open .gs-notes__form { display: block; }
+.gs-notes__form-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 12px 0 6px;
+}
+.gs-notes__cat-pills, .gs-notes__pri-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.gs-notes__cat-pill, .gs-notes__pri-pill {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 1px solid #8FB5A3;
+  background: #fff;
+  color: #8FB5A3;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.gs-notes__cat-pill--active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.gs-notes__pri-pill--active[data-pri="low"] {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.gs-notes__pri-pill--active[data-pri="medium"] {
+  background: #E8C87A;
+  color: #633806;
+  border-color: #E8C87A;
+}
+.gs-notes__pri-pill--active[data-pri="high"] {
+  background: #D4836A;
+  color: #fff;
+  border-color: #D4836A;
+}
+.gs-notes__textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 12px;
+  border: 1px solid #8FB5A3;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--color-text-primary);
+  resize: vertical;
+  min-height: 80px;
+}
+.gs-notes__toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 14px 0;
+}
+.gs-notes__toggle-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #374151;
+}
+.gs-notes__toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  border: none;
+  background: #8FB5A3;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+}
+.gs-notes__toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.gs-notes__toggle--on { background: var(--color-primary); }
+.gs-notes__toggle--on::after { transform: translateX(20px); }
+.gs-notes__save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  border-radius: 50px;
+  background: var(--color-primary);
+  color: #F4F0E8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.gs-notes__cancel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 40px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 50px;
+  background: #fff;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gs-notes__filters {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-bottom: 16px;
+  padding-bottom: 4px;
+}
+.gs-notes__filters::-webkit-scrollbar { display: none; }
+.gs-notes__filter {
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 20px;
+  border: none;
+  background: #F4F0E8;
+  color: #8FB5A3;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.gs-notes__filter--active {
+  background: var(--color-primary);
+  color: #fff;
+}
+.gs-notes__card {
+  background: #fff;
+  border-radius: 14px;
+  border-left: 3px solid #8FB5A3;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.gs-notes__card--doctor-question { border-left-color: #7A8FA6; }
+.gs-notes__card--symptom { border-left-color: #D4836A; }
+.gs-notes__card--medication { border-left-color: #8FB5A3; }
+.gs-notes__card--reminder { border-left-color: #E8C87A; }
+.gs-notes__card--other { border-left-color: #3A5C4E; }
+.gs-notes__card--answered { opacity: 0.5; }
+.gs-notes__card--answered .gs-notes__card-text { text-decoration: line-through; }
+.gs-notes__card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.gs-notes__card-cat {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.gs-notes__card-cat--doctor-question { background: #EBF0F5; color: #7A8FA6; }
+.gs-notes__card-cat--symptom { background: #FAE8E3; color: #D4836A; }
+.gs-notes__card-cat--medication { background: #E8F0EB; color: #3A5C4E; }
+.gs-notes__card-cat--reminder { background: #FDF6E3; color: #633806; }
+.gs-notes__card-cat--other { background: #E8F0EB; color: #3A5C4E; }
+.gs-notes__card-date {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: #8FB5A3;
+}
+.gs-notes__card-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+}
+.gs-notes__card-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.gs-notes__badge {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.gs-notes__badge--ask { background: #7A8FA6; color: #fff; }
+.gs-notes__badge--low { background: #E8F0EB; color: #3A5C4E; }
+.gs-notes__badge--medium { background: #FDF6E3; color: #633806; }
+.gs-notes__badge--high { background: #FAE8E3; color: #D4836A; }
+.gs-notes__card-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+.gs-notes__action-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.gs-notes__action-btn--edit { color: var(--color-primary); }
+.gs-notes__action-btn--delete { color: #D4836A; }
+.gs-notes__empty {
+  text-align: center;
+  background: #fff;
+  border-radius: 14px;
+  border-left: 3px solid #8FB5A3;
+  padding: 30px 20px;
+}
+.gs-notes__empty h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 8px;
+}
+.gs-notes__empty p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #8FB5A3;
+  margin: 0;
+}
     </style>
 </head>
 <body>
@@ -1436,18 +2893,25 @@ body {
         <span onclick="document.getElementById('iosBanner').style.display='none';localStorage.setItem('iosDismissed','1');" style="float:right;cursor:pointer;font-size:18px;line-height:1;margin-top:-2px;">✕</span>
     </div>
 
-<div class="navbar">
-    <div class="nav-content">
-        <div class="nav-brand">🩺 Menopause Impact Tracker</div>
-        <div class="nav-links" id="navLinks" style="display:none;">
-            <button class="nav-btn active" onclick="showPage('dashboard',this)">Dashboard</button>
-            <button class="nav-btn" onclick="showPage('checkin',this)">Daily Log</button>
-            <button class="nav-btn" onclick="showPage('hrt',this)">HRT Tracker</button>
-            <button class="nav-btn" onclick="showPage('calendar',this)">Bleeding Calendar</button>
-            <button class="nav-btn" onclick="showPage('settings',this)">Settings</button>
-            <button class="nav-btn logout-btn" onclick="logout()">Logout</button>
-        </div>
-    </div>
+<div class="gs-topbar" id="gsTopbar">
+  <span class="gs-topbar__brand">Menopause Tracker</span>
+</div>
+<div class="gs-tabbar" id="gsTabbar" style="display:none;">
+  <button class="gs-tab gs-tab--active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="gs-tab__icon">🏠</span><span class="gs-tab__label">Home</span></button>
+  <button class="gs-tab" data-page="checkin" onclick="showPage('checkin',this)"><span class="gs-tab__icon">✏️</span><span class="gs-tab__label">Log</span></button>
+  <button class="gs-tab" data-page="trends" onclick="showPage('trends',this)"><span class="gs-tab__icon">📈</span><span class="gs-tab__label">Trends</span></button>
+  <button class="gs-tab" data-page="reflection" onclick="showPage('reflection',this)"><span class="gs-tab__icon">📋</span><span class="gs-tab__label">Review</span></button>
+  <button class="gs-tab" data-page="report" onclick="showPage('report',this)"><span class="gs-tab__icon">📄</span><span class="gs-tab__label">Report</span></button>
+  <button class="gs-tab" data-page="notes" onclick="showPage('notes',this)"><span class="gs-tab__icon">📝</span><span class="gs-tab__label">Notes</span></button>
+  <button class="gs-tab" onclick="openMoreSheet()"><span class="gs-tab__icon">⋯</span><span class="gs-tab__label">More</span></button>
+</div>
+<div class="gs-more-backdrop" id="gsMoreBackdrop" onclick="closeMoreSheet()" style="display:none;"></div>
+<div class="gs-more-sheet" id="gsMoreSheet" style="display:none;">
+  <button class="gs-more-sheet__close" onclick="closeMoreSheet()">✕</button>
+  <button class="gs-more-sheet__item" onclick="showPage('hrt',null);closeMoreSheet()">HRT Tracker</button>
+  <button class="gs-more-sheet__item" onclick="showPage('calendar',null);closeMoreSheet()">Bleeding Calendar</button>
+  <button class="gs-more-sheet__item" onclick="showPage('settings',null);closeMoreSheet()">Settings</button>
+  <button class="gs-more-sheet__item gs-more-sheet__item--danger" onclick="closeMoreSheet();logout()">Logout</button>
 </div>
 <div class="container">
     <div id="loginPage" class="page active login-page">
@@ -1460,87 +2924,293 @@ body {
             <p style="text-align:center;margin-top:16px;font-size:12px;color:#9ca3af;">No account needed. Your data stays on your device.</p>
         </div>
     </div>
-    <div id="dashboardPage" class="page">
-        <h2 style="font-size:28px;margin-bottom:8px;">Dashboard</h2>
-        <p class="dashboard-notice" id="dashboardNotice">Showing trends from your last 7 active logging days.</p>
-        <div class="dashboard-grid">
-            <div class="card"><h3>Today's Check-In</h3><div id="todayStatus" style="color:#9ca3af;font-size:14px;">Not logged yet</div><button class="btn btn-primary" style="margin-top:16px;width:auto;" onclick="document.querySelectorAll('.nav-btn')[1].click()">Log Today</button></div>
-            <div class="card accent-blue"><h3>Avg Sleep</h3><div class="card-value" id="avgSleep">—</div><div class="card-subtitle">hours per night</div><div id="trendSleep"></div></div>
-            <div class="card accent-pink"><h3>Avg Patience</h3><div class="card-value" id="avgPatience">—</div><div class="card-subtitle">out of 10</div><div id="trendPatience"></div></div>
-            <div class="card accent-amber"><h3>Avg Brain Fog</h3><div class="card-value" id="avgBrainFog">—</div><div class="card-subtitle">out of 10</div><div id="trendBrainFog"></div></div>
-            <div class="card"><h3>Hot Flushes (7 days)</h3><div class="card-value" id="avgHotFlush">—</div><div class="card-subtitle">avg severity | count/day: <span id="avgHotFlushCount">—</span></div><div id="trendHotFlush"></div></div>
-            <div class="card"><h3>Night Sweats (7 days)</h3><div class="card-value" id="avgNightSweat">—</div><div class="card-subtitle">avg severity per day</div><div id="trendNightSweat"></div></div>
-            <div class="card"><h3>Bleeding Days (This Month)</h3><div class="card-value" id="bleedingDays">—</div><div class="card-subtitle">days with bleeding/spotting</div></div>
-            <div class="card"><h3>HRT Adherence</h3><div class="card-value" id="hrtAdherence">—</div><div class="card-subtitle">% of days taken</div></div>
-            <div class="card accent-blue"><h3>Work Impact</h3><div class="card-value" id="avgWorkImpact">—</div><div class="card-subtitle">1=not affected | 10=severely affected</div><div id="trendWork"></div></div>
-            <div class="card accent-pink"><h3>Relationship Impact</h3><div class="card-value" id="avgRelImpact">—</div><div class="card-subtitle">1=not affected | 10=severely affected</div><div id="trendRel"></div></div>
-            <div class="card accent-amber"><h3>Energy Impact</h3><div class="card-value" id="avgEnergyImpact">—</div><div class="card-subtitle">1=not affected | 10=severely affected</div><div id="trendEnergy"></div></div>
-            <div class="card"><h3>Mental Clarity</h3><div class="card-value" id="avgMentalClarity">—</div><div class="card-subtitle">1=not affected | 10=severely affected</div><div id="trendMental"></div></div>
-            <div class="card"><h3>Top Triggers (7 days)</h3><div id="topTriggers" style="color:#9ca3af;font-size:14px;">No data yet</div></div>
+    <div id="dashboardPage" class="page gs-dashboard">
+
+        <!-- Streak badge -->
+        <div class="gs-card gs-card--reward gs-dashboard__streak" id="dashStreak" style="display:none;">
+          <span class="gs-card__label" id="dashStreakText">🔥 0 day streak</span>
         </div>
-        <div class="form-section"><h2>Current HRT Regimen</h2><div id="hrtSummary" style="color:#9ca3af;font-size:14px;">No HRT regimen recorded yet.</div></div>
-    </div>
-    <div id="checkinPage" class="page">
-        <div class="form-section">
-            <h2>Daily Check-In</h2>
-            <div class="success-message" id="checkinSuccess">Check-in saved!</div>
-            <div class="form-grid">
-                <div class="form-group"><label>Date</label><input type="date" id="checkinDate" onchange="loadCheckinForDate()"></div>
-                <div class="form-group"><label>Mood</label><select id="mood"><option value="">Select mood</option><option value="1">1 - Terrible</option><option value="2">2 - Struggling</option><option value="3">3 - Average</option><option value="4">4 - Good</option><option value="5">5 - Great</option></select></div>
-                <div class="form-group">
-                    <label style="display:flex;align-items:center;">Brain Fog: <span id="brainFogVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10 <span class="info-icon" tabindex="0">i<span class="tooltip">1=no brain fog at all<br>10=severely affected,<br>can't think clearly</span></span></label>
-                    <div class="slider-row"><input type="range" id="brainFog" min="1" max="10" value="5" oninput="document.getElementById('brainFogVal').textContent=this.value"></div>
-                </div>
-                <div class="form-group"><label>Hours of Sleep Last Night</label><input type="number" id="sleep" min="0" max="14" step="0.5" value="7"></div>
-                <div class="form-group">
-                    <label style="display:flex;align-items:center;">Patience: <span id="patienceVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10 <span class="info-icon" tabindex="0">i<span class="tooltip">1=very impatient,<br>losing it completely<br>10=very patient,<br>completely unaffected</span></span></label>
-                    <div class="slider-row"><input type="range" id="patience" min="1" max="10" value="5" oninput="document.getElementById('patienceVal').textContent=this.value"></div>
-                </div>
-                <div class="section-divider">🔥 Vasomotor Symptoms</div>
-                <div class="form-group"><label>Hot Flush Severity Today</label><select id="hotFlush"><option value="0">None</option><option value="1">Mild (1-2, barely noticeable)</option><option value="2">Moderate (3-5, uncomfortable)</option><option value="3">Severe (5+, disruptive)</option></select></div>
-                <div class="form-group"><label>Hot Flush Count Today (how many?)</label><input type="number" id="hotFlushCount" min="0" max="30" step="1" value="0"></div>
-                <div class="form-group"><label>Night Sweats Last Night</label><select id="nightSweat"><option value="0">None</option><option value="1">Mild (woke briefly, settled)</option><option value="2">Moderate (woke, took time to settle)</option><option value="3">Severe (drenching, had to change)</option></select></div>
-                <div class="section-divider">🚿 Urinary Symptoms</div>
-                <div class="form-group"><label>Urinary Issues Today</label><select id="urinary"><option value="none">None</option><option value="mild-urgency">Mild urgency (occasional)</option><option value="frequent">Frequent urination</option><option value="urgency-incontinence">Urgency incontinence (couldn't hold it)</option><option value="nocturia">Nocturia (woke to urinate at night)</option><option value="multiple">Multiple issues</option></select></div>
-                <div class="section-divider">🩸 Bleeding and HRT</div>
-                <div class="form-group"><label>Bleeding Level</label><select id="bleeding"><option value="none">None</option><option value="spotting">Spotting</option><option value="light">Light</option><option value="medium">Medium</option><option value="heavy">Heavy</option></select></div>
-                <div class="form-group"><label>HRT Taken Today?</label><div class="checkbox-group"><input type="checkbox" id="hrtTaken"><label style="margin:0;font-weight:400;">Yes</label></div></div>
-                <div class="section-divider">📊 Daily Impact Scores</div>
-                <div class="form-group">
-                    <label style="display:flex;align-items:center;">Work Impact: <span id="workVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10 <span class="info-icon" tabindex="0">i<span class="tooltip">1=not affected at all<br>10=severely affected,<br>couldn't function at work</span></span></label>
-                    <div class="slider-row"><input type="range" id="workImpact" min="1" max="10" value="5" oninput="document.getElementById('workVal').textContent=this.value"></div>
-                </div>
-                <div class="form-group">
-                    <label style="display:flex;align-items:center;">Relationship Impact: <span id="relVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10 <span class="info-icon" tabindex="0">i<span class="tooltip">1=not affected at all<br>10=severely affected,<br>major strain on relationships</span></span></label>
-                    <div class="slider-row"><input type="range" id="relImpact" min="1" max="10" value="5" oninput="document.getElementById('relVal').textContent=this.value"></div>
-                </div>
-                <div class="form-group">
-                    <label style="display:flex;align-items:center;">Energy Impact: <span id="energyVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10 <span class="info-icon" tabindex="0">i<span class="tooltip">1=not affected at all<br>10=severely affected,<br>completely exhausted</span></span></label>
-                    <div class="slider-row"><input type="range" id="energyImpact" min="1" max="10" value="5" oninput="document.getElementById('energyVal').textContent=this.value"></div>
-                </div>
-                <div class="form-group">
-                    <label style="display:flex;align-items:center;">Mental Clarity: <span id="mentalVal" style="font-weight:700;color:#6d28d9;margin:0 6px;">5</span>/10 <span class="info-icon" tabindex="0">i<span class="tooltip">1=not affected at all<br>10=severely affected,<br>can't think or concentrate</span></span></label>
-                    <div class="slider-row"><input type="range" id="mentalClarity" min="1" max="10" value="5" oninput="document.getElementById('mentalVal').textContent=this.value"></div>
-                </div>
-                <div class="section-divider">⚡ Today's Triggers (tick all that apply)</div>
-                <div class="form-group full">
-                    <div class="trigger-grid">
-                        <div class="trigger-item"><input type="checkbox" id="trig-stress"><label for="trig-stress">😰 Stress</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-alcohol"><label for="trig-alcohol">🍷 Alcohol</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-caffeine"><label for="trig-caffeine">☕ Caffeine</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-poorsleep"><label for="trig-poorsleep">😴 Poor Sleep</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-misseddose"><label for="trig-misseddose">💊 Missed HRT Dose</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-exercise"><label for="trig-exercise">🏃 Exercise</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-illness"><label for="trig-illness">🤒 Illness</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-spicyfood"><label for="trig-spicyfood">🌶️ Spicy Food</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-hotweather"><label for="trig-hotweather">☀️ Hot Weather</label></div>
-                        <div class="trigger-item"><input type="checkbox" id="trig-other"><label for="trig-other">➕ Other</label></div>
-                    </div>
-                </div>
-                <div class="form-group full"><label>Notes (Optional)</label><textarea id="notes" placeholder="How are you feeling? Any observations?"></textarea></div>
+
+        <!-- Greeting -->
+        <h1 class="gs-dashboard__greeting" id="dashGreeting">Hello.</h1>
+        <p class="gs-dashboard__subtext" id="dashSubtext">Ready for today?</p>
+
+        <!-- Primary CTA -->
+        <button class="gs-btn gs-btn--primary gs-btn--full gs-dashboard__cta" onclick="showPage('checkin',null)">＋ Log today's check-in</button>
+
+        <!-- Today mini-status (shown only if already logged) -->
+        <div class="gs-dashboard__today-done" id="dashTodayDone" style="display:none;">
+          <span id="dashTodayLabel">✓ Logged today</span>
+        </div>
+
+        <!-- This week snapshot -->
+        <div class="gs-card gs-card--default gs-dashboard__snapshot">
+          <div class="gs-card__label">This week</div>
+          <div class="gs-dashboard__stats-row">
+            <div class="gs-dashboard__stat">
+              <span class="gs-dashboard__stat-value" id="avgSleep">—</span>
+              <span class="gs-dashboard__stat-label">hrs sleep</span>
             </div>
-            <button class="btn btn-primary" onclick="saveCheckin()">Save Check-In</button>
+            <div class="gs-dashboard__stat">
+              <span class="gs-dashboard__stat-value" id="avgBrainFog">—</span>
+              <span class="gs-dashboard__stat-label">brain fog</span>
+            </div>
+            <div class="gs-dashboard__stat">
+              <span class="gs-dashboard__stat-value" id="bleedingDays">—</span>
+              <span class="gs-dashboard__stat-label">bleeding days</span>
+            </div>
+          </div>
         </div>
+
+        <!-- One insight -->
+        <div class="gs-card gs-card--reward gs-dashboard__insight">
+          <div class="gs-card__body" id="dashInsight">You're doing great. Keep logging daily.</div>
+        </div>
+
+        <!-- Life Impact Summary -->
+        <div class="gs-card gs-card--default gs-dashboard__impact">
+          <div class="gs-card__label">Life impact</div>
+          <div class="gs-card__body" id="dashImpactSummary">Life areas remained balanced this week.</div>
+        </div>
+
+        <!-- More stats (collapsed) -->
+        <details class="gs-dashboard__details">
+          <summary class="gs-dashboard__details-toggle">More details</summary>
+          <div class="gs-dashboard__detail-cards">
+            <div class="gs-card gs-card--default">
+              <div class="gs-card__label">Patience</div>
+              <div class="gs-card__value" id="avgPatience">—</div>
+              <div class="gs-card__body">avg out of 10</div>
+            </div>
+            <div class="gs-card gs-card--alert">
+              <div class="gs-card__label">Hot flushes</div>
+              <div class="gs-card__value" id="avgHotFlush">—</div>
+              <div class="gs-card__body">avg severity</div>
+            </div>
+            <div class="gs-card gs-card--default">
+              <div class="gs-card__label">Night sweats</div>
+              <div class="gs-card__value" id="avgNightSweat">—</div>
+              <div class="gs-card__body">avg severity</div>
+            </div>
+            <div class="gs-card gs-card--default">
+              <div class="gs-card__label">HRT adherence</div>
+              <div class="gs-card__value" id="hrtAdherence">—</div>
+              <div class="gs-card__body">% of days taken</div>
+            </div>
+            <div class="gs-card gs-card--default">
+              <div class="gs-card__label">Top triggers</div>
+              <div class="gs-card__body" id="topTriggers" style="font-size:14px;">No triggers logged</div>
+            </div>
+          </div>
+        </details>
+
+        <!-- HRT summary (quiet) -->
+        <div class="gs-dashboard__hrt-quiet" id="hrtSummary">No HRT regimen recorded yet.</div>
+
+        <!-- Hidden elements that updateDashboard still writes to -->
+        <span id="dashboardNotice" style="display:none;"></span>
+        <span id="todayStatus" style="display:none;"></span>
+        <span id="avgHotFlushCount" style="display:none;"></span>
+        <span id="avgWorkImpact" style="display:none;"></span>
+        <span id="avgRelImpact" style="display:none;"></span>
+        <span id="avgEnergyImpact" style="display:none;"></span>
+        <span id="avgMentalClarity" style="display:none;"></span>
+        <span id="trendSleep" style="display:none;"></span>
+        <span id="trendPatience" style="display:none;"></span>
+        <span id="trendBrainFog" style="display:none;"></span>
+        <span id="trendHotFlush" style="display:none;"></span>
+        <span id="trendNightSweat" style="display:none;"></span>
+        <span id="trendWork" style="display:none;"></span>
+        <span id="trendRel" style="display:none;"></span>
+        <span id="trendEnergy" style="display:none;"></span>
+        <span id="trendMental" style="display:none;"></span>
+    </div>
+    <div id="checkinPage" class="page gs-checkin">
+        <h1 class="gs-checkin__title">Daily Check-In</h1>
+        <div class="success-message" id="checkinSuccess">Saved &mdash; see you tomorrow.</div>
+
+        <!-- Date -->
+        <div class="gs-checkin__date-row">
+          <input type="date" id="checkinDate" onchange="loadCheckinForDate();syncCheckinVisuals();" class="gs-field__input gs-checkin__date-input">
+        </div>
+
+        <!-- ═══ Section 1: Head & Body ═══ -->
+        <div class="gs-card gs-card--default gs-checkin__section">
+          <div class="gs-section-label">Head &amp; body</div>
+
+          <!-- Mood: emoji selector (hidden real select) -->
+          <div class="gs-checkin__field">
+            <span class="gs-slider__label">How are you feeling?</span>
+            <select id="mood" style="display:none;"><option value="">Select mood</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+            <div class="gs-emoji-row" id="moodEmojis">
+              <button type="button" class="gs-emoji-btn" data-val="1" aria-label="Terrible" onclick="pickMood(1)"><span class="gs-emoji-btn__face">😢</span><span class="gs-emoji-btn__caption">Terrible</span></button>
+              <button type="button" class="gs-emoji-btn" data-val="2" aria-label="Struggling" onclick="pickMood(2)"><span class="gs-emoji-btn__face">😟</span><span class="gs-emoji-btn__caption">Struggling</span></button>
+              <button type="button" class="gs-emoji-btn" data-val="3" aria-label="Average" onclick="pickMood(3)"><span class="gs-emoji-btn__face">😐</span><span class="gs-emoji-btn__caption">Average</span></button>
+              <button type="button" class="gs-emoji-btn" data-val="4" aria-label="Good" onclick="pickMood(4)"><span class="gs-emoji-btn__face">🙂</span><span class="gs-emoji-btn__caption">Good</span></button>
+              <button type="button" class="gs-emoji-btn" data-val="5" aria-label="Great" onclick="pickMood(5)"><span class="gs-emoji-btn__face">😊</span><span class="gs-emoji-btn__caption">Great</span></button>
+            </div>
+          </div>
+
+          <!-- Brain fog -->
+          <div class="gs-slider">
+            <div class="gs-slider__header">
+              <div class="gs-slider__label-row"><span class="gs-slider__label">Brain fog</span></div>
+              <span class="gs-slider__value-badge" id="brainFogVal">5</span>
+            </div>
+            <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="brainFog" min="1" max="10" value="5" oninput="document.getElementById('brainFogVal').textContent=this.value"></div>
+            <div class="gs-slider__word-labels"><span>Crystal clear</span><span>Totally foggy</span></div>
+          </div>
+
+          <!-- Patience -->
+          <div class="gs-slider">
+            <div class="gs-slider__header">
+              <div class="gs-slider__label-row"><span class="gs-slider__label">Patience</span></div>
+              <span class="gs-slider__value-badge" id="patienceVal">5</span>
+            </div>
+            <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="patience" min="1" max="10" value="5" oninput="document.getElementById('patienceVal').textContent=this.value"></div>
+            <div class="gs-slider__word-labels"><span>Lost it completely</span><span>Completely calm</span></div>
+          </div>
+        </div>
+
+        <!-- ═══ Section 2: Sleep & Symptoms ═══ -->
+        <div class="gs-card gs-card--default gs-checkin__section">
+          <div class="gs-section-label">Sleep &amp; symptoms</div>
+
+          <!-- Sleep -->
+          <div class="gs-checkin__field">
+            <span class="gs-slider__label">Hours of sleep last night</span>
+            <input type="number" class="gs-field__input gs-checkin__sleep-input" id="sleep" min="0" max="14" step="0.5" value="7">
+          </div>
+
+          <!-- Hot flushes (peach border sub-card) -->
+          <div class="gs-checkin__sub-alert">
+            <span class="gs-slider__label">Hot flush severity</span>
+            <select id="hotFlush" style="display:none;"><option value="0">None</option><option value="1">Mild</option><option value="2">Moderate</option><option value="3">Severe</option></select>
+            <div class="gs-checkin__pills" id="hotFlushPills">
+              <button type="button" class="gs-checkin__pill gs-checkin__pill--active" data-val="0" onclick="pickPill('hotFlush','hotFlushPills',this)">None</button>
+              <button type="button" class="gs-checkin__pill" data-val="1" onclick="pickPill('hotFlush','hotFlushPills',this)">Mild</button>
+              <button type="button" class="gs-checkin__pill" data-val="2" onclick="pickPill('hotFlush','hotFlushPills',this)">Moderate</button>
+              <button type="button" class="gs-checkin__pill" data-val="3" onclick="pickPill('hotFlush','hotFlushPills',this)">Severe</button>
+            </div>
+            <div class="gs-checkin__field" style="margin-top:12px;">
+              <span class="gs-slider__label" style="font-size:13px;">How many today?</span>
+              <input type="number" class="gs-field__input" id="hotFlushCount" min="0" max="30" step="1" value="0" style="max-width:120px;">
+            </div>
+          </div>
+
+          <!-- Night sweats -->
+          <div class="gs-checkin__sub-alert">
+            <span class="gs-slider__label">Night sweats</span>
+            <select id="nightSweat" style="display:none;"><option value="0">None</option><option value="1">Mild</option><option value="2">Moderate</option><option value="3">Severe</option></select>
+            <div class="gs-checkin__pills" id="nightSweatPills">
+              <button type="button" class="gs-checkin__pill gs-checkin__pill--active" data-val="0" onclick="pickPill('nightSweat','nightSweatPills',this)">None</button>
+              <button type="button" class="gs-checkin__pill" data-val="1" onclick="pickPill('nightSweat','nightSweatPills',this)">Mild</button>
+              <button type="button" class="gs-checkin__pill" data-val="2" onclick="pickPill('nightSweat','nightSweatPills',this)">Moderate</button>
+              <button type="button" class="gs-checkin__pill" data-val="3" onclick="pickPill('nightSweat','nightSweatPills',this)">Drenching</button>
+            </div>
+          </div>
+
+          <!-- Urinary -->
+          <div class="gs-checkin__field">
+            <span class="gs-slider__label">Urinary issues</span>
+            <select id="urinary" style="display:none;"><option value="none">None</option><option value="mild-urgency">Mild urgency</option><option value="frequent">Frequent</option><option value="urgency-incontinence">Urgency incontinence</option><option value="nocturia">Nocturia</option><option value="multiple">Multiple</option></select>
+            <div class="gs-checkin__pills gs-checkin__pills--wrap" id="urinaryPills">
+              <button type="button" class="gs-checkin__pill gs-checkin__pill--active" data-val="none" onclick="pickPill('urinary','urinaryPills',this)">None</button>
+              <button type="button" class="gs-checkin__pill" data-val="mild-urgency" onclick="pickPill('urinary','urinaryPills',this)">Mild urgency</button>
+              <button type="button" class="gs-checkin__pill" data-val="frequent" onclick="pickPill('urinary','urinaryPills',this)">Frequent</button>
+              <button type="button" class="gs-checkin__pill" data-val="urgency-incontinence" onclick="pickPill('urinary','urinaryPills',this)">Urgency incont.</button>
+              <button type="button" class="gs-checkin__pill" data-val="nocturia" onclick="pickPill('urinary','urinaryPills',this)">Nocturia</button>
+              <button type="button" class="gs-checkin__pill" data-val="multiple" onclick="pickPill('urinary','urinaryPills',this)">Multiple</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ Section 3: HRT & Bleeding ═══ -->
+        <div class="gs-card gs-card--default gs-checkin__section">
+          <div class="gs-section-label">HRT &amp; bleeding</div>
+
+          <!-- HRT taken -->
+          <div class="gs-checkin__field">
+            <span class="gs-slider__label">HRT taken today?</span>
+            <input type="checkbox" id="hrtTaken" style="display:none;">
+            <div class="gs-checkin__pills" id="hrtPills">
+              <button type="button" class="gs-checkin__pill" data-val="yes" onclick="pickHrt(true,this)">&#10003; Yes</button>
+              <button type="button" class="gs-checkin__pill gs-checkin__pill--active" data-val="no" onclick="pickHrt(false,this)">&#10007; No</button>
+            </div>
+          </div>
+
+          <!-- Bleeding -->
+          <div class="gs-checkin__field">
+            <span class="gs-slider__label">Bleeding level</span>
+            <select id="bleeding" style="display:none;"><option value="none">None</option><option value="spotting">Spotting</option><option value="light">Light</option><option value="medium">Medium</option><option value="heavy">Heavy</option></select>
+            <div class="gs-checkin__pills gs-checkin__pills--wrap" id="bleedingPills">
+              <button type="button" class="gs-checkin__pill gs-checkin__pill--active" data-val="none" onclick="pickPill('bleeding','bleedingPills',this)">None</button>
+              <button type="button" class="gs-checkin__pill" data-val="spotting" onclick="pickPill('bleeding','bleedingPills',this)">Spotting</button>
+              <button type="button" class="gs-checkin__pill" data-val="light" onclick="pickPill('bleeding','bleedingPills',this)">Light</button>
+              <button type="button" class="gs-checkin__pill" data-val="medium" onclick="pickPill('bleeding','bleedingPills',this)">Medium</button>
+              <button type="button" class="gs-checkin__pill" data-val="heavy" onclick="pickPill('bleeding','bleedingPills',this)">Heavy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ Section 4: Context ═══ -->
+        <div class="gs-card gs-card--default gs-checkin__section">
+          <div class="gs-section-label">Context</div>
+
+          <!-- Triggers as chips -->
+          <div class="gs-checkin__field">
+            <span class="gs-slider__label">Today's triggers</span>
+            <!-- Hidden checkboxes (original) -->
+            <div style="display:none;">
+              <input type="checkbox" id="trig-stress"><input type="checkbox" id="trig-alcohol"><input type="checkbox" id="trig-caffeine">
+              <input type="checkbox" id="trig-poorsleep"><input type="checkbox" id="trig-misseddose"><input type="checkbox" id="trig-exercise">
+              <input type="checkbox" id="trig-illness"><input type="checkbox" id="trig-spicyfood"><input type="checkbox" id="trig-hotweather"><input type="checkbox" id="trig-other">
+            </div>
+            <div class="gs-chip-grid" id="triggerChips">
+              <div class="gs-chip" onclick="toggleTrig('stress',this)" data-trig="stress"><span class="gs-chip__emoji">😰</span><span>Stress</span></div>
+              <div class="gs-chip" onclick="toggleTrig('alcohol',this)" data-trig="alcohol"><span class="gs-chip__emoji">🍷</span><span>Alcohol</span></div>
+              <div class="gs-chip" onclick="toggleTrig('caffeine',this)" data-trig="caffeine"><span class="gs-chip__emoji">☕</span><span>Caffeine</span></div>
+              <div class="gs-chip" onclick="toggleTrig('poorsleep',this)" data-trig="poorsleep"><span class="gs-chip__emoji">😴</span><span>Poor Sleep</span></div>
+              <div class="gs-chip" onclick="toggleTrig('misseddose',this)" data-trig="misseddose"><span class="gs-chip__emoji">💊</span><span>Missed Dose</span></div>
+              <div class="gs-chip" onclick="toggleTrig('exercise',this)" data-trig="exercise"><span class="gs-chip__emoji">🏃</span><span>Exercise</span></div>
+              <div class="gs-chip" onclick="toggleTrig('illness',this)" data-trig="illness"><span class="gs-chip__emoji">🤒</span><span>Illness</span></div>
+              <div class="gs-chip" onclick="toggleTrig('spicyfood',this)" data-trig="spicyfood"><span class="gs-chip__emoji">🌶️</span><span>Spicy Food</span></div>
+              <div class="gs-chip" onclick="toggleTrig('hotweather',this)" data-trig="hotweather"><span class="gs-chip__emoji">☀️</span><span>Hot Weather</span></div>
+              <div class="gs-chip" onclick="toggleTrig('other',this)" data-trig="other"><span class="gs-chip__emoji">➕</span><span>Other</span></div>
+            </div>
+          </div>
+
+          <!-- Life impact sliders -->
+          <div class="gs-checkin__field" style="margin-top:20px;">
+            <span class="gs-slider__label" style="margin-bottom:8px;display:block;">Life impact</span>
+
+            <div class="gs-slider gs-slider--compact">
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workVal">5</span></div>
+              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="workImpact" min="1" max="10" value="5" oninput="document.getElementById('workVal').textContent=this.value"></div>
+            </div>
+            <div class="gs-slider gs-slider--compact">
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relVal">5</span></div>
+              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="relImpact" min="1" max="10" value="5" oninput="document.getElementById('relVal').textContent=this.value"></div>
+            </div>
+            <div class="gs-slider gs-slider--compact">
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyVal">5</span></div>
+              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="energyImpact" min="1" max="10" value="5" oninput="document.getElementById('energyVal').textContent=this.value"></div>
+            </div>
+            <div class="gs-slider gs-slider--compact">
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalVal">5</span></div>
+              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="mentalClarity" min="1" max="10" value="5" oninput="document.getElementById('mentalVal').textContent=this.value"></div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="gs-checkin__field gs-checkin__notes">
+            <span class="gs-checkin__notes-label">Anything else? (optional)</span>
+            <textarea id="notes" class="gs-field__textarea gs-checkin__notes-ta" placeholder="How are you feeling? Any observations?" rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- Save -->
+        <button class="gs-btn gs-btn--primary gs-btn--full gs-checkin__save" onclick="saveCheckin()">Save Check-In</button>
     </div>
     <div id="hrtPage" class="page">
         <div class="form-section">
@@ -1599,6 +3269,72 @@ body {
                 </div>
             </div>
         </div>
+    </div>
+    <div id="trendsPage" class="page gs-trends">
+      <h1 class="gs-trends__title">Your Trends</h1>
+      <div class="gs-trends__controls">
+        <select id="trendsRange" class="gs-trends__range-select" onchange="renderTrends()">
+          <option value="7">Last 7 days</option>
+          <option value="14">Last 14 days</option>
+          <option value="30" selected>Last 30 days</option>
+        </select>
+        <span class="gs-trends__coverage" id="trendsCoverage"></span>
+      </div>
+      <div id="trendsContent"></div>
+    </div>
+    <div id="reflectionPage" class="page gs-reflect">
+      <div id="reflectionContent"></div>
+    </div>
+    <div id="reportPage" class="page gs-report">
+      <div id="reportContent"></div>
+      <div class="gs-report__footer-bar">
+        <button class="gs-report__footer-btn gs-report__footer-btn--primary" onclick="exportData()">Print / Save PDF</button>
+        <button class="gs-report__footer-btn gs-report__footer-btn--secondary" onclick="showPage('dashboard',null)">Back to Dashboard</button>
+      </div>
+    </div>
+    <div id="notesPage" class="page gs-notes">
+      <h1 class="gs-notes__title">Notes &amp; Questions</h1>
+      <p class="gs-notes__subtitle">A private space for questions, reminders, and things to mention.</p>
+
+      <div class="gs-notes__add-card" id="notesAddCard">
+        <button class="gs-notes__add-btn" id="notesAddBtn" onclick="document.getElementById('notesAddCard').classList.add('gs-notes__add-card--open');this.style.display='none';">+ Add a note or question</button>
+        <div class="gs-notes__form" id="notesForm">
+          <label class="gs-notes__form-label">Category</label>
+          <div class="gs-notes__cat-pills" id="notesCatPills">
+            <button class="gs-notes__cat-pill gs-notes__cat-pill--active" data-cat="doctor-question" onclick="pickNoteCat(this)" type="button">Doctor Question</button>
+            <button class="gs-notes__cat-pill" data-cat="symptom" onclick="pickNoteCat(this)" type="button">Symptom</button>
+            <button class="gs-notes__cat-pill" data-cat="medication" onclick="pickNoteCat(this)" type="button">Medication</button>
+            <button class="gs-notes__cat-pill" data-cat="reminder" onclick="pickNoteCat(this)" type="button">Reminder</button>
+            <button class="gs-notes__cat-pill" data-cat="other" onclick="pickNoteCat(this)" type="button">Other</button>
+          </div>
+          <label class="gs-notes__form-label" for="noteText">Note</label>
+          <textarea id="noteText" class="gs-notes__textarea" rows="4" placeholder="Write your note or question here..."></textarea>
+          <label class="gs-notes__form-label">Priority</label>
+          <div class="gs-notes__pri-pills" id="notesPriPills">
+            <button class="gs-notes__pri-pill gs-notes__pri-pill--active" data-pri="low" onclick="pickNotePri(this)" type="button">Low</button>
+            <button class="gs-notes__pri-pill" data-pri="medium" onclick="pickNotePri(this)" type="button">Medium</button>
+            <button class="gs-notes__pri-pill" data-pri="high" onclick="pickNotePri(this)" type="button">High</button>
+          </div>
+          <div class="gs-notes__toggle-row">
+            <span class="gs-notes__toggle-label">Ask at next appointment?</span>
+            <button class="gs-notes__toggle" id="noteAskToggle" role="switch" aria-label="Ask at next appointment" aria-checked="false" onclick="this.classList.toggle('gs-notes__toggle--on');this.setAttribute('aria-checked',this.classList.contains('gs-notes__toggle--on'))"></button>
+          </div>
+          <input type="hidden" id="noteEditId" value="">
+          <button class="gs-notes__save-btn" onclick="saveNote()">Save Note</button>
+          <button class="gs-notes__cancel-btn" onclick="cancelNoteForm()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="gs-notes__filters" id="notesFilters">
+        <button class="gs-notes__filter gs-notes__filter--active" data-filter="all" onclick="pickNoteFilter(this)">All</button>
+        <button class="gs-notes__filter" data-filter="doctor-question" onclick="pickNoteFilter(this)">Doctor Questions</button>
+        <button class="gs-notes__filter" data-filter="symptom" onclick="pickNoteFilter(this)">Symptoms</button>
+        <button class="gs-notes__filter" data-filter="medication" onclick="pickNoteFilter(this)">Medications</button>
+        <button class="gs-notes__filter" data-filter="reminder" onclick="pickNoteFilter(this)">Reminders</button>
+        <button class="gs-notes__filter" data-filter="other" onclick="pickNoteFilter(this)">Other</button>
+      </div>
+
+      <div id="notesList"></div>
     </div>
     <div id="settingsPage" class="page">
         <h2 style="font-size:28px;margin-bottom:24px;">Settings</h2>
@@ -1816,7 +3552,8 @@ var State = {
   user: null,
   _sample: null,
   _sampleValid: false,
-  _calendarKey: null
+  _calendarKey: null,
+  notes: null
 };
 
 function getCheckins() {
@@ -1886,7 +3623,7 @@ function loadUser() {
     State.user = JSON.parse(u);
     document.getElementById('loginPage').classList.remove('active');
     document.getElementById('dashboardPage').classList.add('active');
-    document.getElementById('navLinks').style.display = 'flex';
+    document.getElementById('gsTabbar').style.display = 'flex';
     document.getElementById('clinicalFooter').style.display = 'block';
     document.getElementById('settingsEmail').textContent = State.user.email || 'Guest';
     loadProfile(); updateDashboard(); updateCalendar(); loadHRTForm(); showIOSBanner();
@@ -1904,17 +3641,22 @@ function logout() {
     State.user = null; State.checkins = null; State.hrt = null; State.profile = null;
     document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
     document.getElementById('loginPage').classList.add('active');
-    document.getElementById('navLinks').style.display = 'none';
+    document.getElementById('gsTabbar').style.display = 'none';
     document.getElementById('clinicalFooter').style.display = 'none';
   }
 }
 function showPage(n, b) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById(n + 'Page').classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(function(x){ x.classList.remove('active'); });
-  if (b) b.classList.add('active');
+  document.querySelectorAll('.gs-tab').forEach(function(t){ t.classList.remove('gs-tab--active'); });
+  var activeTab = document.querySelector('.gs-tab[data-page="' + n + '"]');
+  if (activeTab) activeTab.classList.add('gs-tab--active');
   if (n === 'dashboard') updateDashboard();
-  if (n === 'checkin') loadCheckinForDate();
+  if (n === 'checkin') { loadCheckinForDate(); syncCheckinVisuals(); }
+  if (n === 'trends') renderTrends();
+  if (n === 'reflection') renderReflection();
+  if (n === 'report') renderReport();
+  if (n === 'notes') renderNotes('all');
   if (n === 'calendar') updateCalendar();
 }
 function toggleOther(s, o) {
@@ -1973,6 +3715,66 @@ function loadCheckinForDate() {
   document.getElementById('notes').value = c.notes || '';
   if (c.triggers) TRIGGERS.forEach(function(t){
     document.getElementById('trig-' + t).checked = c.triggers.indexOf(t) >= 0;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DAILY LOG — visual control helpers
+// ═══════════════════════════════════════════════════════════════
+function pickMood(val) {
+  document.getElementById('mood').value = val;
+  var btns = document.querySelectorAll('#moodEmojis .gs-emoji-btn');
+  btns.forEach(function(b){ b.classList.toggle('gs-emoji-btn--active', b.getAttribute('data-val') == val); });
+}
+
+function pickPill(hiddenId, containerId, btn) {
+  document.getElementById(hiddenId).value = btn.getAttribute('data-val');
+  var pills = document.querySelectorAll('#' + containerId + ' .gs-checkin__pill');
+  pills.forEach(function(p){ p.classList.remove('gs-checkin__pill--active'); });
+  btn.classList.add('gs-checkin__pill--active');
+}
+
+function pickHrt(yes, btn) {
+  document.getElementById('hrtTaken').checked = yes;
+  var pills = document.querySelectorAll('#hrtPills .gs-checkin__pill');
+  pills.forEach(function(p){ p.classList.remove('gs-checkin__pill--active'); });
+  btn.classList.add('gs-checkin__pill--active');
+}
+
+function toggleTrig(name, chip) {
+  var cb = document.getElementById('trig-' + name);
+  cb.checked = !cb.checked;
+  chip.classList.toggle('gs-chip--active', cb.checked);
+}
+
+function syncCheckinVisuals() {
+  var moodVal = document.getElementById('mood').value;
+  if (moodVal) pickMood(moodVal);
+  else document.querySelectorAll('#moodEmojis .gs-emoji-btn').forEach(function(b){ b.classList.remove('gs-emoji-btn--active'); });
+
+  var pillMaps = [
+    {sel: 'hotFlush', cont: 'hotFlushPills'},
+    {sel: 'nightSweat', cont: 'nightSweatPills'},
+    {sel: 'urinary', cont: 'urinaryPills'},
+    {sel: 'bleeding', cont: 'bleedingPills'}
+  ];
+  pillMaps.forEach(function(m) {
+    var val = document.getElementById(m.sel).value;
+    var pills = document.querySelectorAll('#' + m.cont + ' .gs-checkin__pill');
+    pills.forEach(function(p){ p.classList.toggle('gs-checkin__pill--active', p.getAttribute('data-val') == val); });
+  });
+
+  var hrtChecked = document.getElementById('hrtTaken').checked;
+  var hrtPills = document.querySelectorAll('#hrtPills .gs-checkin__pill');
+  hrtPills.forEach(function(p){
+    var isYes = p.getAttribute('data-val') === 'yes';
+    p.classList.toggle('gs-checkin__pill--active', hrtChecked ? isYes : !isYes);
+  });
+
+  TRIGGERS.forEach(function(t) {
+    var cb = document.getElementById('trig-' + t);
+    var chip = document.querySelector('#triggerChips .gs-chip[data-trig="' + t + '"]');
+    if (chip) chip.classList.toggle('gs-chip--active', cb.checked);
   });
 }
 
@@ -2161,6 +3963,98 @@ function updateDashboard() {
       (hrt.doseChangeDate?'<br><strong>Last dose change:</strong> '+hrt.doseChangeDate+' — '+(hrt.doseChangeWhat||''):'')+
       (hrt.notes?'<br><strong>Notes:</strong> '+hrt.notes:''));
   }
+
+  // ─── Garden Sage dashboard enrichment ────────────────────────
+  // Greeting (time-aware)
+  var usr = getUser();
+  var displayName = (usr.email && usr.email !== 'Guest') ? usr.email.split('@')[0] : '';
+  displayName = displayName ? displayName.charAt(0).toUpperCase() + displayName.slice(1) : '';
+  var hour = new Date().getHours();
+  var timeGreet = hour < 12 ? 'Morning' : hour < 17 ? 'Afternoon' : 'Evening';
+  var greetEl = document.getElementById('dashGreeting');
+  if (greetEl) greetEl.textContent = displayName ? (timeGreet + ', ' + displayName + '.') : ('Good ' + timeGreet + '.');
+  var subEl = document.getElementById('dashSubtext');
+  if (subEl) subEl.textContent = todayLog ? "Here’s your snapshot." : "Ready for today?";
+
+  // Today CTA vs done
+  var ctaEl = document.querySelector('.gs-dashboard__cta');
+  var doneEl = document.getElementById('dashTodayDone');
+  if (todayLog && ctaEl) { ctaEl.style.display = 'none'; }
+  if (todayLog && doneEl) {
+    doneEl.style.display = 'block';
+    var doneLabel = document.getElementById('dashTodayLabel');
+    if (doneLabel) doneLabel.textContent = '✓ Logged — Mood ' + (todayLog.mood||'?') + '/5, Sleep ' + (todayLog.sleep||'?') + 'hrs';
+  }
+  if (!todayLog && ctaEl) { ctaEl.style.display = ''; }
+  if (!todayLog && doneEl) { doneEl.style.display = 'none'; }
+
+  // Streak
+  var streakEl = document.getElementById('dashStreak');
+  var streakText = document.getElementById('dashStreakText');
+  if (streakEl && arr.length > 0) {
+    var sorted = [].concat(arr).sort(function(a,b){ return new Date(b.date)-new Date(a.date); });
+    var streak = 0;
+    var checkDate = new Date();
+    for (var si = 0; si < sorted.length && si < 365; si++) {
+      var expected = checkDate.getFullYear()+'-'+String(checkDate.getMonth()+1).padStart(2,'0')+'-'+String(checkDate.getDate()).padStart(2,'0');
+      if (sorted[si].date === expected) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else if (si === 0 && !todayLog) {
+        checkDate.setDate(checkDate.getDate() - 1);
+        if (sorted[si].date === checkDate.getFullYear()+'-'+String(checkDate.getMonth()+1).padStart(2,'0')+'-'+String(checkDate.getDate()).padStart(2,'0')) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else { break; }
+      } else { break; }
+    }
+    if (streak > 1) {
+      streakEl.style.display = '';
+      if (streakText) streakText.textContent = '🔥 ' + streak + ' day streak';
+    } else { streakEl.style.display = 'none'; }
+  }
+
+  // One insight (gold card)
+  var insightEl = document.getElementById('dashInsight');
+  if (insightEl && s && s.length > 0) {
+    var avgFn = function(f){ return s.reduce(function(x,c){ return x+(parseFloat(c[f])||0); },0)/s.length; };
+    var sl = avgFn('sleep');
+    var bf = avgFn('brainFog');
+    var pa = avgFn('patience');
+    var ha = s.filter(function(c){ return c.hrtTaken; }).length;
+    var haPct = Math.round((ha / s.length) * 100);
+    var tt = getTopTriggers(s);
+    var insight = "You’re doing great. Keep logging daily.";
+    if (sl < 5.5) insight = 'Sleep has been your biggest challenge.';
+    else if (bf > 7) insight = 'Brain fog is running high this week.';
+    else if (pa > 7) insight = 'Your patience is holding strong.';
+    else if (haPct < 70 && s.length >= 3) insight = 'HRT adherence dipped this week.';
+    else if (tt.length > 0) insight = 'Your top trigger: ' + tt[0].split(' (')[0] + '.';
+    else if (sl >= 7) insight = 'Sleep is looking solid this week.';
+    else if (bf < 4) insight = 'Mental clarity is on your side.';
+    insightEl.textContent = insight;
+  }
+
+  // Life Impact Summary
+  var impactEl = document.getElementById('dashImpactSummary');
+  if (impactEl && s && s.length > 0) {
+    var avgFn2 = function(f){ return s.reduce(function(x,c){ return x+(parseFloat(c[f])||0); },0)/s.length; };
+    var wi = avgFn2('workImpact');
+    var ri = avgFn2('relImpact');
+    var ei = avgFn2('energyImpact');
+    var mc = avgFn2('mentalClarity');
+    var areas = [{name:'Work',v:wi},{name:'Relationships',v:ri},{name:'Energy',v:ei},{name:'Mental clarity',v:mc}];
+    areas.sort(function(a,b){ return b.v - a.v; });
+    var impactText = 'Life areas remained balanced this week.';
+    if (areas[0].v > 6 && areas[1].v > 6) {
+      impactText = areas[0].name + ' and ' + areas[1].name.toLowerCase() + ' felt the strain this week.';
+    } else if (areas[0].v > 6) {
+      impactText = areas[0].name + ' impact was significant. Other areas held steady.';
+    } else if (areas[0].v < 4) {
+      impactText = 'A steady week across all areas.';
+    }
+    impactEl.textContent = impactText;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2265,7 +4159,7 @@ function exportData() {
   var t30=getTopTriggers(s30);
   var uri=function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+' days)'; }).join(', ')||'None reported'; };
 
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>GP Report</title><style>body{font-family:Arial,sans-serif;max-width:820px;margin:40px auto;padding:40px;color:#111;font-size:13px;}h1{font-size:20px;text-align:center;border-bottom:3px solid #111;padding-bottom:14px;margin-bottom:6px;}h2{font-size:13px;text-transform:uppercase;letter-spacing:1px;background:#f5f5f5;padding:7px 10px;border-left:4px solid #6d28d9;margin:24px 0 12px;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#ede9fe;text-align:left;padding:8px 10px;font-size:12px;border:1px solid #ccc;}td{padding:7px 10px;border:1px solid #ddd;font-size:12px;vertical-align:top;}tr:nth-child(even) td{background:#fafafa;}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.ir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;font-size:12px;}.lb{color:#555;font-weight:600;}.ft{margin-top:36px;padding-top:12px;border-top:1px solid #ccc;font-size:10px;color:#888;text-align:center;}@media print{body{margin:10px;padding:20px;}}</style></head><body>';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>GP Report</title><style>body{font-family:Inter,Arial,Helvetica,sans-serif;max-width:820px;margin:40px auto;padding:40px;color:#111;font-size:13px;background:#fff;}h1{font-size:20px;text-align:center;border-bottom:3px solid #7A8FA6;padding-bottom:14px;margin-bottom:6px;color:#3A5C4E;}h2{font-size:13px;text-transform:uppercase;letter-spacing:1px;background:#f8fafc;padding:7px 10px;border-left:4px solid #7A8FA6;margin:24px 0 12px;color:#3A5C4E;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#EFF3F7;text-align:left;padding:8px 10px;font-size:12px;border:1px solid #ccc;color:#3A5C4E;}td{padding:7px 10px;border:1px solid #ddd;font-size:12px;vertical-align:top;}tr:nth-child(even) td{background:#fafafa;}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.ir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;font-size:12px;}.lb{color:#555;font-weight:600;}.ft{margin-top:36px;padding-top:12px;border-top:1px solid #ccc;font-size:10px;color:#9ca3af;text-align:center;font-family:Inter,Arial,sans-serif;}@media print{body{margin:10px;padding:20px;}}</style></head><body>';
   html+='<h1>Menopause Impact Tracker - GP Clinical Summary Report</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Report Date: '+rd+' | Patient: '+(prf.name||usr.email||'Not recorded')+'</div>';
   html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob||'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod||'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
   html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr></table>';
@@ -2732,7 +4626,745 @@ function _makeHelper(text) {
   el.className = 'gs-field__helper';
   el.textContent = text;
   return el;
-}    
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRENDS SCREEN
+// ═══════════════════════════════════════════════════════════════
+function renderTrends() {
+  var allCheckins = getCheckins();
+  var days = parseInt(document.getElementById('trendsRange').value) || 30;
+  var now = new Date();
+  var cutoff = days * 86400000;
+  var filtered = allCheckins.filter(function(c) { return (now - new Date(c.date)) <= cutoff; })
+    .sort(function(a,b) { return new Date(a.date) - new Date(b.date); });
+  var container = document.getElementById('trendsContent');
+  var coverageEl = document.getElementById('trendsCoverage');
+  coverageEl.textContent = 'Based on ' + filtered.length + ' logged day' + (filtered.length !== 1 ? 's' : '');
+
+  if (allCheckins.length < 3) {
+    container.innerHTML = '<div class="gs-trends__empty"><h2>Nothing to show yet</h2><p>Log at least 3 days to start seeing your trends.</p><button class="gs-trends__empty-btn" onclick="showPage(\'checkin\',null)">Go to Daily Log</button></div>';
+    return;
+  }
+
+  var html = '';
+
+  // Helper: compute average
+  function avg(field) {
+    var vals = filtered.map(function(c) { return parseFloat(c[field]); }).filter(function(v) { return !isNaN(v); });
+    if (vals.length === 0) return null;
+    return vals.reduce(function(a,b) { return a+b; }, 0) / vals.length;
+  }
+
+  // Helper: trend direction (reuses trendBadge logic)
+  function trendDir(field, upIsGood) {
+    if (filtered.length < 4) return 'stable';
+    var mid = Math.floor(filtered.length / 2);
+    var vals = filtered.map(function(c) { return parseFloat(c[field]) || 0; });
+    var f1 = vals.slice(0, mid).reduce(function(a,b) { return a+b; }, 0) / mid;
+    var f2 = vals.slice(mid).reduce(function(a,b) { return a+b; }, 0) / (vals.length - mid);
+    var d = f2 - f1;
+    if (Math.abs(d) < 0.3) return 'stable';
+    var ok = upIsGood ? d > 0 : d < 0;
+    return ok ? 'up' : 'down';
+  }
+
+  function trendBadgeHtml(dir) {
+    if (dir === 'up') return '<span class="gs-trends__trend-badge gs-trends__trend-badge--up">↑ Improving</span>';
+    if (dir === 'down') return '<span class="gs-trends__trend-badge gs-trends__trend-badge--down">↓ Worsening</span>';
+    return '<span class="gs-trends__trend-badge gs-trends__trend-badge--stable">→ Stable</span>';
+  }
+
+  // Section 2: Main Insight Card
+  var avgSleep = avg('sleep');
+  var avgFog = avg('brainFog');
+  var avgHF = avg('hotFlushCount');
+  var insightParts = [];
+  if (avgSleep !== null) insightParts.push('Your sleep averaged ' + avgSleep.toFixed(1) + ' hrs.');
+  if (avgFog !== null) {
+    var fogWord = avgFog <= 3 ? 'low' : avgFog <= 6 ? 'moderate' : 'high';
+    insightParts.push('Brain fog was ' + fogWord + '.');
+  }
+  if (avgHF !== null) {
+    var hfWord = avgHF < 1 ? 'rare' : avgHF <= 3 ? 'mild on most days' : 'frequent';
+    insightParts.push('Hot flushes were ' + hfWord + '.');
+  }
+  var insightText = insightParts.length > 0 ? insightParts.join(' ') : 'Start logging daily to see your trends here.';
+  html += '<div class="gs-trends__card gs-trends__card--gold"><h3 class="gs-trends__card-heading">This period at a glance</h3><p class="gs-trends__card-body">' + insightText + '</p></div>';
+
+  // Section 3: Metric cards with sparklines
+  var metrics = [
+    {field:'sleep', label:'SLEEP', unit:' hrs', upGood:true},
+    {field:'brainFog', label:'BRAIN FOG', unit:'/10', upGood:false},
+    {field:'patience', label:'PATIENCE', unit:'/10', upGood:true},
+    {field:'hotFlushCount', label:'HOT FLUSHES', unit:'/day', upGood:false},
+    {field:'nightSweat', label:'NIGHT SWEATS', unit:'/3', upGood:false},
+    {field:'workImpact', label:'WORK IMPACT', unit:'/10', upGood:false},
+    {field:'energyImpact', label:'ENERGY IMPACT', unit:'/10', upGood:false}
+  ];
+
+  metrics.forEach(function(m) {
+    var a = avg(m.field);
+    if (a === null) return;
+    var dir = trendDir(m.field, m.upGood);
+    var borderClass = dir === 'up' ? 'gs-trends__card--gold' : dir === 'down' ? 'gs-trends__card--peach' : '';
+    html += '<div class="gs-trends__card ' + borderClass + '">';
+    html += '<p class="gs-trends__metric-label">' + m.label + '</p>';
+    html += '<div class="gs-trends__metric-row"><span class="gs-trends__metric-big">' + a.toFixed(1) + '</span><span style="font-size:13px;color:#6B7280;">' + m.unit + '</span>' + trendBadgeHtml(dir) + '</div>';
+    var vals = filtered.map(function(c) { return parseFloat(c[m.field]); }).filter(function(v) { return !isNaN(v); });
+    if (vals.length >= 3) {
+      html += '<div class="gs-trends__sparkline-wrap"><canvas class="gs-trends__sparkline" data-vals="' + vals.join(',') + '" data-field="' + m.label + '" width="120" height="40" role="img" aria-label="' + m.label + ' trend sparkline showing ' + vals.length + ' data points"></canvas></div>';
+    } else {
+      html += '<p class="gs-trends__no-data">Not enough data</p>';
+    }
+    html += '</div>';
+  });
+
+  // Section 4: HRT Change Markers
+  var hrt = getHRT();
+  html += '<div class="gs-trends__card gs-trends__card--slate"><h3 class="gs-trends__card-heading">HRT Changes During This Period</h3>';
+  if (hrt.doseChangeDate) {
+    var changeDate = new Date(hrt.doseChangeDate);
+    var inRange = (now - changeDate) <= cutoff;
+    if (inRange) {
+      html += '<div class="gs-trends__hrt-event"><span class="gs-trends__hrt-date-pill">' + hrt.doseChangeDate + '</span><span class="gs-trends__hrt-desc">' + (hrt.doseChangeWhat || 'Dose change') + (hrt.doseChangeReason ? ' · ' + hrt.doseChangeReason : '') + '</span></div>';
+    } else {
+      html += '<p class="gs-trends__card-body">No HRT changes recorded in this period.</p>';
+    }
+  } else {
+    html += '<p class="gs-trends__card-body">No HRT changes recorded in this period.</p>';
+  }
+  html += '<p class="gs-trends__card-sub">HRT change markers help you spot symptom shifts after dose adjustments.</p></div>';
+
+  // Section 5: Top Triggers
+  html += '<div class="gs-trends__card gs-trends__card--peach"><h3 class="gs-trends__card-heading">What\'s Been Triggering You</h3>';
+  var trigCounts = {};
+  filtered.forEach(function(c) { if (c.triggers) c.triggers.forEach(function(t) { trigCounts[t] = (trigCounts[t]||0) + 1; }); });
+  var trigSorted = Object.keys(trigCounts).sort(function(a,b) { return trigCounts[b] - trigCounts[a]; }).slice(0,5);
+  if (trigSorted.length > 0) {
+    var maxTrig = trigCounts[trigSorted[0]];
+    html += '<div id="triggerBarChart" style="margin-top:8px;">';
+    trigSorted.forEach(function(t) {
+      var pct = Math.round((trigCounts[t] / maxTrig) * 100);
+      var lbl = TLABELS[t] || t;
+      html += '<div class="gs-trends__bar-row"><span class="gs-trends__bar-label">' + lbl + '</span><svg width="100%" height="28" style="flex:1;min-width:0;"><rect x="0" y="2" width="' + pct + '%" height="24" rx="4" fill="#D4836A" opacity="0.6"/></svg><span class="gs-trends__bar-count">' + trigCounts[t] + '</span></div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<p class="gs-trends__card-body">No triggers logged in this period.</p>';
+  }
+  html += '</div>';
+
+  // Section 6: Bleeding Summary
+  html += '<div class="gs-trends__card gs-trends__card--peach"><h3 class="gs-trends__card-heading">Bleeding This Period</h3>';
+  var bleedDays = filtered.filter(function(c) { return c.bleeding && c.bleeding !== 'none'; });
+  if (bleedDays.length > 0) {
+    var bleedBreak = {spotting:0, light:0, medium:0, heavy:0};
+    bleedDays.forEach(function(c) { if (bleedBreak.hasOwnProperty(c.bleeding)) bleedBreak[c.bleeding]++; });
+    html += '<p class="gs-trends__card-body">' + bleedDays.length + ' bleeding day' + (bleedDays.length !== 1 ? 's' : '') + '</p><div style="margin-top:8px;">';
+    if (bleedBreak.spotting) html += '<span class="gs-trends__pill-badge gs-trends__pill-badge--spotting">Spotting: ' + bleedBreak.spotting + '</span>';
+    if (bleedBreak.light) html += '<span class="gs-trends__pill-badge gs-trends__pill-badge--light">Light: ' + bleedBreak.light + '</span>';
+    if (bleedBreak.medium) html += '<span class="gs-trends__pill-badge gs-trends__pill-badge--medium">Medium: ' + bleedBreak.medium + '</span>';
+    if (bleedBreak.heavy) html += '<span class="gs-trends__pill-badge gs-trends__pill-badge--heavy">Heavy: ' + bleedBreak.heavy + '</span>';
+    html += '</div>';
+  } else {
+    html += '<p class="gs-trends__card-body">No bleeding recorded in this period.</p>';
+  }
+  html += '</div>';
+
+  // Section 7: HRT Adherence
+  html += '<div class="gs-trends__card gs-trends__card--sage"><h3 class="gs-trends__card-heading">HRT Adherence</h3>';
+  var hrtDays = filtered.filter(function(c) { return c.hrtTaken; }).length;
+  var totalLogged = filtered.length;
+  var hrtPct = totalLogged > 0 ? Math.round((hrtDays / totalLogged) * 100) : 0;
+  html += '<svg width="100%" height="24" style="margin:8px 0;" role="img" aria-label="HRT adherence ' + hrtPct + ' percent"><rect x="0" y="0" width="100%" height="24" rx="12" fill="#F4F0E8"/><rect x="0" y="0" width="' + hrtPct + '%" height="24" rx="12" fill="#3A5C4E"/></svg>';
+  html += '<p class="gs-trends__card-body" style="font-size:13px;">' + hrtPct + '% — ' + hrtDays + ' of ' + totalLogged + ' logged days</p></div>';
+
+  container.innerHTML = html;
+
+  // Draw sparklines
+  var canvases = container.querySelectorAll('.gs-trends__sparkline');
+  canvases.forEach(function(cvs) {
+    var vals = cvs.getAttribute('data-vals').split(',').map(Number);
+    var ctx = cvs.getContext('2d');
+    var w = 120, h = 40;
+    cvs.width = w; cvs.height = h;
+    var mn = Math.min.apply(null, vals);
+    var mx = Math.max.apply(null, vals);
+    var range = mx - mn || 1;
+    var step = w / (vals.length - 1);
+
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    for (var i = 0; i < vals.length - 1; i++) {
+      var x1 = i * step, x2 = (i + 1) * step;
+      var y1 = h - 4 - ((vals[i] - mn) / range) * (h - 8);
+      var y2 = h - 4 - ((vals[i + 1] - mn) / range) * (h - 8);
+      ctx.beginPath();
+      ctx.strokeStyle = (vals[i] > 7 || vals[i + 1] > 7) ? '#D4836A' : '#3A5C4E';
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WEEKLY REFLECTION
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// MORE SHEET
+// ═══════════════════════════════════════════════════════════════
+function openMoreSheet() {
+  document.getElementById('gsMoreBackdrop').style.display = 'block';
+  document.getElementById('gsMoreSheet').style.display = 'block';
+}
+function closeMoreSheet() {
+  document.getElementById('gsMoreBackdrop').style.display = 'none';
+  document.getElementById('gsMoreSheet').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTES & QUESTIONS
+// ═══════════════════════════════════════════════════════════════
+function getNotes() {
+  if (!State.notes) State.notes = JSON.parse(localStorage.getItem('notes') || '[]');
+  return State.notes;
+}
+function setNotes(arr) {
+  State.notes = arr;
+  localStorage.setItem('notes', JSON.stringify(arr));
+}
+
+var _notesCatLabels = {
+  'doctor-question': 'Doctor Question',
+  'symptom': 'Symptom',
+  'medication': 'Medication',
+  'reminder': 'Reminder',
+  'other': 'Other'
+};
+
+function pickNoteCat(btn) {
+  document.querySelectorAll('#notesCatPills .gs-notes__cat-pill').forEach(function(p){ p.classList.remove('gs-notes__cat-pill--active'); });
+  btn.classList.add('gs-notes__cat-pill--active');
+}
+function pickNotePri(btn) {
+  document.querySelectorAll('#notesPriPills .gs-notes__pri-pill').forEach(function(p){ p.classList.remove('gs-notes__pri-pill--active'); });
+  btn.classList.add('gs-notes__pri-pill--active');
+}
+function pickNoteFilter(btn) {
+  document.querySelectorAll('#notesFilters .gs-notes__filter').forEach(function(f){ f.classList.remove('gs-notes__filter--active'); });
+  btn.classList.add('gs-notes__filter--active');
+  renderNotes(btn.getAttribute('data-filter'));
+}
+
+function cancelNoteForm() {
+  var card = document.getElementById('notesAddCard');
+  card.classList.remove('gs-notes__add-card--open');
+  document.getElementById('notesAddBtn').style.display = '';
+  document.getElementById('noteText').value = '';
+  document.getElementById('noteEditId').value = '';
+  document.getElementById('noteAskToggle').classList.remove('gs-notes__toggle--on');
+  document.getElementById('noteAskToggle').setAttribute('aria-checked', 'false');
+  pickNoteCat(document.querySelector('#notesCatPills .gs-notes__cat-pill[data-cat="doctor-question"]'));
+  pickNotePri(document.querySelector('#notesPriPills .gs-notes__pri-pill[data-pri="low"]'));
+}
+
+function saveNote() {
+  var text = document.getElementById('noteText').value.trim();
+  if (!text) return;
+  var cat = document.querySelector('#notesCatPills .gs-notes__cat-pill--active').getAttribute('data-cat');
+  var pri = document.querySelector('#notesPriPills .gs-notes__pri-pill--active').getAttribute('data-pri');
+  var ask = document.getElementById('noteAskToggle').classList.contains('gs-notes__toggle--on');
+  var editId = document.getElementById('noteEditId').value;
+  var arr = getNotes();
+
+  if (editId) {
+    var idx = arr.findIndex(function(n){ return n.id == editId; });
+    if (idx >= 0) { arr[idx].text = text; arr[idx].category = cat; arr[idx].priority = pri; arr[idx].askAtAppointment = ask; }
+  } else {
+    arr.push({
+      id: Date.now(),
+      date: new Date().toISOString().slice(0,10),
+      category: cat,
+      text: text,
+      priority: pri,
+      askAtAppointment: ask,
+      answered: false
+    });
+  }
+  setNotes(arr);
+  cancelNoteForm();
+  var activeFilter = document.querySelector('#notesFilters .gs-notes__filter--active');
+  renderNotes(activeFilter ? activeFilter.getAttribute('data-filter') : 'all');
+}
+
+function deleteNote(id) {
+  var arr = getNotes().filter(function(n){ return n.id !== id; });
+  setNotes(arr);
+  var activeFilter = document.querySelector('#notesFilters .gs-notes__filter--active');
+  renderNotes(activeFilter ? activeFilter.getAttribute('data-filter') : 'all');
+}
+
+function toggleNoteAnswered(id) {
+  var arr = getNotes();
+  var n = arr.find(function(x){ return x.id === id; });
+  if (n) n.answered = !n.answered;
+  setNotes(arr);
+  var activeFilter = document.querySelector('#notesFilters .gs-notes__filter--active');
+  renderNotes(activeFilter ? activeFilter.getAttribute('data-filter') : 'all');
+}
+
+function editNote(id) {
+  var arr = getNotes();
+  var n = arr.find(function(x){ return x.id === id; });
+  if (!n) return;
+  var card = document.getElementById('notesAddCard');
+  card.classList.add('gs-notes__add-card--open');
+  document.getElementById('notesAddBtn').style.display = 'none';
+  document.getElementById('noteText').value = n.text;
+  document.getElementById('noteEditId').value = n.id;
+  pickNoteCat(document.querySelector('#notesCatPills .gs-notes__cat-pill[data-cat="' + n.category + '"]'));
+  pickNotePri(document.querySelector('#notesPriPills .gs-notes__pri-pill[data-pri="' + n.priority + '"]'));
+  var toggle = document.getElementById('noteAskToggle');
+  toggle.classList.toggle('gs-notes__toggle--on', n.askAtAppointment);
+  toggle.setAttribute('aria-checked', String(n.askAtAppointment));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function renderNotes(filter) {
+  var arr = getNotes();
+  var filtered = filter && filter !== 'all' ? arr.filter(function(n){ return n.category === filter; }) : arr;
+  filtered.sort(function(a, b) {
+    if (a.answered !== b.answered) return a.answered ? 1 : -1;
+    return new Date(b.date) - new Date(a.date);
+  });
+  var container = document.getElementById('notesList');
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="gs-notes__empty"><h3>Nothing here yet</h3><p>Add your first note or question above.</p></div>';
+    return;
+  }
+  var html = '';
+  filtered.forEach(function(n) {
+    html += '<div class="gs-notes__card gs-notes__card--' + n.category + (n.answered ? ' gs-notes__card--answered' : '') + '">';
+    html += '<div class="gs-notes__card-top"><span class="gs-notes__card-cat gs-notes__card-cat--' + n.category + '">' + (_notesCatLabels[n.category] || n.category) + '</span><span class="gs-notes__card-date">' + n.date + '</span></div>';
+    html += '<p class="gs-notes__card-text">' + n.text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+    var badges = '';
+    if (n.askAtAppointment) badges += '<span class="gs-notes__badge gs-notes__badge--ask">Ask at appointment</span>';
+    badges += '<span class="gs-notes__badge gs-notes__badge--' + n.priority + '">' + n.priority.charAt(0).toUpperCase() + n.priority.slice(1) + '</span>';
+    html += '<div class="gs-notes__card-badges">' + badges + '</div>';
+    html += '<div class="gs-notes__card-actions">';
+    html += '<button class="gs-notes__action-btn gs-notes__action-btn--edit" onclick="editNote(' + n.id + ')">Edit</button>';
+    if (n.answered) {
+      html += '<button class="gs-notes__action-btn gs-notes__action-btn--edit" onclick="toggleNoteAnswered(' + n.id + ')">Reopen</button>';
+    } else {
+      html += '<button class="gs-notes__action-btn gs-notes__action-btn--edit" onclick="toggleNoteAnswered(' + n.id + ')">Mark answered</button>';
+    }
+    html += '<button class="gs-notes__action-btn gs-notes__action-btn--delete" onclick="if(confirm(\'Delete this note?\'))deleteNote(' + n.id + ')">Delete</button>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GP REPORT SCREEN
+// ═══════════════════════════════════════════════════════════════
+function renderReport() {
+  var arr = getCheckins();
+  var hrt = getHRT();
+  var prf = getProfile();
+  var usr = getUser();
+  var container = document.getElementById('reportContent');
+  var now = new Date();
+  var rd = now.toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
+
+  var html = '';
+  html += '<h1 class="gs-report__title">GP Report</h1>';
+  html += '<p class="gs-report__subtitle">A summary ready to share with your doctor</p>';
+  html += '<p class="gs-report__date">Generated ' + rd + '</p>';
+  html += '<button class="gs-report__cta" onclick="exportData()">Generate &amp; Print Report</button>';
+
+  if (arr.length < 3) {
+    html += '<div class="gs-report__card gs-report__card--sage gs-report__empty"><h2>Not enough data yet</h2><p>Log at least 3 days to generate a meaningful report.</p><button class="gs-report__empty-btn" onclick="showPage(\'checkin\',null)">Go to Daily Log</button></div>';
+    container.innerHTML = html;
+    return;
+  }
+
+  var s7 = getSample(arr).sample;
+  var s30 = arr.filter(function(c){ return (now - new Date(c.date)) <= 30*86400000; });
+
+  function avg(a, f) {
+    var vals = a.map(function(c){ return parseFloat(c[f]); }).filter(function(v){ return !isNaN(v); });
+    if (vals.length === 0) return null;
+    return vals.reduce(function(s,v){ return s+v; },0) / vals.length;
+  }
+  function fmt(v) { return v !== null ? v.toFixed(1) : 'N/A'; }
+  function alertCls(v, thresh, isLow) {
+    if (v === null) return '';
+    return (isLow ? v < thresh : v >= thresh) ? ' gs-report__row-val--alert' : '';
+  }
+
+  // Section 2: Patient details
+  html += '<div class="gs-report__card gs-report__card--slate">';
+  html += '<p class="gs-report__card-label gs-report__card-label--slate">PATIENT</p>';
+  var hasProfile = prf.name || prf.dob || prf.menstrualStatus;
+  if (hasProfile) {
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Name</span><span class="gs-report__row-val">' + (prf.name || 'Not recorded') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Date of Birth</span><span class="gs-report__row-val">' + (prf.dob || 'Not recorded') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Menstrual Status</span><span class="gs-report__row-val">' + (prf.menstrualStatus || 'Not recorded') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Last Period</span><span class="gs-report__row-val">' + (prf.lastPeriod || 'Not recorded') + '</span></div>';
+  } else {
+    html += '<p class="gs-report__text gs-report__text--muted">Complete your profile in Settings for a fuller report</p>';
+  }
+  html += '</div>';
+
+  // Section 3: Current HRT
+  html += '<div class="gs-report__card gs-report__card--slate">';
+  html += '<p class="gs-report__card-label gs-report__card-label--slate">CURRENT HRT REGIMEN</p>';
+  if (hrt.estrogenName || hrt.progName) {
+    if (hrt.estrogenName) html += '<p class="gs-report__text">Estrogen: ' + hrt.estrogenName + (hrt.estrogenDose ? ' ' + hrt.estrogenDose : '') + (hrt.estrogenAdmin ? ' · ' + hrt.estrogenAdmin : '') + (hrt.estrogenFreq ? ' · ' + hrt.estrogenFreq : '') + '</p>';
+    if (hrt.progName) html += '<p class="gs-report__text">Progesterone: ' + hrt.progName + (hrt.progDose ? ' ' + hrt.progDose : '') + (hrt.progAdmin ? ' · ' + hrt.progAdmin : '') + (hrt.progFreq ? ' · ' + hrt.progFreq : '') + '</p>';
+    if (hrt.doseChangeDate) html += '<p class="gs-report__text--sub">Last change: ' + hrt.doseChangeDate + ' — ' + (hrt.doseChangeWhat || '') + '</p>';
+  } else {
+    html += '<p class="gs-report__text gs-report__text--muted">No HRT regimen recorded. Add it in the HRT Tracker.</p>';
+  }
+  html += '</div>';
+
+  // Section 4: 7-day summary
+  var avgSleep7 = avg(s7,'sleep');
+  var avgFog7 = avg(s7,'brainFog');
+  var avgPat7 = avg(s7,'patience');
+  var avgHF7 = avg(s7,'hotFlush');
+  var avgHFC7 = avg(s7,'hotFlushCount');
+  var avgNS7 = avg(s7,'nightSweat');
+  var avgWork7 = avg(s7,'workImpact');
+  var avgRel7 = avg(s7,'relImpact');
+  var avgEnergy7 = avg(s7,'energyImpact');
+  var avgMental7 = avg(s7,'mentalClarity');
+  var b7 = s7.filter(function(c){ return c.bleeding && c.bleeding !== 'none'; }).length;
+  var hrtTaken7 = s7.filter(function(c){ return c.hrtTaken && c.loggedViaForm !== false; }).length;
+  var hrtLogged7 = s7.filter(function(c){ return c.loggedViaForm !== false; }).length;
+  var a7 = hrtLogged7 > 0 ? Math.round((hrtTaken7 / hrtLogged7) * 100) : null;
+  var t7 = getTopTriggers(s7);
+  var uriSum7 = (function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none') c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+')'; }).join(', ')||'None reported'; })(s7);
+
+  html += '<div class="gs-report__card gs-report__card--slate">';
+  html += '<p class="gs-report__card-label gs-report__card-label--slate">LAST 7 DAYS</p>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Sleep</span><span class="gs-report__row-val' + alertCls(avgSleep7,6,true) + '">' + fmt(avgSleep7) + ' hrs</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Brain Fog</span><span class="gs-report__row-val' + alertCls(avgFog7,7,false) + '">' + fmt(avgFog7) + ' / 10</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Patience</span><span class="gs-report__row-val">' + fmt(avgPat7) + ' / 10</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Hot Flushes</span><span class="gs-report__row-val' + alertCls(avgHFC7,3,false) + '">' + fmt(avgHFC7) + ' avg/day (severity ' + fmt(avgHF7) + '/3)</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Night Sweats</span><span class="gs-report__row-val">' + fmt(avgNS7) + ' / 3</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Bleeding Days</span><span class="gs-report__row-val">' + b7 + ' days</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">HRT Adherence</span><span class="gs-report__row-val">' + (a7 !== null ? a7 + '%' : 'N/A') + '</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Work Impact</span><span class="gs-report__row-val' + alertCls(avgWork7,7,false) + '">' + fmt(avgWork7) + ' / 10</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Relationship Impact</span><span class="gs-report__row-val">' + fmt(avgRel7) + ' / 10</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Energy Impact</span><span class="gs-report__row-val">' + fmt(avgEnergy7) + ' / 10</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Mental Clarity</span><span class="gs-report__row-val">' + fmt(avgMental7) + ' / 10</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Top Triggers</span><span class="gs-report__row-val gs-report__text--sm">' + (t7.length > 0 ? t7.join(', ') : 'None logged') + '</span></div>';
+  html += '<div class="gs-report__row"><span class="gs-report__row-label">Urinary</span><span class="gs-report__row-val gs-report__text--sm">' + uriSum7 + '</span></div>';
+  html += '</div>';
+
+  // Section 5: 30-day summary
+  if (s30.length > 0) {
+    var avgSleep30=avg(s30,'sleep'), avgFog30=avg(s30,'brainFog'), avgPat30=avg(s30,'patience');
+    var avgHF30=avg(s30,'hotFlush'), avgHFC30=avg(s30,'hotFlushCount'), avgNS30=avg(s30,'nightSweat');
+    var avgWork30=avg(s30,'workImpact'), avgRel30=avg(s30,'relImpact'), avgEnergy30=avg(s30,'energyImpact'), avgMental30=avg(s30,'mentalClarity');
+    var b30=s30.filter(function(c){return c.bleeding&&c.bleeding!=='none';}).length;
+    var hrtT30=s30.filter(function(c){return c.hrtTaken&&c.loggedViaForm!==false;}).length;
+    var hrtL30=s30.filter(function(c){return c.loggedViaForm!==false;}).length;
+    var a30=hrtL30>0?Math.round((hrtT30/hrtL30)*100):null;
+    var t30=getTopTriggers(s30);
+    var uriSum30=(function(a){var c={};a.forEach(function(e){if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1;});return Object.entries(c).sort(function(x,y){return y[1]-x[1];}).map(function(e){return e[0]+' ('+e[1]+')';}).join(', ')||'None reported';})(s30);
+
+    html += '<div class="gs-report__card gs-report__card--sage">';
+    html += '<p class="gs-report__card-label">LAST 30 DAYS</p>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Sleep</span><span class="gs-report__row-val">' + fmt(avgSleep30) + ' hrs</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Brain Fog</span><span class="gs-report__row-val">' + fmt(avgFog30) + ' / 10</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Patience</span><span class="gs-report__row-val">' + fmt(avgPat30) + ' / 10</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Hot Flushes</span><span class="gs-report__row-val">' + fmt(avgHFC30) + ' avg/day (severity ' + fmt(avgHF30) + '/3)</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Night Sweats</span><span class="gs-report__row-val">' + fmt(avgNS30) + ' / 3</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Bleeding Days</span><span class="gs-report__row-val">' + b30 + ' days</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">HRT Adherence</span><span class="gs-report__row-val">' + (a30!==null?a30+'%':'N/A') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Work Impact</span><span class="gs-report__row-val">' + fmt(avgWork30) + ' / 10</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Relationship Impact</span><span class="gs-report__row-val">' + fmt(avgRel30) + ' / 10</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Energy Impact</span><span class="gs-report__row-val">' + fmt(avgEnergy30) + ' / 10</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Mental Clarity</span><span class="gs-report__row-val">' + fmt(avgMental30) + ' / 10</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Top Triggers</span><span class="gs-report__row-val gs-report__text--sm">' + (t30.length>0?t30.join(', '):'None logged') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Urinary</span><span class="gs-report__row-val gs-report__text--sm">' + uriSum30 + '</span></div>';
+    html += '</div>';
+  }
+
+  // Section 6: Clinical flags
+  html += '<div class="gs-report__card gs-report__card--peach">';
+  html += '<p class="gs-report__card-label gs-report__card-label--peach">WORTH MENTIONING TO YOUR GP</p>';
+  var flags = [];
+  if ((avgHF7 !== null && avgHF7 >= 2) || (avgHFC7 !== null && avgHFC7 > 3)) flags.push('Hot flushes were frequent or moderate.');
+  if (b7 > 0) flags.push('Bleeding or spotting on ' + b7 + ' day' + (b7!==1?'s':'') + '.');
+  if (a7 !== null && a7 < 80) flags.push('HRT missed on some days — ' + a7 + '% taken.');
+  if (avgFog7 !== null && avgFog7 >= 7) flags.push('Significant brain fog most days.');
+  if (avgSleep7 !== null && avgSleep7 < 6) flags.push('Sleep averaged under 6 hours.');
+  if (avgWork7 !== null && avgWork7 >= 7) flags.push('Menopause significantly affected work.');
+  if (avgNS7 !== null && avgNS7 >= 2) flags.push('Moderate to severe night sweats.');
+  if (flags.length > 0) {
+    html += '<ul class="gs-report__flags-list">';
+    flags.forEach(function(f) { html += '<li>' + f + '</li>'; });
+    html += '</ul>';
+  } else {
+    html += '<p class="gs-report__text">No major flags in the last 7 days. Keep logging.</p>';
+  }
+  html += '</div>';
+
+  // Section 7: HRT dose change
+  if (hrt.doseChangeDate) {
+    html += '<div class="gs-report__card gs-report__card--slate">';
+    html += '<p class="gs-report__card-label gs-report__card-label--slate">RECENT HRT CHANGE</p>';
+    html += '<p class="gs-report__text">' + hrt.doseChangeDate + ' — ' + (hrt.doseChangeWhat || 'Change recorded') + (hrt.doseChangeReason ? ' · Reason: ' + hrt.doseChangeReason : '') + '</p>';
+    if (hrt.doseChangeSideEffects) html += '<p class="gs-report__text gs-report__text--muted" style="font-size:13px;">' + hrt.doseChangeSideEffects + '</p>';
+    html += '</div>';
+  }
+
+  // Section 8: Notes
+  var notesArr = arr.filter(function(c) { return c.notes && c.notes.trim(); })
+    .sort(function(a,b) { return new Date(b.date) - new Date(a.date); }).slice(0,3);
+  if (notesArr.length > 0) {
+    html += '<div class="gs-report__card gs-report__card--gold">';
+    html += '<p class="gs-report__card-label">YOUR NOTES</p>';
+    notesArr.forEach(function(c) {
+      html += '<div class="gs-report__note-row"><span class="gs-report__note-date">' + c.date + '</span><span class="gs-report__note-text">' + c.notes + '</span></div>';
+    });
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function renderReflection() {
+  var all = getCheckins();
+  var container = document.getElementById('reflectionContent');
+  var now = new Date();
+
+  // Find most recent Mon–Sun window with data, fallback to last 7 calendar days
+  var end = new Date(now); end.setHours(23,59,59,999);
+  var start = new Date(end); start.setDate(start.getDate() - 6); start.setHours(0,0,0,0);
+
+  var week = all.filter(function(c) {
+    var d = new Date(c.date);
+    return d >= start && d <= end;
+  }).sort(function(a,b) { return new Date(a.date) - new Date(b.date); });
+
+  // Prior week for comparison
+  var priorEnd = new Date(start); priorEnd.setDate(priorEnd.getDate() - 1); priorEnd.setHours(23,59,59,999);
+  var priorStart = new Date(priorEnd); priorStart.setDate(priorStart.getDate() - 6); priorStart.setHours(0,0,0,0);
+  var prior = all.filter(function(c) {
+    var d = new Date(c.date);
+    return d >= priorStart && d <= priorEnd;
+  });
+
+  // Date formatting
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var rangeStr = start.getDate() + '–' + end.getDate() + ' ' + months[end.getMonth()] + ' ' + end.getFullYear();
+
+  // Avg helper
+  function wavg(arr, field) {
+    var vals = arr.map(function(c) { return parseFloat(c[field]); }).filter(function(v) { return !isNaN(v); });
+    if (vals.length === 0) return null;
+    return vals.reduce(function(a,b) { return a+b; }, 0) / vals.length;
+  }
+
+  var cardIdx = 0;
+  function cardDelay() { return 'animation-delay:' + (cardIdx++ * 0.08) + 's;'; }
+
+  var html = '';
+  html += '<h1 class="gs-reflect__title">Your Week</h1>';
+  html += '<p class="gs-reflect__subtitle">' + rangeStr + '</p>';
+  html += '<p class="gs-reflect__logged">' + week.length + ' day' + (week.length !== 1 ? 's' : '') + ' logged this week</p>';
+
+  if (week.length < 3) {
+    html += '<div class="reflection-card reflection-card--sage gs-reflect__empty" style="' + cardDelay() + '"><h2>Not enough data yet</h2><p>Log at least 3 days this week to see your weekly reflection.</p><button class="gs-reflect__empty-btn" onclick="showPage(\'checkin\',null)">Go to Daily Log</button></div>';
+    container.innerHTML = html;
+    return;
+  }
+
+  // Compute averages
+  var avgSleep = wavg(week, 'sleep');
+  var avgFog = wavg(week, 'brainFog');
+  var avgPatience = wavg(week, 'patience');
+  var avgMood = wavg(week, 'mood');
+  var avgHF = wavg(week, 'hotFlush');
+  var avgHFC = wavg(week, 'hotFlushCount');
+  var avgNS = wavg(week, 'nightSweat');
+  var avgWork = wavg(week, 'workImpact');
+  var avgRel = wavg(week, 'relImpact');
+  var avgEnergy = wavg(week, 'energyImpact');
+  var avgMental = wavg(week, 'mentalClarity');
+
+  // Prior averages
+  var pSleep = wavg(prior, 'sleep');
+  var pFog = wavg(prior, 'brainFog');
+  var pHFC = wavg(prior, 'hotFlushCount');
+  var pWork = wavg(prior, 'workImpact');
+  var pRel = wavg(prior, 'relImpact');
+
+  // Section 2: Reflection quote
+  var frags = [];
+  if (avgSleep !== null) {
+    if (avgSleep >= 7) frags.push('Sleep was kind to you this week.');
+    else if (avgSleep < 6) frags.push('Sleep was a struggle.');
+    else frags.push('Sleep was mixed.');
+  }
+  if (avgFog !== null) {
+    if (avgFog <= 4) frags.push('Your mind felt clearer than usual.');
+    else if (avgFog >= 7) frags.push('Brain fog made things harder.');
+    else frags.push('Mental clarity had its ups and downs.');
+  }
+  if (avgPatience !== null) {
+    if (avgPatience >= 7) frags.push('Your patience held up well.');
+    else if (avgPatience <= 4) frags.push('Patience was in short supply.');
+  }
+  if (avgHFC !== null) {
+    if (avgHFC > 3) frags.push('Hot flushes were frequent.');
+    else if (avgHFC <= 1) frags.push('Hot flushes were minimal.');
+  }
+  var quoteText = frags.slice(0, 3).join(' ') || 'Keep logging to build your weekly picture.';
+
+  var closing = 'Every day you log is data that helps you.';
+  if (avgMood !== null) {
+    if (avgMood >= 4) closing = 'A stronger week than it might have felt.';
+    else if (avgMood <= 2) closing = 'You showed up every day. That matters.';
+  }
+
+  html += '<div class="reflection-card reflection-card--gold" style="' + cardDelay() + '">';
+  html += '<p class="gs-reflect__card-label">THIS WEEK</p>';
+  html += '<p class="gs-reflect__quote">' + quoteText + '</p>';
+  html += '<p class="gs-reflect__closing">' + closing + '</p>';
+  html += '</div>';
+
+  // Section 3: Insight cards
+  html += '<h2 class="gs-reflect__section-heading">What we noticed</h2>';
+
+  function compareNote(curr, prev, unit, lowerBetter) {
+    if (prev === null || prev === undefined) return 'Not enough prior data to compare';
+    var diff = curr - prev;
+    if (Math.abs(diff) < 0.3) return 'Holding steady';
+    var dir = diff > 0 ? 'Up' : 'Down';
+    return dir + ' from ' + prev.toFixed(1) + unit + ' last week';
+  }
+
+  function insightBorder(curr, prev, lowerBetter) {
+    if (prev === null || prev === undefined) return 'reflection-card--sage';
+    var diff = curr - prev;
+    if (Math.abs(diff) < 0.3) return 'reflection-card--sage';
+    var improved = lowerBetter ? diff < 0 : diff > 0;
+    return improved ? 'reflection-card--gold' : 'reflection-card--peach';
+  }
+
+  // Sleep
+  if (avgSleep !== null) {
+    var sleepBorder = insightBorder(avgSleep, pSleep, false);
+    html += '<div class="reflection-card ' + sleepBorder + '" style="' + cardDelay() + '">';
+    html += '<p class="gs-reflect__insight-label">SLEEP</p>';
+    html += '<p class="gs-reflect__insight-val">' + avgSleep.toFixed(1) + ' hrs</p>';
+    html += '<p class="gs-reflect__insight-note">' + compareNote(avgSleep, pSleep, ' hrs', false) + '</p>';
+    html += '</div>';
+  }
+
+  // Brain fog
+  if (avgFog !== null) {
+    var fogBorder = avgFog >= 7 ? 'reflection-card--peach' : avgFog <= 3 ? 'reflection-card--gold' : insightBorder(avgFog, pFog, true);
+    html += '<div class="reflection-card ' + fogBorder + '" style="' + cardDelay() + '">';
+    html += '<p class="gs-reflect__insight-label">BRAIN FOG</p>';
+    html += '<p class="gs-reflect__insight-val">' + avgFog.toFixed(1) + ' / 10</p>';
+    var fogNote = avgFog >= 7 ? 'Higher than usual' : avgFog <= 3 ? 'Clearer than most weeks' : compareNote(avgFog, pFog, '', true);
+    html += '<p class="gs-reflect__insight-note">' + fogNote + '</p>';
+    html += '</div>';
+  }
+
+  // Hot flushes
+  if (avgHFC !== null) {
+    var hfBorder = insightBorder(avgHFC, pHFC, true);
+    if (avgHFC > 3) hfBorder = 'reflection-card--peach';
+    html += '<div class="reflection-card ' + hfBorder + '" style="' + cardDelay() + '">';
+    html += '<p class="gs-reflect__insight-label">HOT FLUSHES</p>';
+    html += '<p class="gs-reflect__insight-val">' + avgHFC.toFixed(1) + ' / day</p>';
+    var hfNote = avgHFC > 3 ? 'Frequent this week' : avgHFC <= 1 ? 'Minimal this week' : compareNote(avgHFC, pHFC, '/day', true);
+    html += '<p class="gs-reflect__insight-note">' + hfNote + '</p>';
+    html += '</div>';
+  }
+
+  // Work or Relationship (whichever higher)
+  if (avgWork !== null || avgRel !== null) {
+    var useWork = (avgWork || 0) >= (avgRel || 0);
+    var impLabel = useWork ? 'WORK IMPACT' : 'RELATIONSHIP IMPACT';
+    var impVal = useWork ? avgWork : avgRel;
+    var impPrior = useWork ? pWork : pRel;
+    var impBorder = (impVal || 0) >= 7 ? 'reflection-card--peach' : insightBorder(impVal, impPrior, true);
+    html += '<div class="reflection-card ' + impBorder + '" style="' + cardDelay() + '">';
+    html += '<p class="gs-reflect__insight-label">' + impLabel + '</p>';
+    html += '<p class="gs-reflect__insight-val">' + (impVal || 0).toFixed(1) + ' / 10</p>';
+    html += '<p class="gs-reflect__insight-note">' + compareNote(impVal || 0, impPrior, '', true) + '</p>';
+    html += '</div>';
+  }
+
+  // Section 4: GP note
+  html += '<div class="reflection-card reflection-card--slate" style="' + cardDelay() + '">';
+  html += '<p class="gs-reflect__card-label gs-reflect__card-label--slate">FOR YOUR NEXT GP VISIT</p>';
+  html += '<h3 class="gs-reflect__gp-heading">Worth mentioning</h3>';
+  var gpItems = [];
+  if ((avgHF !== null && avgHF >= 2) || (avgHFC !== null && avgHFC > 3)) gpItems.push('Hot flushes were frequent or moderate this week.');
+  var bleedDays = week.filter(function(c) { return c.bleeding && c.bleeding !== 'none'; }).length;
+  if (bleedDays > 0) gpItems.push('Bleeding or spotting occurred on ' + bleedDays + ' day' + (bleedDays !== 1 ? 's' : '') + '.');
+  var hrtTaken = week.filter(function(c) { return c.hrtTaken; }).length;
+  var hrtPct = week.length > 0 ? Math.round((hrtTaken / week.length) * 100) : 0;
+  if (hrtPct < 80) gpItems.push('HRT was missed on some days — ' + hrtPct + '% taken.');
+  if (avgFog !== null && avgFog >= 7) gpItems.push('Significant brain fog reported most days.');
+  if (avgSleep !== null && avgSleep < 6) gpItems.push('Sleep averaged under 6 hours.');
+  if (avgWork !== null && avgWork >= 7) gpItems.push('Menopause significantly affected work this week.');
+
+  if (gpItems.length > 0) {
+    html += '<ul class="gs-reflect__gp-list">';
+    gpItems.forEach(function(item) { html += '<li>' + item + '</li>'; });
+    html += '</ul>';
+  } else {
+    html += '<p class="gs-reflect__card-body">No major clinical flags this week. Keep logging to build a fuller picture.</p>';
+  }
+  html += '<button class="gs-reflect__gp-btn" onclick="exportData()">Add to GP Report</button>';
+  html += '</div>';
+
+  // Section 5: Triggers
+  html += '<div class="reflection-card reflection-card--peach" style="' + cardDelay() + '">';
+  html += '<h3 class="gs-reflect__trig-heading">What triggered you</h3>';
+  var trigCounts = {};
+  week.forEach(function(c) { if (c.triggers) c.triggers.forEach(function(t) { trigCounts[t] = (trigCounts[t]||0) + 1; }); });
+  var trigSorted = Object.keys(trigCounts).sort(function(a,b) { return trigCounts[b] - trigCounts[a]; }).slice(0, 5);
+  if (trigSorted.length > 0) {
+    html += '<div class="gs-reflect__trig-pills">';
+    trigSorted.forEach(function(t) {
+      var lbl = TLABELS[t] || t;
+      html += '<span class="gs-reflect__trig-pill">' + lbl + ' (' + trigCounts[t] + ')</span>';
+    });
+    html += '</div>';
+  } else {
+    html += '<p class="gs-reflect__card-body">No triggers recorded this week.</p>';
+  }
+  html += '</div>';
+
+  // Section 6: HRT Adherence
+  html += '<div class="reflection-card reflection-card--sage" style="' + cardDelay() + '">';
+  html += '<h3 class="gs-reflect__adh-heading">HRT this week</h3>';
+  html += '<p class="gs-reflect__adh-big">' + hrtPct + '%</p>';
+  html += '<p class="gs-reflect__adh-sub">of logged days HRT was taken</p>';
+  html += '<svg width="100%" height="8" role="img" aria-label="HRT adherence ' + hrtPct + ' percent"><rect x="0" y="0" width="100%" height="8" rx="4" fill="#F4F0E8"/><rect x="0" y="0" width="' + hrtPct + '%" height="8" rx="4" fill="#3A5C4E"/></svg>';
+  var hrt = getHRT();
+  if (hrt.estrogenName) {
+    html += '<p class="gs-reflect__adh-med">Current: ' + hrt.estrogenName + '</p>';
+  }
+  html += '</div>';
+
+  container.innerHTML = html;
+}
 </script>
 </body>
 </html>
