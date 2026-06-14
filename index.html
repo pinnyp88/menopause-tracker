@@ -3031,6 +3031,29 @@ body {
 /* --- iOS banner → sage --- */
 #iosBanner { background: #3A5C4E !important; }
 
+/* ═══ Custom Emoji Mood Selector ═══ */
+.emoji-row { display: flex; justify-content: space-between; gap: 8px; margin: 12px 0; }
+.emoji-opt { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 8px 4px; border-radius: 12px; border: 2px solid transparent; background: transparent; transition: all 0.15s ease; flex: 1; }
+.emoji-face { font-size: 32px; line-height: 1; display: block; transition: transform 0.15s ease; }
+.emoji-label { font-family: Inter, sans-serif; font-size: 10px; color: #8FB5A3; text-align: center; }
+.emoji-opt.selected { background: #EBF2EE; border: 2px solid #3A5C4E; }
+.emoji-opt.selected .emoji-face { transform: scale(1.15); }
+.emoji-opt.selected .emoji-label { color: #3A5C4E; font-weight: 600; }
+
+/* ═══ Custom Slider ═══ */
+.custom-slider-wrap { padding: 8px 0; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: none; }
+.custom-track { position: relative; height: 6px; background: #D4D0C8; border-radius: 3px; width: 100%; }
+.custom-fill { position: absolute; left: 0; top: 0; height: 6px; border-radius: 3px; background: #3A5C4E; pointer-events: none; width: 40%; }
+.custom-fill.peach { background: #D4836A; }
+.custom-thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px; border-radius: 50%; background: #FFFFFF; border: 3px solid #3A5C4E; box-shadow: 0 1px 4px rgba(0,0,0,0.15); pointer-events: none; left: 40%; }
+.custom-thumb.peach { border-color: #D4836A; }
+
+/* ═══ Custom Trigger Chips ═══ */
+.trigger-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 8px; }
+.trig-chip { padding: 10px 14px; border-radius: 50px; border: 2px solid #8FB5A3; background: #FFFFFF; color: #3A5C4E; font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.15s ease; user-select: none; -webkit-user-select: none; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.trig-chip.selected { background: #2A4A3E; border-color: #2A4A3E; color: #FFFFFF; font-weight: 700; }
+.trig-chip.selected::before { content: "\2713\00a0"; }
+
 /* --- Motivational quotes --- */
 .gs-motivational {
   font-family: var(--font-heading); font-style: italic; font-size: 15px;
@@ -3205,17 +3228,17 @@ body {
         <div class="gs-card gs-card--default gs-checkin__section">
           <div class="gs-section-label">Head &amp; body</div>
 
-          <!-- Mood: emoji selector (hidden real select) -->
+          <!-- Mood: emoji selector -->
           <div class="gs-checkin__field">
             <span class="gs-slider__label">How are you feeling?</span>
-            <select id="mood" style="display:none;"><option value="">Select mood</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
-            <div class="gs-emoji-row" id="moodEmojis">
-              <button type="button" class="gs-emoji-btn" data-val="1" aria-label="Terrible" onclick="pickMood(1)"><span class="gs-emoji-btn__face">😢</span><span class="gs-emoji-btn__caption">Terrible</span></button>
-              <button type="button" class="gs-emoji-btn" data-val="2" aria-label="Struggling" onclick="pickMood(2)"><span class="gs-emoji-btn__face">😟</span><span class="gs-emoji-btn__caption">Struggling</span></button>
-              <button type="button" class="gs-emoji-btn" data-val="3" aria-label="Average" onclick="pickMood(3)"><span class="gs-emoji-btn__face">😐</span><span class="gs-emoji-btn__caption">Average</span></button>
-              <button type="button" class="gs-emoji-btn" data-val="4" aria-label="Good" onclick="pickMood(4)"><span class="gs-emoji-btn__face">🙂</span><span class="gs-emoji-btn__caption">Good</span></button>
-              <button type="button" class="gs-emoji-btn" data-val="5" aria-label="Great" onclick="pickMood(5)"><span class="gs-emoji-btn__face">😊</span><span class="gs-emoji-btn__caption">Great</span></button>
+            <div class="emoji-row" id="moodSelector">
+              <div class="emoji-opt" data-value="1"><span class="emoji-face">😣</span><span class="emoji-label">Terrible</span></div>
+              <div class="emoji-opt" data-value="2"><span class="emoji-face">😔</span><span class="emoji-label">Struggling</span></div>
+              <div class="emoji-opt" data-value="3"><span class="emoji-face">😐</span><span class="emoji-label">Average</span></div>
+              <div class="emoji-opt" data-value="4"><span class="emoji-face">🙂</span><span class="emoji-label">Good</span></div>
+              <div class="emoji-opt" data-value="5"><span class="emoji-face">😊</span><span class="emoji-label">Great</span></div>
             </div>
+            <input type="hidden" id="mood" value="">
           </div>
 
           <!-- Brain fog -->
@@ -3224,7 +3247,8 @@ body {
               <div class="gs-slider__label-row"><span class="gs-slider__label">Brain fog</span></div>
               <span class="gs-slider__value-badge" id="brainFogVal">5</span>
             </div>
-            <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="brainFog" min="1" max="10" value="5" oninput="document.getElementById('brainFogVal').textContent=this.value"></div>
+            <div class="custom-slider-wrap"><div class="custom-track" id="brainFogTrack"><div class="custom-fill" id="brainFogFill"></div><div class="custom-thumb" id="brainFogThumb"></div></div></div>
+            <input type="hidden" id="brainFog" value="5">
             <div class="gs-slider__word-labels"><span>Crystal clear</span><span>Totally foggy</span></div>
           </div>
 
@@ -3234,7 +3258,8 @@ body {
               <div class="gs-slider__label-row"><span class="gs-slider__label">Patience</span></div>
               <span class="gs-slider__value-badge" id="patienceVal">5</span>
             </div>
-            <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="patience" min="1" max="10" value="5" oninput="document.getElementById('patienceVal').textContent=this.value"></div>
+            <div class="custom-slider-wrap"><div class="custom-track" id="patienceTrack"><div class="custom-fill" id="patienceFill"></div><div class="custom-thumb" id="patienceThumb"></div></div></div>
+            <input type="hidden" id="patience" value="5">
             <div class="gs-slider__word-labels"><span>Lost it completely</span><span>Completely calm</span></div>
           </div>
         </div>
@@ -3327,23 +3352,17 @@ body {
           <!-- Triggers as chips -->
           <div class="gs-checkin__field">
             <span class="gs-slider__label">Today's triggers</span>
-            <!-- Hidden checkboxes (original) -->
-            <div style="display:none;">
-              <input type="checkbox" id="trig-stress"><input type="checkbox" id="trig-alcohol"><input type="checkbox" id="trig-caffeine">
-              <input type="checkbox" id="trig-poorsleep"><input type="checkbox" id="trig-misseddose"><input type="checkbox" id="trig-exercise">
-              <input type="checkbox" id="trig-illness"><input type="checkbox" id="trig-spicyfood"><input type="checkbox" id="trig-hotweather"><input type="checkbox" id="trig-other">
-            </div>
-            <div class="gs-chip-grid" id="triggerChips">
-              <div class="gs-chip" onclick="toggleTrig('stress',this)" data-trig="stress"><span class="gs-chip__emoji">😰</span><span>Stress</span></div>
-              <div class="gs-chip" onclick="toggleTrig('alcohol',this)" data-trig="alcohol"><span class="gs-chip__emoji">🍷</span><span>Alcohol</span></div>
-              <div class="gs-chip" onclick="toggleTrig('caffeine',this)" data-trig="caffeine"><span class="gs-chip__emoji">☕</span><span>Caffeine</span></div>
-              <div class="gs-chip" onclick="toggleTrig('poorsleep',this)" data-trig="poorsleep"><span class="gs-chip__emoji">😴</span><span>Poor Sleep</span></div>
-              <div class="gs-chip" onclick="toggleTrig('misseddose',this)" data-trig="misseddose"><span class="gs-chip__emoji">💊</span><span>Missed Dose</span></div>
-              <div class="gs-chip" onclick="toggleTrig('exercise',this)" data-trig="exercise"><span class="gs-chip__emoji">🏃</span><span>Exercise</span></div>
-              <div class="gs-chip" onclick="toggleTrig('illness',this)" data-trig="illness"><span class="gs-chip__emoji">🤒</span><span>Illness</span></div>
-              <div class="gs-chip" onclick="toggleTrig('spicyfood',this)" data-trig="spicyfood"><span class="gs-chip__emoji">🌶️</span><span>Spicy Food</span></div>
-              <div class="gs-chip" onclick="toggleTrig('hotweather',this)" data-trig="hotweather"><span class="gs-chip__emoji">☀️</span><span>Hot Weather</span></div>
-              <div class="gs-chip" onclick="toggleTrig('other',this)" data-trig="other"><span class="gs-chip__emoji">➕</span><span>Other</span></div>
+            <div class="trigger-grid" id="triggerGrid">
+              <div class="trig-chip" data-trigger="stress">😰 Stress</div>
+              <div class="trig-chip" data-trigger="alcohol">🍷 Alcohol</div>
+              <div class="trig-chip" data-trigger="caffeine">☕ Caffeine</div>
+              <div class="trig-chip" data-trigger="poorsleep">😴 Poor Sleep</div>
+              <div class="trig-chip" data-trigger="misseddose">💊 Missed Dose</div>
+              <div class="trig-chip" data-trigger="exercise">🏃 Exercise</div>
+              <div class="trig-chip" data-trigger="illness">🤒 Illness</div>
+              <div class="trig-chip" data-trigger="spicyfood">🌶️ Spicy Food</div>
+              <div class="trig-chip" data-trigger="hotweather">☀️ Hot Weather</div>
+              <div class="trig-chip" data-trigger="other">➕ Other</div>
             </div>
           </div>
 
@@ -3353,22 +3372,26 @@ body {
 
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workVal">5</span></div>
-              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="workImpact" min="1" max="10" value="5" oninput="document.getElementById('workVal').textContent=this.value"></div>
+              <div class="custom-slider-wrap"><div class="custom-track" id="workImpactTrack"><div class="custom-fill" id="workImpactFill"></div><div class="custom-thumb" id="workImpactThumb"></div></div></div>
+              <input type="hidden" id="workImpact" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relVal">5</span></div>
-              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="relImpact" min="1" max="10" value="5" oninput="document.getElementById('relVal').textContent=this.value"></div>
+              <div class="custom-slider-wrap"><div class="custom-track" id="relImpactTrack"><div class="custom-fill" id="relImpactFill"></div><div class="custom-thumb" id="relImpactThumb"></div></div></div>
+              <input type="hidden" id="relImpact" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyVal">5</span></div>
-              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="energyImpact" min="1" max="10" value="5" oninput="document.getElementById('energyVal').textContent=this.value"></div>
+              <div class="custom-slider-wrap"><div class="custom-track" id="energyImpactTrack"><div class="custom-fill" id="energyImpactFill"></div><div class="custom-thumb" id="energyImpactThumb"></div></div></div>
+              <input type="hidden" id="energyImpact" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalVal">5</span></div>
-              <div class="gs-slider__track-row"><input type="range" class="gs-slider__input" id="mentalClarity" min="1" max="10" value="5" oninput="document.getElementById('mentalVal').textContent=this.value"></div>
+              <div class="custom-slider-wrap"><div class="custom-track" id="mentalClarityTrack"><div class="custom-fill" id="mentalClarityFill"></div><div class="custom-thumb" id="mentalClarityThumb"></div></div></div>
+              <input type="hidden" id="mentalClarity" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
           </div>
@@ -3801,6 +3824,89 @@ document.getElementById('calendarMonth').value = new Date().getMonth();
 document.getElementById('calendarYear').value = new Date().getFullYear();
 
 // ═══════════════════════════════════════════════════════════════
+// CUSTOM SLIDER INITIALISER
+// ═══════════════════════════════════════════════════════════════
+function initSlider(fieldId, min, max, defaultVal, isPeach) {
+  var track = document.getElementById(fieldId + 'Track');
+  var fill = document.getElementById(fieldId + 'Fill');
+  var thumb = document.getElementById(fieldId + 'Thumb');
+  var input = document.getElementById(fieldId);
+  if (!track) return null;
+
+  if (isPeach) {
+    fill.classList.add('peach');
+    thumb.classList.add('peach');
+  }
+
+  function setVal(val) {
+    val = Math.min(max, Math.max(min, Math.round(val)));
+    var pct = ((val - min) / (max - min)) * 100;
+    fill.style.width = pct + '%';
+    thumb.style.left = pct + '%';
+    input.value = val;
+    var lbl = document.getElementById(fieldId + 'Val');
+    if (lbl) lbl.textContent = val;
+  }
+
+  setVal(defaultVal);
+
+  function onMove(clientX) {
+    var rect = track.getBoundingClientRect();
+    var pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    var val = Math.round(min + pct * (max - min));
+    setVal(val);
+  }
+
+  track.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    onMove(e.clientX);
+    var mm = function(e2) { onMove(e2.clientX); };
+    var mu = function() { window.removeEventListener('mousemove', mm); window.removeEventListener('mouseup', mu); };
+    window.addEventListener('mousemove', mm);
+    window.addEventListener('mouseup', mu);
+  });
+
+  track.addEventListener('touchstart', function(e) {
+    onMove(e.touches[0].clientX);
+    var tm = function(e2) { e2.preventDefault(); onMove(e2.touches[0].clientX); };
+    var te = function() { window.removeEventListener('touchmove', tm); window.removeEventListener('touchend', te); };
+    window.addEventListener('touchmove', tm, { passive: false });
+    window.addEventListener('touchend', te);
+  }, { passive: true });
+
+  return setVal;
+}
+
+var sliderSetters = {
+  brainFog: initSlider('brainFog', 1, 10, 5, false),
+  patience: initSlider('patience', 1, 10, 5, false),
+  workImpact: initSlider('workImpact', 1, 10, 5, false),
+  relImpact: initSlider('relImpact', 1, 10, 5, false),
+  energyImpact: initSlider('energyImpact', 1, 10, 5, false),
+  mentalClarity: initSlider('mentalClarity', 1, 10, 5, false)
+};
+
+// ═══════════════════════════════════════════════════════════════
+// EMOJI MOOD SELECTOR — click handlers
+// ═══════════════════════════════════════════════════════════════
+document.querySelectorAll('.emoji-opt').forEach(function(opt) {
+  opt.addEventListener('click', function() {
+    document.querySelectorAll('.emoji-opt').forEach(function(o) { o.classList.remove('selected'); });
+    this.classList.add('selected');
+    document.getElementById('mood').value = this.getAttribute('data-value');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// TRIGGER CHIPS — click handlers
+// ═══════════════════════════════════════════════════════════════
+document.querySelectorAll('.trig-chip').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    this.classList.toggle('selected');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════════════════════════════
 function loadUser() {
@@ -3882,31 +3988,33 @@ function loadCheckinForDate() {
   var dt = document.getElementById('checkinDate').value;
   var arr = getCheckins();
   var c = arr.find(function(x){ return x.date === dt; });
-  if (!c) return;
-  if (c.mood) document.getElementById('mood').value = c.mood;
-  document.getElementById('brainFog').value = c.brainFog || 5;
-  document.getElementById('brainFogVal').textContent = c.brainFog || 5;
+  if (!c) {
+    restoreMood('');
+    restoreTriggers([]);
+    if (sliderSetters.brainFog) sliderSetters.brainFog(5);
+    if (sliderSetters.patience) sliderSetters.patience(5);
+    if (sliderSetters.workImpact) sliderSetters.workImpact(5);
+    if (sliderSetters.relImpact) sliderSetters.relImpact(5);
+    if (sliderSetters.energyImpact) sliderSetters.energyImpact(5);
+    if (sliderSetters.mentalClarity) sliderSetters.mentalClarity(5);
+    return;
+  }
+  restoreMood(c.mood || '');
+  if (sliderSetters.brainFog) sliderSetters.brainFog(c.brainFog || 5);
   document.getElementById('sleep').value = c.sleep || 7;
-  document.getElementById('patience').value = c.patience || 5;
-  document.getElementById('patienceVal').textContent = c.patience || 5;
+  if (sliderSetters.patience) sliderSetters.patience(c.patience || 5);
   document.getElementById('hotFlush').value = c.hotFlush || 0;
   document.getElementById('hotFlushCount').value = c.hotFlushCount || 0;
   document.getElementById('nightSweat').value = c.nightSweat || 0;
   document.getElementById('urinary').value = c.urinary || 'none';
   document.getElementById('bleeding').value = c.bleeding || 'none';
   document.getElementById('hrtTaken').checked = c.hrtTaken || false;
-  document.getElementById('workImpact').value = c.workImpact || 5;
-  document.getElementById('workVal').textContent = c.workImpact || 5;
-  document.getElementById('relImpact').value = c.relImpact || 5;
-  document.getElementById('relVal').textContent = c.relImpact || 5;
-  document.getElementById('energyImpact').value = c.energyImpact || 5;
-  document.getElementById('energyVal').textContent = c.energyImpact || 5;
-  document.getElementById('mentalClarity').value = c.mentalClarity || 5;
-  document.getElementById('mentalVal').textContent = c.mentalClarity || 5;
+  if (sliderSetters.workImpact) sliderSetters.workImpact(c.workImpact || 5);
+  if (sliderSetters.relImpact) sliderSetters.relImpact(c.relImpact || 5);
+  if (sliderSetters.energyImpact) sliderSetters.energyImpact(c.energyImpact || 5);
+  if (sliderSetters.mentalClarity) sliderSetters.mentalClarity(c.mentalClarity || 5);
   document.getElementById('notes').value = c.notes || '';
-  if (c.triggers) TRIGGERS.forEach(function(t){
-    document.getElementById('trig-' + t).checked = c.triggers.indexOf(t) >= 0;
-  });
+  restoreTriggers(c.triggers || []);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3914,8 +4022,25 @@ function loadCheckinForDate() {
 // ═══════════════════════════════════════════════════════════════
 function pickMood(val) {
   document.getElementById('mood').value = val;
-  var btns = document.querySelectorAll('#moodEmojis .gs-emoji-btn');
-  btns.forEach(function(b){ b.classList.toggle('gs-emoji-btn--active', b.getAttribute('data-val') == val); });
+  restoreMood(val);
+}
+
+function restoreMood(value) {
+  document.querySelectorAll('.emoji-opt').forEach(function(opt) {
+    opt.classList.toggle('selected', opt.getAttribute('data-value') === String(value));
+  });
+  document.getElementById('mood').value = value || '';
+}
+
+function getSelectedTriggers() {
+  return Array.from(document.querySelectorAll('.trig-chip.selected')).map(function(el) { return el.getAttribute('data-trigger'); });
+}
+
+function restoreTriggers(savedTriggers) {
+  document.querySelectorAll('.trig-chip').forEach(function(chip) {
+    var isSelected = savedTriggers && savedTriggers.indexOf(chip.getAttribute('data-trigger')) >= 0;
+    chip.classList.toggle('selected', isSelected);
+  });
 }
 
 function pickPill(hiddenId, containerId, btn) {
@@ -3932,16 +4057,9 @@ function pickHrt(yes, btn) {
   btn.classList.add('gs-checkin__pill--active');
 }
 
-function toggleTrig(name, chip) {
-  var cb = document.getElementById('trig-' + name);
-  cb.checked = !cb.checked;
-  chip.classList.toggle('gs-chip--active', cb.checked);
-}
-
 function syncCheckinVisuals() {
   var moodVal = document.getElementById('mood').value;
-  if (moodVal) pickMood(moodVal);
-  else document.querySelectorAll('#moodEmojis .gs-emoji-btn').forEach(function(b){ b.classList.remove('gs-emoji-btn--active'); });
+  restoreMood(moodVal);
 
   var pillMaps = [
     {sel: 'hotFlush', cont: 'hotFlushPills'},
@@ -3962,18 +4080,15 @@ function syncCheckinVisuals() {
     p.classList.toggle('gs-checkin__pill--active', hrtChecked ? isYes : !isYes);
   });
 
-  TRIGGERS.forEach(function(t) {
-    var cb = document.getElementById('trig-' + t);
-    var chip = document.querySelector('#triggerChips .gs-chip[data-trig="' + t + '"]');
-    if (chip) chip.classList.toggle('gs-chip--active', cb.checked);
-  });
+  // Sliders are restored via loadCheckinForDate → sliderSetters
+  // Triggers are restored via loadCheckinForDate → restoreTriggers
 }
 
 // ═══════════════════════════════════════════════════════════════
 // SAVE CHECK-IN — only re-render what changed
 // ═══════════════════════════════════════════════════════════════
 function saveCheckin() {
-  var trigs = TRIGGERS.filter(function(t){ return document.getElementById('trig-' + t).checked; });
+  var trigs = getSelectedTriggers();
   var newBleeding = document.getElementById('bleeding').value;
   var dt = document.getElementById('checkinDate').value;
 
