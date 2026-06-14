@@ -2883,12 +2883,160 @@ body {
   color: #8FB5A3;
   margin: 0;
 }
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — HRT Tracker, Bleeding Calendar, Settings Restyle
+   ═══════════════════════════════════════════════════════════════ */
+
+/* --- Global overrides: purple → sage --- */
+.nav-brand { color: #3A5C4E; }
+.nav-btn { color: #3A5C4E; border-radius: 50px; }
+.nav-btn.active { background: #3A5C4E; border-color: #3A5C4E; }
+.nav-btn:hover { background: #E8F0EB; border-color: #3A5C4E; }
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: #3A5C4E; box-shadow: 0 0 0 3px rgba(58,92,78,0.12);
+}
+.form-group input, .form-group select, .form-group textarea {
+  border: 0.5px solid #8FB5A3; border-radius: 12px; min-height: 44px;
+  font-family: var(--font-body); font-size: 14px;
+}
+.btn { border-radius: 50px; min-height: 44px; font-family: var(--font-body); }
+.btn-primary { background: #3A5C4E; }
+.btn-primary:hover { background: #2E4A3F; }
+.btn-secondary { color: #3A5C4E; border: 1px solid #3A5C4E; }
+.btn-secondary:hover { background: #E8F0EB; }
+
+.card-value { color: #3A5C4E; }
+.form-section { border-radius: 14px; border-left: 3px solid #8FB5A3; }
+.form-section h2 {
+  font-family: var(--font-heading); font-weight: 500; color: #3A5C4E;
+  border-bottom: 2px solid #8FB5A3;
+}
+
+.info-icon { background: #3A5C4E; }
+.slider-row input[type="range"]::-webkit-slider-thumb { background: #3A5C4E; }
+.slider-row input[type="range"]::-moz-range-thumb { background: #3A5C4E; }
+.section-divider { color: #3A5C4E; border-bottom-color: #E8F0EB; }
+
+.trigger-item { background: #E8F0EB; border-color: #E8F0EB; }
+.trigger-item:hover { background: #d5e8dd; border-color: #3A5C4E; }
+
+/* --- Hormone sections → sage cards --- */
+.hormone-section {
+  background: #FFFFFF; border: none; border-radius: 14px;
+  border-left: 3px solid #8FB5A3; box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+}
+.hormone-section h3 {
+  font-family: var(--font-heading); font-weight: 500; color: #3A5C4E;
+  border-bottom-color: #E8F0EB;
+}
+
+/* --- Dose change → honey gold --- */
+.dose-change-section {
+  background: #FFFFFF; border: none; border-radius: 14px;
+  border-left: 3px solid #E8C87A; box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+}
+.dose-change-section h3 {
+  font-family: var(--font-heading); font-weight: 500; color: #633806;
+  border-bottom-color: #f5e6c4;
+}
+
+/* --- Calendar hover → sage --- */
+.calendar-day:hover:not(.header):not(.empty) { border-color: #3A5C4E; }
+.calendar-day.header { background: #E8F0EB; color: #3A5C4E; font-family: var(--font-body); }
+
+/* --- Settings section → sage cards --- */
+.settings-section {
+  background: #FFFFFF; border-radius: 14px;
+  border-left: 3px solid #8FB5A3; box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+  padding: 24px; margin-bottom: 16px;
+}
+.settings-section h3 {
+  font-family: var(--font-heading); font-weight: 500; color: #3A5C4E; font-size: 18px;
+}
+
+/* --- Login card → sage --- */
+.login-card {
+  border-radius: 14px; border-left: 3px solid #8FB5A3;
+  box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+}
+.login-card h1 { font-family: var(--font-heading); font-weight: 500; color: #3A5C4E; }
+
+/* --- Success message → sage --- */
+.success-message { background: #E8F0EB; color: #3A5C4E; border-radius: 14px; }
+
+/* --- Page titles for restyled screens --- */
+.gs-screen-title {
+  font-family: var(--font-heading); font-weight: 500; font-size: 24px;
+  color: #3A5C4E; margin-bottom: 20px;
+}
+
+/* --- HRT empty state --- */
+.gs-hrt-empty {
+  text-align: center; padding: 40px 20px;
+  background: #FFFFFF; border-radius: 14px;
+  border-left: 3px solid #8FB5A3;
+  box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+  margin-bottom: 20px;
+}
+.gs-hrt-empty__icon { font-size: 40px; margin-bottom: 12px; }
+.gs-hrt-empty__text {
+  font-family: var(--font-body); font-size: 14px; color: #6B7280;
+  margin: 0 0 16px; line-height: 1.6;
+}
+.gs-hrt-empty__btn {
+  display: inline-block; background: #3A5C4E; color: #F4F0E8;
+  border: none; border-radius: 50px; padding: 12px 24px;
+  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  min-height: 44px; cursor: pointer;
+}
+.gs-hrt-empty__btn:hover { background: #2E4A3F; }
+
+/* --- Calendar empty state --- */
+.gs-cal-empty {
+  text-align: center; padding: 20px;
+  font-family: var(--font-body); font-size: 14px; color: #8FB5A3;
+  font-style: italic;
+}
+
+/* --- Profile hint --- */
+.gs-profile-hint {
+  font-family: var(--font-body); font-size: 12px; color: #8FB5A3;
+  margin-top: 4px; font-style: italic;
+}
+
+/* --- Calendar legend card → sage --- */
+.gs-cal-legend {
+  margin-top: 20px; padding: 16px; background: #E8F0EB;
+  border-radius: 14px; font-family: var(--font-body);
+}
+.gs-cal-legend__title {
+  font-size: 11px; color: #8FB5A3; text-transform: uppercase;
+  letter-spacing: 0.07em; margin-bottom: 10px;
+}
+.gs-cal-legend__row { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #1F2937; }
+.gs-cal-legend__swatch {
+  display: inline-block; width: 18px; height: 18px; border-radius: 4px;
+  vertical-align: middle; margin-right: 6px;
+}
+
+/* --- Calendar select styling --- */
+.gs-cal-select {
+  padding: 10px 14px; border: 0.5px solid #8FB5A3; border-radius: 12px;
+  font-size: 14px; font-family: var(--font-body); min-height: 44px;
+  background: #FFFFFF; color: #1F2937; cursor: pointer;
+}
+.gs-cal-select:focus { outline: none; border-color: #3A5C4E; box-shadow: 0 0 0 3px rgba(58,92,78,0.12); }
+
+/* --- iOS banner → sage --- */
+#iosBanner { background: #3A5C4E !important; }
+
     </style>
 </head>
 <body>
 
     <!-- iOS Install Banner -->
-    <div id="iosBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:#6d28d9;color:white;padding:12px 16px;font-size:13px;text-align:center;z-index:200;line-height:1.5;">
+    <div id="iosBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:#3A5C4E;color:white;padding:12px 16px;font-size:13px;text-align:center;z-index:200;line-height:1.5;">
         📲 Add to Home Screen: tap <strong>Share</strong> → <strong>"Add to Home Screen"</strong> for the best experience
         <span onclick="document.getElementById('iosBanner').style.display='none';localStorage.setItem('iosDismissed','1');" style="float:right;cursor:pointer;font-size:18px;line-height:1;margin-top:-2px;">✕</span>
     </div>
@@ -3213,7 +3361,13 @@ body {
         <button class="gs-btn gs-btn--primary gs-btn--full gs-checkin__save" onclick="saveCheckin()">Save Check-In</button>
     </div>
     <div id="hrtPage" class="page">
-        <div class="form-section">
+        <h1 class="gs-screen-title" style="padding:0 20px;">HRT Tracker</h1>
+        <div class="gs-hrt-empty" id="hrtEmptyState" style="display:none;margin:0 20px;">
+          <div class="gs-hrt-empty__icon">💊</div>
+          <p class="gs-hrt-empty__text">Your HRT details aren't saved yet. Add your current regimen so your GP report is complete.</p>
+          <button class="gs-hrt-empty__btn" onclick="document.getElementById('hrtEmptyState').style.display='none';document.getElementById('hrtFormSection').style.display='block';">Add HRT details</button>
+        </div>
+        <div class="form-section" id="hrtFormSection">
             <h2>HRT Regimen</h2>
             <div class="hormone-section">
                 <h3>💊 Estrogen</h3>
@@ -3253,19 +3407,20 @@ body {
     <div id="calendarPage" class="page">
         <div class="form-section">
             <h2>Bleeding Calendar</h2>
-            <div style="margin-bottom:20px;">
-                <select id="calendarMonth" onchange="updateCalendar()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select>
-                <select id="calendarYear" onchange="updateCalendar()" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;margin-left:8px;"><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select>
+            <div style="margin-bottom:20px;display:flex;gap:8px;">
+                <select id="calendarMonth" onchange="updateCalendar()" class="gs-cal-select"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select>
+                <select id="calendarYear" onchange="updateCalendar()" class="gs-cal-select"><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select>
             </div>
             <div class="calendar" id="calendar"></div>
-            <div style="margin-top:24px;padding:16px;background:#f3f4f6;border-radius:6px;">
-                <p style="font-size:12px;color:#6b7280;margin-bottom:10px;">Tap a day to cycle through levels:</p>
-                <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;">
-                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#f3f4f6;border-radius:4px;border:1px solid #ddd;"></div>None</div>
-                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#fecaca;border-radius:4px;"></div>Spotting</div>
-                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#fca5a5;border-radius:4px;"></div>Light</div>
-                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#f87171;border-radius:4px;"></div>Medium</div>
-                    <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;background:#ef4444;border-radius:4px;"></div>Heavy</div>
+            <div class="gs-cal-empty" id="calEmptyState" style="display:none;">No bleeding logged for this month. Tap any day to record bleeding level.</div>
+            <div class="gs-cal-legend">
+                <div class="gs-cal-legend__title">Tap a day to cycle through levels</div>
+                <div class="gs-cal-legend__row">
+                    <div><span class="gs-cal-legend__swatch" style="background:#E8F0EB;border:1px solid #ccc;"></span>None</div>
+                    <div><span class="gs-cal-legend__swatch" style="background:#fecaca;"></span>Spotting</div>
+                    <div><span class="gs-cal-legend__swatch" style="background:#fca5a5;"></span>Light</div>
+                    <div><span class="gs-cal-legend__swatch" style="background:#f87171;"></span>Medium</div>
+                    <div><span class="gs-cal-legend__swatch" style="background:#ef4444;"></span>Heavy</div>
                 </div>
             </div>
         </div>
@@ -3337,11 +3492,11 @@ body {
       <div id="notesList"></div>
     </div>
     <div id="settingsPage" class="page">
-        <h2 style="font-size:28px;margin-bottom:24px;">Settings</h2>
+        <h1 class="gs-screen-title" style="padding:0 20px;">Settings</h1>
         <div class="settings-section">
             <h3>Patient Profile</h3>
             <div class="form-grid" style="padding:0;">
-                <div class="form-group"><label>Full Name</label><input type="text" id="profileName" placeholder="As it appears on your Medicare card"></div>
+                <div class="form-group"><label>Full Name</label><input type="text" id="profileName" placeholder="As it appears on your Medicare card"><p class="gs-profile-hint">Used on your GP report</p></div>
                 <div class="form-group"><label>Date of Birth</label><input type="date" id="profileDOB"></div>
                 <div class="form-group"><label>Date of Last Period</label><input type="date" id="profileLastPeriod"></div>
                 <div class="form-group"><label>Menstrual Status</label><select id="profileMenstrualStatus"><option value="">Select status</option><option value="Perimenopausal">Perimenopausal (still having periods, irregular)</option><option value="Menopausal">Menopausal (no period for 12+ months)</option><option value="Surgical menopause">Surgical menopause (hysterectomy / oophorectomy)</option><option value="Premature ovarian insufficiency">Premature ovarian insufficiency (POI)</option></select></div>
@@ -3350,16 +3505,16 @@ body {
         </div>
         <div class="settings-section">
             <h3>Account</h3>
-            <div class="settings-item"><div><p style="font-weight:500;">Email</p><p style="font-size:14px;color:#6b7280;" id="settingsEmail">—</p></div></div>
+            <div class="settings-item"><div><p style="font-weight:500;font-family:var(--font-body);">Email</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);" id="settingsEmail">—</p></div></div>
         </div>
         <div class="settings-section">
             <h3>Reports and Data</h3>
             <div class="settings-item">
-                <div><p style="font-weight:500;">Generate GP Report</p><p style="font-size:14px;color:#6b7280;">Opens a print-ready clinical summary for your doctor</p></div>
+                <div><p style="font-weight:500;font-family:var(--font-body);">Generate GP Report</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">Opens a print-ready clinical summary for your doctor</p></div>
                 <button class="btn btn-primary" style="width:auto;" onclick="exportData()">Generate Report</button>
             </div>
             <div class="settings-item">
-                <div><p style="font-weight:500;">Delete All Data</p><p style="font-size:14px;color:#6b7280;">This cannot be undone</p></div>
+                <div><p style="font-weight:500;font-family:var(--font-body);">Delete All Data</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">This cannot be undone</p></div>
                 <button class="btn btn-danger" onclick="deleteAllData()">Delete</button>
             </div>
         </div>
@@ -3657,7 +3812,8 @@ function showPage(n, b) {
   if (n === 'reflection') renderReflection();
   if (n === 'report') renderReport();
   if (n === 'notes') renderNotes('all');
-  if (n === 'calendar') updateCalendar();
+  if (n === 'calendar') { State._calendarKey = null; updateCalendar(); checkCalendarEmpty(); }
+  if (n === 'hrt') checkHRTEmpty();
 }
 function toggleOther(s, o) {
   document.getElementById(o).classList.toggle('show', document.getElementById(s).value === 'other');
@@ -3863,6 +4019,29 @@ function loadHRTForm() {
     var el = document.getElementById(f); if (el) el.value = h[f] || '';
   });
   document.getElementById('hrtNotes').value = h.notes || '';
+}
+
+function checkHRTEmpty() {
+  var h = getHRT();
+  var hasData = h.estrogenName || h.progName || h.doseChangeDate;
+  var empty = document.getElementById('hrtEmptyState');
+  var form = document.getElementById('hrtFormSection');
+  if (empty && form) {
+    empty.style.display = hasData ? 'none' : 'block';
+    form.style.display = hasData ? 'block' : 'none';
+  }
+}
+
+function checkCalendarEmpty() {
+  var month = parseInt(document.getElementById('calendarMonth').value);
+  var year = parseInt(document.getElementById('calendarYear').value);
+  var checkins = getCheckins();
+  var hasBleed = checkins.some(function(c) {
+    var d = new Date(c.date);
+    return d.getMonth() === month && d.getFullYear() === year && c.bleeding && c.bleeding !== 'none';
+  });
+  var el = document.getElementById('calEmptyState');
+  if (el) el.style.display = hasBleed ? 'none' : 'block';
 }
 
 // ═══════════════════════════════════════════════════════════════
