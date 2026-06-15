@@ -5,6 +5,6 @@ copyright. You may use this code for personal use
 only. Commercial use, distribution, or resale is 
 not permitted without written permission.
 
-For inquiries: [your email]
+For inquiries: [pinnyp88@gmail.com]
 
 Built by Pinny — 2026
