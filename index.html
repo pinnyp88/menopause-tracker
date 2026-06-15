@@ -3031,6 +3031,43 @@ body {
 /* --- iOS banner → sage --- */
 #iosBanner { background: #3A5C4E !important; }
 
+/* ═══ Screen title typography — spec-matched ═══ */
+.gs-checkin__title,
+.gs-trends__title,
+.gs-reflect__title,
+.gs-report__title,
+.gs-notes__title,
+.gs-screen-title,
+.gs-dashboard__greeting,
+#calendarPage .form-section > h2,
+#hrtPage .form-section > h2 {
+  font-family: 'Fraunces', serif !important;
+  font-weight: 500 !important;
+  font-size: 27px !important;
+  color: #3A5C4E !important;
+  text-align: center !important;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+/* ═══ Subtitle/prompt line below titles ═══ */
+.gs-motivational,
+.gs-notes__subtitle,
+.gs-report__subtitle,
+.gs-reflect__subtitle,
+.gs-dashboard__subtext {
+  font-family: 'Fraunces', serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: 15px !important;
+  color: #8FB5A3 !important;
+  text-align: center !important;
+  display: block;
+  margin-bottom: 20px;
+}
+
 /* ═══ Custom Emoji Mood Selector ═══ */
 .emoji-row { display: flex; justify-content: space-between; gap: 8px; margin: 12px 0; }
 .emoji-opt { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 8px 4px; border-radius: 12px; border: 2px solid transparent; background: transparent; transition: all 0.15s ease; flex: 1; }
@@ -3066,6 +3103,14 @@ body {
   padding: 16px 20px; margin: 0 0 16px; box-shadow: 0 1px 4px rgba(58,92,78,0.08);
   font-family: var(--font-heading); font-style: italic; font-size: 16px;
   color: #3A5C4E; line-height: 1.5;
+}
+.review-quote-card {
+  background: #FFFFFF; border-left: 4px solid #E8C87A; border-radius: 14px;
+  padding: 18px 22px; margin: 0 0 18px; box-shadow: 0 1px 4px rgba(58,92,78,0.08);
+}
+.review-quote-text {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 18px;
+  color: #3A5C4E; line-height: 1.5; margin: 0;
 }
 
     </style>
@@ -5535,18 +5580,24 @@ function renderReflection() {
   html += '<p class="gs-reflect__subtitle">' + rangeStr + '</p>';
   html += '<p class="gs-reflect__logged">' + week.length + ' day' + (week.length !== 1 ? 's' : '') + ' logged this week</p>';
 
-  // Review insight card
-  var reviewInsight = 'Here\'s your week at a glance.';
-  if (week.length >= 3) {
-    var riSleep = wavg(week, 'sleep');
-    var riFog = wavg(week, 'brainFog');
-    var riForm = week.filter(function(c){ return c.loggedViaForm !== false; });
-    var riHrt = riForm.length > 0 ? Math.round((riForm.filter(function(c){ return c.hrtTaken; }).length / riForm.length) * 100) : 0;
-    if (riHrt === 100 && riForm.length > 0) reviewInsight = 'Perfect HRT adherence this week. Well done.';
-    else if (riSleep !== null && riSleep > 6.5) reviewInsight = 'Sleep is holding up well this week.';
-    else if (riFog !== null && riFog > 6) reviewInsight = 'A foggy week. That\'s worth telling your GP.';
+  // Review quote card
+  var weekQuote = 'Start logging to see your weekly reflection.';
+  if (week.length > 0) {
+    var qSleep = wavg(week, 'sleep');
+    var qFog = wavg(week, 'brainFog');
+    var qPatience = wavg(week, 'patience');
+    var qForm = week.filter(function(c){ return c.loggedViaForm !== false; });
+    var qAdhered = qForm.filter(function(c){ return c.hrtTaken; }).length;
+    var qPct = qForm.length > 0 ? Math.round((qAdhered / qForm.length) * 100) : 0;
+    if (qPct === 100 && qForm.length > 0) weekQuote = 'Perfect HRT adherence this week. Your consistency is doing the work.';
+    else if (qSleep !== null && qSleep >= 7) weekQuote = 'Sleep held up well this week. That matters more than you think.';
+    else if (qSleep !== null && qSleep < 5.5) weekQuote = 'A tough week for sleep. Worth mentioning to your GP.';
+    else if (qFog !== null && qFog >= 7) weekQuote = 'A foggy week. Be kind to yourself — this is the menopause, not you.';
+    else if (qPatience !== null && qPatience >= 7) weekQuote = 'Your patience held steady this week. That’s not nothing.';
+    else if (qPatience !== null && qPatience < 4) weekQuote = 'A harder week emotionally. Every day you logged is useful data.';
+    else weekQuote = 'A steadier week than last. Keep going — patterns take time.';
   }
-  html += '<div class="gs-review-insight">' + reviewInsight + '</div>';
+  html += '<div class="review-quote-card"><p class="review-quote-text">“' + weekQuote + '”</p></div>';
 
   if (week.length < 3) {
     html += '<div class="reflection-card reflection-card--sage gs-reflect__empty" style="' + cardDelay() + '"><h2>Not enough data yet</h2><p>Log at least 3 days this week to see your weekly reflection.</p><button class="gs-reflect__empty-btn" onclick="showPage(\'checkin\',null)">Go to Daily Log</button></div>';
