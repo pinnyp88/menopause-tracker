@@ -867,7 +867,7 @@ body {
         .nav-btn:hover { background: #ede9fe; border-color: #6d28d9; }
         .logout-btn { background: #ef4444; color: white; border-color: #ef4444; }
         .logout-btn:hover { background: #dc2626; }
-        .page { display: none; padding: 32px 0; }
+        .page { display: none; padding: 32px 0 130px; }
         .page.active { display: block; }
         .login-page.active { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 0 !important; }
         .login-card { background: white; padding: 48px 32px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
@@ -940,7 +940,7 @@ body {
         .other-field { display: none; margin-top: 10px; }
         .other-field.show { display: block; }
         .dashboard-notice { font-size: 13px; color: #6b7280; font-style: italic; margin-bottom: 20px; margin-top: -16px; }
-        .clinical-footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; padding: 8px 20px; font-size: 11px; color: #6b7280; text-align: center; z-index: 50; line-height: 1.5; }
+        .clinical-footer { position: fixed; bottom: 65px; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; padding: 8px 20px; font-size: 11px; color: #6b7280; text-align: center; z-index: 110; line-height: 1.5; }
 /* ═══════════════════════════════════════════════════════════════
    GARDEN SAGE — Dashboard Homepage
    ═══════════════════════════════════════════════════════════════ */
@@ -3120,6 +3120,42 @@ body {
   line-height: 1.5; margin: 0;
 }
 
+/* ═══ GP Report In-App Page ═══ */
+.gp-report-page { padding-top: 0 !important; }
+.gp-report-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 20px; position: sticky; top: 0; background: #F4F0E8; z-index: 10;
+}
+.gp-report-back {
+  background: none; border: none; color: #3A5C4E; font-family: Inter, sans-serif;
+  font-size: 15px; font-weight: 600; cursor: pointer; padding: 8px 0; min-height: 44px;
+}
+.gp-report-print {
+  background: #3A5C4E; color: #FFFFFF; border: none; border-radius: 50px;
+  padding: 10px 20px; font-family: Inter, sans-serif; font-size: 14px;
+  font-weight: 600; cursor: pointer; min-height: 44px;
+}
+#gpReportContent {
+  max-width: 820px; margin: 0 auto; padding: 20px; font-size: 13px; color: #111;
+}
+#gpReportContent h1 { font-size: 20px; text-align: center; border-bottom: 3px solid #7A8FA6; padding-bottom: 14px; margin-bottom: 6px; color: #3A5C4E; }
+#gpReportContent h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; background: #f8fafc; padding: 7px 10px; border-left: 4px solid #7A8FA6; margin: 24px 0 12px; color: #3A5C4E; }
+#gpReportContent table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+#gpReportContent th { background: #EFF3F7; text-align: left; padding: 8px 10px; font-size: 12px; border: 1px solid #ccc; color: #3A5C4E; }
+#gpReportContent td { padding: 7px 10px; border: 1px solid #ddd; font-size: 12px; vertical-align: top; }
+#gpReportContent tr:nth-child(even) td { background: #fafafa; }
+#gpReportContent .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+#gpReportContent .ir { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+#gpReportContent .lb { color: #555; font-weight: 600; }
+#gpReportContent .ft { margin-top: 36px; padding-top: 12px; border-top: 1px solid #ccc; font-size: 10px; color: #9ca3af; text-align: center; }
+
+@media print {
+  .gs-tabbar, .clinical-footer, .gp-report-bar, .qa-overlay, .qa-toast { display: none !important; }
+  .gp-report-page { padding: 0 !important; }
+  #gpReportContent { padding: 10px 20px; }
+  .page:not(#gpReportPage) { display: none !important; }
+}
+
 /* ═══ Quick-Add Button & Modal ═══ */
 .quick-add-btn {
   width: 100%; background: #FFFFFF; color: #D4836A; border: 1.5px solid #D4836A;
@@ -3586,6 +3622,13 @@ body {
         <button class="gs-report__footer-btn gs-report__footer-btn--primary" onclick="exportData()">Print / Save PDF</button>
         <button class="gs-report__footer-btn gs-report__footer-btn--secondary" onclick="showPage('dashboard',null)">Back to Dashboard</button>
       </div>
+    </div>
+    <div id="gpReportPage" class="page gp-report-page">
+      <div class="gp-report-bar">
+        <button class="gp-report-back" onclick="showPage('report',null)">← Back</button>
+        <button class="gp-report-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+      </div>
+      <div id="gpReportContent"></div>
     </div>
     <div id="notesPage" class="page gs-notes">
       <p class="gs-motivational screen-subtitle" id="notesMotivational">Your private space. Questions, worries, things to remember.</p>
@@ -4650,7 +4693,7 @@ function exportData() {
   var t30=getTopTriggers(s30);
   var uri=function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+' days)'; }).join(', ')||'None reported'; };
 
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>GP Report</title><style>body{font-family:Inter,Arial,Helvetica,sans-serif;max-width:820px;margin:40px auto;padding:40px;color:#111;font-size:13px;background:#fff;}h1{font-size:20px;text-align:center;border-bottom:3px solid #7A8FA6;padding-bottom:14px;margin-bottom:6px;color:#3A5C4E;}h2{font-size:13px;text-transform:uppercase;letter-spacing:1px;background:#f8fafc;padding:7px 10px;border-left:4px solid #7A8FA6;margin:24px 0 12px;color:#3A5C4E;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#EFF3F7;text-align:left;padding:8px 10px;font-size:12px;border:1px solid #ccc;color:#3A5C4E;}td{padding:7px 10px;border:1px solid #ddd;font-size:12px;vertical-align:top;}tr:nth-child(even) td{background:#fafafa;}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.ir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;font-size:12px;}.lb{color:#555;font-weight:600;}.ft{margin-top:36px;padding-top:12px;border-top:1px solid #ccc;font-size:10px;color:#9ca3af;text-align:center;font-family:Inter,Arial,sans-serif;}@media print{body{margin:10px;padding:20px;}}</style></head><body>';
+  var html='';
   html+='<h1>Menopause Impact Tracker - GP Clinical Summary Report</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Report Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
   html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob||'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod||'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
   html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr></table>';
@@ -4658,8 +4701,11 @@ function exportData() {
   html+='<h2>7-Day Symptom Summary ('+rng(s7)+', n='+s7.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Patience</td><td>'+avg(s7,'patience')+'/10</td><td>1=very impatient | 10=very patient</td></tr><tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s7)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s7,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b7+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a7+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t7.length>0?t7.join(', '):'None logged')+'</td></tr></table>';
   if(s30.length>0){html+='<h2>30-Day Symptom Summary ('+rng(s30)+', n='+s30.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Patience</td><td>'+avg(s30,'patience')+'/10</td><td>1=very impatient | 10=very patient</td></tr><tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+'/3</td><td>0=none | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s30,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s30,'nightSweat')+'/3</td><td>0=none | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s30)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s30,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s30,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s30,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s30,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b30+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a30+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t30.length>0?t30.join(', '):'None logged')+'</td></tr></table>';}
   if(hrt.notes)html+='<h2>Additional Notes</h2><p style="font-size:12px;">'+hrt.notes+'</p>';
-  html+='<div class="ft">This report is a clinical symptom tracking journal export. It does not constitute medical advice. Generated by Menopause Impact Tracker — Clinic Engine v1.3.0 | '+rd+'</div><script>window.onload=function(){window.print();}<\/script></body></html>';
-  var w = window.open('','_blank'); w.document.write(html); w.document.close();
+  html+='<div class="ft">This report is a clinical symptom tracking journal export. It does not constitute medical advice. Generated by Menopause Impact Tracker — Clinic Engine v1.3.0 | '+rd+'</div>';
+  document.getElementById('gpReportContent').innerHTML = html;
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('gpReportPage').classList.add('active');
+  window.scrollTo(0, 0);
 }
 
 // ═══════════════════════════════════════════════════════════════
