@@ -3120,6 +3120,45 @@ body {
   line-height: 1.5; margin: 0;
 }
 
+/* ═══ Quick-Add Button & Modal ═══ */
+.quick-add-btn {
+  width: 100%; background: #FFFFFF; color: #D4836A; border: 1.5px solid #D4836A;
+  border-radius: 50px; padding: 12px 20px; font-family: Inter, sans-serif;
+  font-size: 14px; font-weight: 600; min-height: 44px; margin-top: 10px; cursor: pointer;
+}
+.qa-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.qa-overlay.show { opacity: 1; pointer-events: auto; }
+.qa-modal {
+  background: #FFFFFF; border-radius: 20px; padding: 28px; max-width: 340px; width: 90%;
+}
+.qa-modal h2 { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 500; color: #3A5C4E; text-align: center; margin: 0 0 4px; }
+.qa-modal p { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 13px; color: #8FB5A3; text-align: center; margin: 0 0 20px; }
+.qa-option {
+  width: 100%; background: #F4F0E8; border: 1.5px solid #D4D0C8; border-radius: 50px;
+  padding: 14px 20px; font-family: Inter, sans-serif; font-size: 15px; font-weight: 500;
+  color: #3A5C4E; min-height: 50px; margin-bottom: 10px; cursor: pointer; text-align: center;
+}
+.qa-cancel { display: block; margin: 8px auto 0; background: none; border: none; color: #8FB5A3; font-family: Inter, sans-serif; font-size: 14px; cursor: pointer; }
+.qa-toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  background: #3A5C4E; color: #FFFFFF; padding: 10px 24px; border-radius: 50px;
+  font-family: Inter, sans-serif; font-size: 14px; font-weight: 600; z-index: 400;
+  opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+}
+.qa-toast.show { opacity: 1; }
+
+/* ═══ Save Delight ═══ */
+.btn-save-success { background: #4A6B5C !important; transition: background 0.3s ease, transform 0.4s ease; }
+.save-success-message {
+  font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 14px;
+  color: #8FB5A3; text-align: center; margin-top: 12px; opacity: 0; transition: opacity 0.3s ease;
+}
+.save-success-message.show { opacity: 1; }
+
     </style>
 </head>
 <body>
@@ -3178,6 +3217,7 @@ body {
 
         <!-- Primary CTA -->
         <button class="gs-btn gs-btn--primary gs-btn--full gs-dashboard__cta" onclick="showPage('checkin',null)">＋ Log today's check-in</button>
+        <button class="quick-add-btn" onclick="openQuickAdd()">🔥 Log a hot flush now</button>
 
         <!-- Today mini-status (shown only if already logged) -->
         <div class="gs-dashboard__today-done" id="dashTodayDone" style="display:none;">
@@ -3423,25 +3463,25 @@ body {
             <span class="gs-slider__label" style="margin-bottom:8px;display:block;">Life impact</span>
 
             <div class="gs-slider gs-slider--compact">
-              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workVal">5</span></div>
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="workImpactTrack"><div class="custom-fill" id="workImpactFill"></div><div class="custom-thumb" id="workImpactThumb"></div></div></div>
               <input type="hidden" id="workImpact" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
-              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relVal">5</span></div>
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="relImpactTrack"><div class="custom-fill" id="relImpactFill"></div><div class="custom-thumb" id="relImpactThumb"></div></div></div>
               <input type="hidden" id="relImpact" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
-              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyVal">5</span></div>
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="energyImpactTrack"><div class="custom-fill" id="energyImpactFill"></div><div class="custom-thumb" id="energyImpactThumb"></div></div></div>
               <input type="hidden" id="energyImpact" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
-              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalVal">5</span></div>
+              <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalClarityVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="mentalClarityTrack"><div class="custom-fill" id="mentalClarityFill"></div><div class="custom-thumb" id="mentalClarityThumb"></div></div></div>
               <input type="hidden" id="mentalClarity" value="5">
               <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
@@ -3456,7 +3496,8 @@ body {
         </div>
 
         <!-- Save -->
-        <button class="gs-btn gs-btn--primary gs-btn--full gs-checkin__save" onclick="saveCheckin()">Save Check-In</button>
+        <button class="gs-btn gs-btn--primary gs-btn--full gs-checkin__save" id="saveCheckinBtn" onclick="saveCheckin()">Save Check-In</button>
+        <div class="save-success-message" id="saveDelightMsg"></div>
     </div>
     <div id="hrtPage" class="page">
         <h1 class="gs-screen-title screen-title" style="padding:0 20px;">HRT Tracker</h1>
@@ -4171,8 +4212,21 @@ function saveCheckin() {
   if (idx >= 0) { arr[idx] = c; } else { arr.push(c); }
   setCheckins(arr); // updates cache + localStorage, invalidates sample cache
 
-  document.getElementById('checkinSuccess').classList.add('show');
-  setTimeout(function(){ document.getElementById('checkinSuccess').classList.remove('show'); }, 3000);
+  var saveBtn = document.getElementById('saveCheckinBtn');
+  var saveMsg = document.getElementById('saveDelightMsg');
+  var SAVE_MSGS = ['Saved. That’s helpful data for your GP.','Logged. Every day adds to the picture.','Done. See you tomorrow.'];
+  saveBtn.textContent = '✓ Saved';
+  saveBtn.classList.add('btn-save-success');
+  saveBtn.style.transform = 'scale(1.03)';
+  setTimeout(function(){ saveBtn.style.transform = 'scale(1)'; }, 400);
+  saveMsg.textContent = SAVE_MSGS[Math.floor(Math.random()*SAVE_MSGS.length)];
+  saveMsg.classList.add('show');
+  setTimeout(function(){
+    saveBtn.textContent = 'Save Check-In';
+    saveBtn.classList.remove('btn-save-success');
+    saveBtn.style.transform = '';
+    saveMsg.classList.remove('show');
+  }, 2500);
 
   loadCheckinForDate();
   syncCheckinVisuals();
@@ -4183,6 +4237,39 @@ function saveCheckin() {
   if (newBleeding !== oldBleeding) {
     updateCalendarCell(dt, newBleeding);
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// QUICK-ADD
+// ═══════════════════════════════════════════════════════════════
+function openQuickAdd() { document.getElementById('qaOverlay').classList.add('show'); }
+function closeQuickAdd() { document.getElementById('qaOverlay').classList.remove('show'); }
+
+function quickLog(type) {
+  closeQuickAdd();
+  var today = localDate();
+  var arr = getCheckins();
+  var idx = arr.findIndex(function(x){ return x.date === today; });
+  var entry = idx >= 0 ? arr[idx] : { date: today, mood: 0, brainFog: 5, sleep: 7, patience: 5, hotFlush: 0, hotFlushCount: 0, nightSweat: 0, urinary: 'none', bleeding: 'none', hrtTaken: false, workImpact: 5, relImpact: 5, energyImpact: 5, mentalClarity: 5, triggers: [], notes: '', loggedViaForm: false };
+  var label = '';
+  if (type === 'hotFlush') {
+    entry.hotFlushCount = (entry.hotFlushCount || 0) + 1;
+    if (!entry.hotFlush || entry.hotFlush === 0) entry.hotFlush = 1;
+    label = 'Logged 🔥';
+  } else if (type === 'nightSweat') {
+    if (!entry.nightSweat || entry.nightSweat === 0) entry.nightSweat = 1;
+    label = 'Logged 🌙';
+  } else if (type === 'moodDip') {
+    if (!entry.mood || entry.mood === 0) entry.mood = 2;
+    label = 'Logged 😣';
+  }
+  if (idx >= 0) { arr[idx] = entry; } else { arr.push(entry); }
+  setCheckins(arr);
+  updateDashboard();
+  var toast = document.getElementById('qaToast');
+  toast.textContent = label;
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 1500);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5791,6 +5878,20 @@ function renderReflection() {
   container.innerHTML = html;
 }
 </script>
+
+<!-- Quick-Add Modal -->
+<div class="qa-overlay" id="qaOverlay">
+  <div class="qa-modal">
+    <h2>Quick log</h2>
+    <p>Just this moment, no full check-in needed</p>
+    <button class="qa-option" onclick="quickLog('hotFlush')">🔥 Hot flush</button>
+    <button class="qa-option" onclick="quickLog('nightSweat')">🌙 Night sweat</button>
+    <button class="qa-option" onclick="quickLog('moodDip')">😣 Mood dip</button>
+    <button class="qa-cancel" onclick="closeQuickAdd()">Cancel</button>
+  </div>
+</div>
+<div class="qa-toast" id="qaToast"></div>
+
 <script>
 document.fonts.ready.then(function() {
   var loaded = document.fonts.check('500 16px Fraunces');
