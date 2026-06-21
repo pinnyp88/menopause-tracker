@@ -3027,6 +3027,39 @@ body {
 }
 .gs-cal-select:focus { outline: none; border-color: #3A5C4E; box-shadow: 0 0 0 3px rgba(58,92,78,0.12); }
 
+/* --- Calendar month nav header --- */
+.cal-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.cal-nav-arrow {
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: 1.5px solid #3A5C4E;
+  border-radius: 50%;
+  color: #3A5C4E;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.cal-nav-label {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 500;
+  color: #3A5C4E;
+  min-width: 160px;
+  text-align: center;
+}
+
 /* --- iOS banner → sage --- */
 #iosBanner { background: #3A5C4E !important; }
 
@@ -3452,6 +3485,16 @@ body {
               <div class="trigger-item"><input type="checkbox" id="som-dizziness"><label for="som-dizziness">💫 Dizziness</label></div>
               <div class="trigger-item"><input type="checkbox" id="som-breasttenderness"><label for="som-breasttenderness">🌷 Breast Tenderness</label></div>
               <div class="trigger-item"><input type="checkbox" id="som-bloating"><label for="som-bloating">🎈 Bloating</label></div>
+              <div class="trigger-item"><input type="checkbox" id="som-backache"><label for="som-backache">🔙 Backache</label></div>
+            </div>
+            <div style="margin-top:16px;">
+              <span class="gs-slider__label">🌷 Intimate Health <span style="font-weight:400;font-size:12px;color:#3A5C4E;">(optional)</span></span>
+              <p style="font-family:var(--font-body);font-size:12px;color:#3A5C4E;font-style:italic;margin:4px 0 10px;line-height:1.5;">This stays completely private on your device. Skip if you'd rather not log this.</p>
+              <div class="trigger-grid">
+                <div class="trigger-item"><input type="checkbox" id="som-libido"><label for="som-libido">💜 Reduced Libido</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-vaginaldryness"><label for="som-vaginaldryness">🩹 Vaginal Dryness</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-paininintercourse"><label for="som-paininintercourse">⚡ Painful Intercourse</label></div>
+              </div>
             </div>
           </div>
 
@@ -3607,9 +3650,14 @@ body {
     <div id="calendarPage" class="page">
         <div class="form-section">
             <h2 class="screen-title">Bleeding Calendar</h2>
-            <div style="margin-bottom:20px;display:flex;gap:8px;">
+            <div style="display:none;">
                 <select id="calendarMonth" onchange="updateCalendar()" class="gs-cal-select"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select>
                 <select id="calendarYear" onchange="updateCalendar()" class="gs-cal-select"><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select>
+            </div>
+            <div class="cal-nav-header">
+                <button class="cal-nav-arrow" onclick="calNavMonth(-1)" aria-label="Previous month">&#8249;</button>
+                <span class="cal-nav-label" id="calNavLabel"></span>
+                <button class="cal-nav-arrow" onclick="calNavMonth(1)" aria-label="Next month">&#8250;</button>
             </div>
             <div class="calendar" id="calendar"></div>
             <div class="gs-cal-empty" id="calEmptyState" style="display:none;">No bleeding logged for this month. Tap any day to record bleeding level.</div>
@@ -3971,8 +4019,8 @@ var TRIGGERS = ['stress','alcohol','caffeine','poorsleep','misseddose','exercise
 var TLABELS = {stress:'Stress',alcohol:'Alcohol',caffeine:'Caffeine',poorsleep:'Poor Sleep',
   misseddose:'Missed HRT Dose',exercise:'Exercise',illness:'Illness',
   spicyfood:'Spicy Food',hotweather:'Hot Weather',other:'Other'};
-var SOMATIC = ['headache','jointpain','palpitations','dizziness','breasttenderness','bloating'];
-var SLABELS = {headache:'Headache',jointpain:'Joint/Muscle Pain',palpitations:'Heart Palpitations',dizziness:'Dizziness',breasttenderness:'Breast Tenderness',bloating:'Bloating'};
+var SOMATIC = ['headache','jointpain','palpitations','dizziness','breasttenderness','bloating','backache','libido','vaginaldryness','paininintercourse'];
+var SLABELS = {headache:'Headache',jointpain:'Joint/Muscle Pain',palpitations:'Heart Palpitations',dizziness:'Dizziness',breasttenderness:'Breast Tenderness',bloating:'Bloating',backache:'Backache',libido:'Reduced Libido',vaginaldryness:'Vaginal Dryness',paininintercourse:'Painful Intercourse'};
 
 // ═══════════════════════════════════════════════════════════════
 // LOCAL DATE — device timezone, not UTC
@@ -4720,6 +4768,37 @@ function updateCalendar() {
   // Single DOM write — no incremental reflow
   cal.innerHTML = '';
   cal.appendChild(frag);
+  syncCalNavLabel();
+}
+
+var CAL_MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function syncCalNavLabel() {
+  var lbl = document.getElementById('calNavLabel');
+  if (!lbl) return;
+  var m = parseInt(document.getElementById('calendarMonth').value);
+  var y = parseInt(document.getElementById('calendarYear').value);
+  lbl.textContent = CAL_MONTH_NAMES[m] + ' ' + y;
+}
+
+function calNavMonth(dir) {
+  var mSel = document.getElementById('calendarMonth');
+  var ySel = document.getElementById('calendarYear');
+  var m = parseInt(mSel.value) + dir;
+  var y = parseInt(ySel.value);
+  if (m > 11) { m = 0; y++; }
+  if (m < 0) { m = 11; y--; }
+  var yearOpt = ySel.querySelector('option[value="' + y + '"]');
+  if (!yearOpt) {
+    yearOpt = document.createElement('option');
+    yearOpt.value = y;
+    yearOpt.textContent = y;
+    ySel.appendChild(yearOpt);
+  }
+  mSel.value = m;
+  ySel.value = y;
+  State._calendarKey = null;
+  updateCalendar();
 }
 
 // ═══════════════════════════════════════════════════════════════
