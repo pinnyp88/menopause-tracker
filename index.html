@@ -4600,6 +4600,23 @@ function loadHRTForm() {
    'doseChangeDate','doseChangeWhat','doseChangeReason','doseChangeSideEffects'].forEach(function(f){
     var el = document.getElementById(f); if (el) el.value = h[f] || '';
   });
+  // Restore admin type dropdowns — if saved value isn't a standard option, treat as "other"
+  ['estrogen','prog'].forEach(function(prefix) {
+    var sel = document.getElementById(prefix === 'estrogen' ? 'estrogenAdmin' : 'progAdmin');
+    var otherText = document.getElementById(prefix === 'estrogen' ? 'estrogenOtherText' : 'progOtherText');
+    var otherWrap = document.getElementById(prefix === 'estrogen' ? 'estrogenOther' : 'progOther');
+    var saved = h[prefix === 'estrogen' ? 'estrogenAdmin' : 'progAdmin'] || '';
+    if (!sel) return;
+    var isStandard = Array.from(sel.options).some(function(o) { return o.value === saved; });
+    if (isStandard) {
+      sel.value = saved;
+      if (otherWrap) otherWrap.classList.remove('show');
+    } else if (saved) {
+      sel.value = 'other';
+      if (otherText) otherText.value = saved;
+      if (otherWrap) otherWrap.classList.add('show');
+    }
+  });
   document.getElementById('hrtNotes').value = h.notes || '';
   renderHRTHistory();
 }
