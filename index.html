@@ -3677,7 +3677,8 @@ body {
                 <div class="hrt-history-list" id="testHistory"></div>
             </div>
             <div class="form-group"><label>Additional Notes</label><textarea id="hrtNotes" placeholder="Other medications, supplements, or general notes..."></textarea></div>
-            <button class="btn btn-primary" onclick="saveHRT()">Save HRT Regimen</button>
+            <button class="gs-btn gs-btn--primary gs-btn--full" id="saveHRTBtn" onclick="saveHRT()">Save HRT Regimen</button>
+            <div class="save-success-message" id="saveHRTMsg"></div>
         </div>
     </div>
     <div id="calendarPage" class="page">
@@ -4571,7 +4572,22 @@ function saveHRT() {
   State.hrt = newH;
   setHRT(State.hrt);
   renderHRTHistory();
-  alert('HRT regimen saved!');
+
+  var hrtBtn = document.getElementById('saveHRTBtn');
+  var hrtMsg = document.getElementById('saveHRTMsg');
+  hrtBtn.textContent = '✓ Saved';
+  hrtBtn.classList.add('btn-save-success');
+  hrtBtn.style.transform = 'scale(1.03)';
+  setTimeout(function(){ hrtBtn.style.transform = 'scale(1)'; }, 400);
+  hrtMsg.textContent = 'Saved — HRT updated.';
+  hrtMsg.classList.add('show');
+  setTimeout(function(){
+    hrtBtn.textContent = 'Save HRT Regimen';
+    hrtBtn.classList.remove('btn-save-success');
+    hrtBtn.style.transform = '';
+    hrtMsg.classList.remove('show');
+  }, 2500);
+
   updateDashboard();
 }
 function loadHRTForm() {
