@@ -2962,6 +2962,24 @@ body {
   font-family: var(--font-body); font-size: 12px; color: #3A5C4E;
   font-style: italic; padding-top: 10px; border-top: 1px solid #E8E2D9;
 }
+.hrt-history-delete {
+  background: none; border: none; cursor: pointer; font-size: 14px;
+  padding: 2px 6px; float: right; opacity: 0.5; transition: opacity 0.2s;
+}
+.hrt-history-delete:hover { opacity: 1; }
+.hrt-change-date-row {
+  display: none; margin: 12px 0; padding: 14px; background: #FFF9F0;
+  border: 1.5px solid #E8C87A; border-radius: 12px;
+}
+.hrt-change-date-row.show { display: block; }
+.hrt-change-date-row label {
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  color: #3A5C4E; display: block; margin-bottom: 6px;
+}
+.hrt-change-date-row input[type="date"] {
+  font-family: var(--font-body); font-size: 14px; padding: 8px 12px;
+  border: 1.5px solid #D4C9B8; border-radius: 8px; background: #fff;
+}
 
 /* --- Calendar hover → sage --- */
 .calendar-day:hover:not(.header):not(.empty) { border-color: #3A5C4E; }
@@ -3677,6 +3695,10 @@ body {
                 <div class="hrt-history-list" id="testHistory"></div>
             </div>
             <div class="form-group"><label>Additional Notes</label><textarea id="hrtNotes" placeholder="Other medications, supplements, or general notes..."></textarea></div>
+            <div class="hrt-change-date-row" id="hrtChangeDateRow">
+                <label>📅 When did this change actually start?</label>
+                <input type="date" id="hrtChangeDate">
+            </div>
             <button class="gs-btn gs-btn--primary gs-btn--full" id="saveHRTBtn" onclick="saveHRT()">Save HRT Regimen</button>
             <div class="save-success-message" id="saveHRTMsg"></div>
         </div>
@@ -4505,21 +4527,73 @@ function detectHRTChanges(oldH, newH) {
   return changes;
 }
 
+function deleteHRTHistoryEntry(idx) {
+  if (!confirm('Delete this history entry?')) return;
+  var hist = getHRTHistory();
+  hist.splice(idx, 1);
+  setHRTHistory(hist);
+  renderHRTHistory();
+}
+function dedupHRTHistory() {
+  var hist = getHRTHistory();
+  var seen = {};
+  var deduped = hist.filter(function(e) {
+    var key = e.hormone + '|' + e.date + '|' + e.description;
+    if (seen[key]) return false;
+    seen[key] = true;
+    return true;
+  });
+  if (deduped.length < hist.length) setHRTHistory(deduped);
+}
+function showHRTChangeDateIfNeeded() {
+  var oldH = getHRT();
+  var ea = document.getElementById('estrogenAdmin').value;
+  var pa = document.getElementById('progAdmin').value;
+  var newH = {
+    estrogenName: document.getElementById('estrogenName').value,
+    estrogenDose: document.getElementById('estrogenDose').value,
+    estrogenAdmin: ea === 'other' ? document.getElementById('estrogenOtherText').value : ea,
+    estrogenFreq: document.getElementById('estrogenFreq').value,
+    estrogenSchedule: document.getElementById('estrogenSchedule').value,
+    progName: document.getElementById('progName').value,
+    progDose: document.getElementById('progDose').value,
+    progAdmin: pa === 'other' ? document.getElementById('progOtherText').value : pa,
+    progFreq: document.getElementById('progFreq').value,
+    progSchedule: document.getElementById('progSchedule').value,
+    testUsed: document.getElementById('testUsed').value,
+    testName: document.getElementById('testName').value,
+    testDose: document.getElementById('testDose').value
+  };
+  var hasChange = detectHRTChanges(oldH, newH).length > 0;
+  var row = document.getElementById('hrtChangeDateRow');
+  if (row) {
+    if (hasChange) {
+      row.classList.add('show');
+      var inp = document.getElementById('hrtChangeDate');
+      if (inp && !inp.value) inp.value = new Date().toISOString().slice(0, 10);
+    } else {
+      row.classList.remove('show');
+    }
+  }
+}
 function renderHRTHistory() {
   var hist = getHRTHistory();
   ['estrogen', 'progesterone', 'testosterone'].forEach(function(hormone) {
     var id = hormone === 'progesterone' ? 'progHistory' : (hormone === 'testosterone' ? 'testHistory' : 'estrogenHistory');
     var container = document.getElementById(id);
     if (!container) return;
-    var entries = hist.filter(function(e) { return e.hormone === hormone; })
-      .sort(function(a, b) { return b.date.localeCompare(a.date); });
+    var entries = [];
+    hist.forEach(function(e, i) { if (e.hormone === hormone) entries.push({entry: e, idx: i}); });
+    entries.sort(function(a, b) { return b.entry.date.localeCompare(a.entry.date); });
     if (entries.length === 0) {
       container.innerHTML = '<p class="hrt-history-empty">No changes recorded yet.</p>';
       return;
     }
     var html = '<p class="hrt-history-heading">Change History</p>';
-    entries.forEach(function(e) {
+    entries.forEach(function(item) {
+      var e = item.entry;
       html += '<div class="hrt-history-entry">';
+      html += '<button class="hrt-history-delete" onclick="deleteHRTHistoryEntry(' + item.idx + ')" title="Delete entry">🗑</button>';
       html += '<span class="hrt-history-date">' + e.date.split('-').reverse().join('/') + '</span> ';
       if (e.previous) html += e.previous + ' → ';
       html += e.description;
@@ -4565,10 +4639,16 @@ function saveHRT() {
   };
   var changes = detectHRTChanges(oldH, newH);
   if (changes.length > 0) {
+    var userDate = document.getElementById('hrtChangeDate').value || new Date().toISOString().slice(0, 10);
+    changes.forEach(function(c) { c.date = userDate; });
     var hist = getHRTHistory();
     changes.forEach(function(c) { hist.push(c); });
     setHRTHistory(hist);
   }
+  var cdRow = document.getElementById('hrtChangeDateRow');
+  if (cdRow) cdRow.classList.remove('show');
+  var cdInp = document.getElementById('hrtChangeDate');
+  if (cdInp) cdInp.value = '';
   State.hrt = newH;
   setHRT(State.hrt);
   renderHRTHistory();
@@ -4592,6 +4672,7 @@ function saveHRT() {
 }
 function loadHRTForm() {
   migrateOldDoseChange();
+  dedupHRTHistory();
   var h = getHRT();
   if (!h.estrogenName && !h.progName && !h.testUsed) { renderHRTHistory(); return; }
   ['estrogenName','estrogenDose','estrogenFreq','estrogenSchedule','estrogenStart',
@@ -4619,6 +4700,12 @@ function loadHRTForm() {
   });
   document.getElementById('hrtNotes').value = h.notes || '';
   renderHRTHistory();
+  ['estrogenName','estrogenDose','estrogenAdmin','estrogenFreq','estrogenSchedule',
+   'progName','progDose','progAdmin','progFreq','progSchedule',
+   'testUsed','testName','testDose','estrogenOtherText','progOtherText'].forEach(function(fid) {
+    var el = document.getElementById(fid);
+    if (el) el.addEventListener('change', showHRTChangeDateIfNeeded);
+  });
 }
 
 function checkHRTEmpty() {
