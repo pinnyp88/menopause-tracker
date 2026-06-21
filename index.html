@@ -2967,6 +2967,40 @@ body {
   padding: 2px 6px; float: right; opacity: 0.5; transition: opacity 0.2s;
 }
 .hrt-history-delete:hover { opacity: 1; }
+.hrt-add-past-btn {
+  display: inline-block; margin-top: 10px; padding: 6px 14px;
+  font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  color: #3A5C4E; background: none; border: 1.5px solid #8FB5A3;
+  border-radius: 20px; cursor: pointer; transition: background 0.2s;
+}
+.hrt-add-past-btn:hover { background: rgba(143,181,163,0.12); }
+.hrt-past-form {
+  display: none; margin-top: 12px; padding: 14px;
+  background: #F9F7F2; border: 1.5px solid #D4C9B8; border-radius: 12px;
+}
+.hrt-past-form.show { display: block; }
+.hrt-past-form label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 600;
+  color: #3A5C4E; display: block; margin: 8px 0 4px;
+}
+.hrt-past-form label:first-child { margin-top: 0; }
+.hrt-past-form input, .hrt-past-form select, .hrt-past-form textarea {
+  font-family: var(--font-body); font-size: 13px; padding: 7px 10px;
+  border: 1.5px solid #D4C9B8; border-radius: 8px; background: #fff;
+  width: 100%; box-sizing: border-box;
+}
+.hrt-past-form textarea { resize: vertical; min-height: 50px; }
+.hrt-past-form-actions { display: flex; gap: 8px; margin-top: 12px; }
+.hrt-past-save {
+  padding: 8px 18px; font-family: var(--font-body); font-size: 13px;
+  font-weight: 600; color: #fff; background: #3A5C4E; border: none;
+  border-radius: 8px; cursor: pointer;
+}
+.hrt-past-cancel {
+  padding: 8px 18px; font-family: var(--font-body); font-size: 13px;
+  font-weight: 600; color: #3A5C4E; background: none; border: 1.5px solid #D4C9B8;
+  border-radius: 8px; cursor: pointer;
+}
 .hrt-change-date-row {
   display: none; margin: 12px 0; padding: 14px; background: #FFF9F0;
   border: 1.5px solid #E8C87A; border-radius: 12px;
@@ -3670,6 +3704,19 @@ body {
                     <div class="form-group"><label>Start Date</label><input type="date" id="estrogenStart"></div>
                 </div>
                 <div class="hrt-history-list" id="estrogenHistory"></div>
+                <button class="hrt-add-past-btn" onclick="togglePastEntryForm('estrogen')">+ Add Past Entry</button>
+                <div class="hrt-past-form" id="pastForm-estrogen">
+                    <label>Date</label><input type="date" id="pastDate-estrogen">
+                    <label>Medication Name</label><input type="text" id="pastName-estrogen" placeholder="e.g., Estradot, Oestrogel">
+                    <label>Dose</label><input type="text" id="pastDose-estrogen" placeholder="e.g., 50mcg, 1mg">
+                    <label>Admin Type</label><select id="pastAdmin-estrogen"><option value="">Select type</option><option value="Patch">Patch</option><option value="Gel">Gel</option><option value="Tablet">Tablet</option><option value="Spray">Spray</option><option value="Vaginal">Vaginal</option><option value="Injection">Injection</option><option value="other">Other</option></select>
+                    <label>Frequency</label><input type="text" id="pastFreq-estrogen" placeholder="e.g., Daily, Every 3 days">
+                    <label>Notes (optional)</label><textarea id="pastNotes-estrogen" placeholder="Any context about this entry..."></textarea>
+                    <div class="hrt-past-form-actions">
+                        <button class="hrt-past-save" onclick="savePastEntry('estrogen')">Save Entry</button>
+                        <button class="hrt-past-cancel" onclick="togglePastEntryForm('estrogen')">Cancel</button>
+                    </div>
+                </div>
             </div>
             <div class="hormone-section">
                 <h3>🌙 Progesterone</h3>
@@ -3682,6 +3729,19 @@ body {
                     <div class="form-group"><label>Start Date</label><input type="date" id="progStart"></div>
                 </div>
                 <div class="hrt-history-list" id="progHistory"></div>
+                <button class="hrt-add-past-btn" onclick="togglePastEntryForm('progesterone')">+ Add Past Entry</button>
+                <div class="hrt-past-form" id="pastForm-progesterone">
+                    <label>Date</label><input type="date" id="pastDate-progesterone">
+                    <label>Medication Name</label><input type="text" id="pastName-progesterone" placeholder="e.g., Utrogestan, Prometrium">
+                    <label>Dose</label><input type="text" id="pastDose-progesterone" placeholder="e.g., 100mg, 200mg">
+                    <label>Admin Type</label><select id="pastAdmin-progesterone"><option value="">Select type</option><option value="Tablet">Tablet</option><option value="Oral Transmucosal">Oral Transmucosal</option><option value="Vaginal Suppository">Vaginal Suppository</option><option value="Cream">Cream</option><option value="Injection">Injection</option><option value="Patch (combined)">Patch (combined)</option><option value="other">Other</option></select>
+                    <label>Frequency</label><input type="text" id="pastFreq-progesterone" placeholder="e.g., Daily, 10 days per cycle">
+                    <label>Notes (optional)</label><textarea id="pastNotes-progesterone" placeholder="Any context about this entry..."></textarea>
+                    <div class="hrt-past-form-actions">
+                        <button class="hrt-past-save" onclick="savePastEntry('progesterone')">Save Entry</button>
+                        <button class="hrt-past-cancel" onclick="togglePastEntryForm('progesterone')">Cancel</button>
+                    </div>
+                </div>
             </div>
             <div class="hormone-section">
                 <h3>⚪ Testosterone (optional)</h3>
@@ -3693,6 +3753,17 @@ body {
                     <div class="form-group"><label>Start Date</label><input type="date" id="testStart"></div>
                 </div>
                 <div class="hrt-history-list" id="testHistory"></div>
+                <button class="hrt-add-past-btn" onclick="togglePastEntryForm('testosterone')">+ Add Past Entry</button>
+                <div class="hrt-past-form" id="pastForm-testosterone">
+                    <label>Date</label><input type="date" id="pastDate-testosterone">
+                    <label>Medication Name</label><input type="text" id="pastName-testosterone" placeholder="e.g., AndroFeme, Testogel">
+                    <label>Dose</label><input type="text" id="pastDose-testosterone" placeholder="e.g., 5mg cream daily">
+                    <label>Notes (optional)</label><textarea id="pastNotes-testosterone" placeholder="Any context about this entry..."></textarea>
+                    <div class="hrt-past-form-actions">
+                        <button class="hrt-past-save" onclick="savePastEntry('testosterone')">Save Entry</button>
+                        <button class="hrt-past-cancel" onclick="togglePastEntryForm('testosterone')">Cancel</button>
+                    </div>
+                </div>
             </div>
             <div class="form-group"><label>Additional Notes</label><textarea id="hrtNotes" placeholder="Other medications, supplements, or general notes..."></textarea></div>
             <div class="hrt-change-date-row" id="hrtChangeDateRow">
@@ -4576,6 +4647,46 @@ function showHRTChangeDateIfNeeded() {
     }
   }
 }
+function togglePastEntryForm(hormone) {
+  var form = document.getElementById('pastForm-' + hormone);
+  if (!form) return;
+  form.classList.toggle('show');
+  if (!form.classList.contains('show')) {
+    var dateEl = document.getElementById('pastDate-' + hormone);
+    var nameEl = document.getElementById('pastName-' + hormone);
+    var doseEl = document.getElementById('pastDose-' + hormone);
+    var adminEl = document.getElementById('pastAdmin-' + hormone);
+    var freqEl = document.getElementById('pastFreq-' + hormone);
+    var notesEl = document.getElementById('pastNotes-' + hormone);
+    if (dateEl) dateEl.value = '';
+    if (nameEl) nameEl.value = '';
+    if (doseEl) doseEl.value = '';
+    if (adminEl) adminEl.value = '';
+    if (freqEl) freqEl.value = '';
+    if (notesEl) notesEl.value = '';
+  }
+}
+function savePastEntry(hormone) {
+  var dateVal = document.getElementById('pastDate-' + hormone).value;
+  if (!dateVal) { alert('Please choose a date for this entry.'); return; }
+  var name = document.getElementById('pastName-' + hormone).value;
+  var dose = document.getElementById('pastDose-' + hormone).value;
+  var admin = document.getElementById('pastAdmin-' + hormone);
+  var freq = document.getElementById('pastFreq-' + hormone);
+  var notes = document.getElementById('pastNotes-' + hormone).value;
+  var parts = [name, dose];
+  if (admin) parts.push(admin.value);
+  if (freq) parts.push(freq.value);
+  var description = parts.filter(Boolean).join(' · ');
+  if (!description) { alert('Please fill in at least one detail.'); return; }
+  var entry = { hormone: hormone, date: dateVal, description: description };
+  if (notes) entry.sideEffects = notes;
+  var hist = getHRTHistory();
+  hist.push(entry);
+  setHRTHistory(hist);
+  togglePastEntryForm(hormone);
+  renderHRTHistory();
+}
 function renderHRTHistory() {
   var hist = getHRTHistory();
   ['estrogen', 'progesterone', 'testosterone'].forEach(function(hormone) {
@@ -4589,14 +4700,20 @@ function renderHRTHistory() {
       container.innerHTML = '<p class="hrt-history-empty">No changes recorded yet.</p>';
       return;
     }
+    var earliestDate = entries[entries.length - 1].entry.date;
     var html = '<p class="hrt-history-heading">Change History</p>';
     entries.forEach(function(item) {
       var e = item.entry;
+      var isEarliest = e.date === earliestDate && !e.previous;
       html += '<div class="hrt-history-entry">';
       html += '<button class="hrt-history-delete" onclick="deleteHRTHistoryEntry(' + item.idx + ')" title="Delete entry">🗑</button>';
       html += '<span class="hrt-history-date">' + e.date.split('-').reverse().join('/') + '</span> ';
-      if (e.previous) html += e.previous + ' → ';
-      html += e.description;
+      if (isEarliest) {
+        html += '<strong>Started</strong> ' + e.description;
+      } else {
+        if (e.previous) html += e.previous + ' → ';
+        html += e.description;
+      }
       if (e.reason || e.sideEffects) {
         html += '<div class="hrt-history-reason">';
         if (e.reason) html += e.reason;
