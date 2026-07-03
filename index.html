@@ -2513,14 +2513,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   min-width: 44px;
   min-height: 44px;
   background: none;
   border: none;
+  border-radius: 14px;
   cursor: pointer;
-  padding: 4px 2px;
+  padding: 6px 10px;
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
 }
 .gs-tab__icon { font-size: 20px; line-height: 1; }
 .gs-tab__label {
@@ -2530,16 +2533,10 @@ body {
   color: #3A5C4E;
   transition: color 0.15s;
 }
-.gs-tab--active .gs-tab__label { color: var(--color-primary); font-weight: 600; }
-.gs-tab--active::after {
-  content: '';
-  display: block;
-  width: 16px;
-  height: 3px;
-  border-radius: 2px;
+.gs-tab--active {
   background: var(--color-primary);
-  margin-top: 1px;
 }
+.gs-tab--active .gs-tab__label { color: #F4F0E8; font-weight: 700; }
 .gs-more-backdrop {
   position: fixed;
   inset: 0;
@@ -3327,17 +3324,17 @@ body {
 <div class="gs-tabbar" id="gsTabbar" style="display:none;">
   <button class="gs-tab gs-tab--active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="gs-tab__icon">🏠</span><span class="gs-tab__label">Home</span></button>
   <button class="gs-tab" data-page="checkin" onclick="showPage('checkin',this)"><span class="gs-tab__icon">✏️</span><span class="gs-tab__label">Log</span></button>
-  <button class="gs-tab" data-page="trends" onclick="showPage('trends',this)"><span class="gs-tab__icon">📈</span><span class="gs-tab__label">Trends</span></button>
-  <button class="gs-tab" data-page="reflection" onclick="showPage('reflection',this)"><span class="gs-tab__icon">📋</span><span class="gs-tab__label">Review</span></button>
+  <button class="gs-tab" data-page="hrt" onclick="showPage('hrt',this)"><span class="gs-tab__icon">💊</span><span class="gs-tab__label">HRT</span></button>
+  <button class="gs-tab" data-page="calendar" onclick="showPage('calendar',this)"><span class="gs-tab__icon">🗓</span><span class="gs-tab__label">Calendar</span></button>
   <button class="gs-tab" data-page="report" onclick="showPage('report',this)"><span class="gs-tab__icon">📄</span><span class="gs-tab__label">Report</span></button>
-  <button class="gs-tab" data-page="notes" onclick="showPage('notes',this)"><span class="gs-tab__icon">📝</span><span class="gs-tab__label">Notes</span></button>
   <button class="gs-tab" onclick="openMoreSheet()"><span class="gs-tab__icon">⋯</span><span class="gs-tab__label">More</span></button>
 </div>
 <div class="gs-more-backdrop" id="gsMoreBackdrop" onclick="closeMoreSheet()" style="display:none;"></div>
 <div class="gs-more-sheet" id="gsMoreSheet" style="display:none;">
   <button class="gs-more-sheet__close" onclick="closeMoreSheet()">✕</button>
-  <button class="gs-more-sheet__item" onclick="showPage('hrt',null);closeMoreSheet()">HRT Tracker</button>
-  <button class="gs-more-sheet__item" onclick="showPage('calendar',null);closeMoreSheet()">Bleeding Calendar</button>
+  <button class="gs-more-sheet__item" onclick="showPage('trends',null);closeMoreSheet()">Trends</button>
+  <button class="gs-more-sheet__item" onclick="showPage('reflection',null);closeMoreSheet()">Weekly Review</button>
+  <button class="gs-more-sheet__item" onclick="showPage('notes',null);closeMoreSheet()">Notes &amp; Questions</button>
   <button class="gs-more-sheet__item" onclick="showPage('settings',null);closeMoreSheet()">Settings</button>
   <button class="gs-more-sheet__item gs-more-sheet__item--danger" onclick="closeMoreSheet();logout()">Logout</button>
 </div>
