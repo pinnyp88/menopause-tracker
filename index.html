@@ -3460,6 +3460,12 @@ body {
 /* --- HRT empty state aligns to column --- */
 #hrtPage .gs-hrt-empty { margin: 0 0 var(--space-4) !important; }
 
+/* --- Home screen: HOT FLUSHES label matches other section labels --- */
+.gs-dashboard__detail-cards .gs-card--alert .gs-card__label { color: #3A5C4E; }
+
+/* --- Home screen: HRT regimen card body --- */
+.gs-dashboard__hrt-card-body { font-size: var(--text-sm); line-height: var(--leading-base); }
+
     </style>
 </head>
 <body>
@@ -3591,8 +3597,11 @@ body {
           </div>
         </details>
 
-        <!-- HRT summary (quiet) -->
-        <div class="gs-dashboard__hrt-quiet" id="hrtSummary">No HRT regimen recorded yet.</div>
+        <!-- HRT summary card -->
+        <div class="gs-card gs-card--default">
+          <h3 class="gs-card__title" style="font-size:16px;">Current HRT Regimen</h3>
+          <div class="gs-card__body gs-dashboard__hrt-card-body" id="hrtSummary">No HRT regimen recorded yet.</div>
+        </div>
 
         <!-- Hidden elements that updateDashboard still writes to -->
         <span id="dashboardNotice" style="display:none;"></span>
