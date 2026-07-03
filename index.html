@@ -3908,6 +3908,30 @@ body {
                     </div>
                 </div>
             </div>
+            <div class="hormone-section">
+                <h3>🌸 Vaginal / Local Treatment (optional)</h3>
+                <p style="font-family:var(--font-body);font-size:12px;color:#3A5C4E;font-style:italic;margin:0 0 14px;line-height:1.5;">Local treatments like Vagifem, Intrarosa or DHEA cream are separate from systemic HRT — your GP needs to see these too.</p>
+                <div class="form-grid">
+                    <div class="form-group"><label>Product Name</label><input type="text" id="vagName" placeholder="e.g. Vagifem, Intrarosa, Ovestin, DHEA cream"></div>
+                    <div class="form-group"><label>Form</label><select id="vagForm"><option value="">Select form</option><option value="Cream">Cream</option><option value="Pessary">Pessary</option><option value="Ring">Ring</option><option value="Gel">Gel</option><option value="Other">Other</option></select></div>
+                    <div class="form-group"><label>Dose and Frequency</label><input type="text" id="vagDose" placeholder="e.g. twice weekly"></div>
+                    <div class="form-group"><label>Start Date</label><input type="date" id="vagStart"></div>
+                    <div class="form-group"><label>Notes</label><input type="text" id="vagNotes" placeholder="e.g. prescribed by gynaecologist"></div>
+                </div>
+                <div class="hrt-history-list" id="vagHistory"></div>
+                <button class="hrt-add-past-btn" onclick="togglePastEntryForm('vaginal')">+ Add Past Entry</button>
+                <div class="hrt-past-form" id="pastForm-vaginal">
+                    <label>Date</label><input type="date" id="pastDate-vaginal">
+                    <label>Product Name</label><input type="text" id="pastName-vaginal" placeholder="e.g. Vagifem, Intrarosa, Ovestin">
+                    <label>Dose and Frequency</label><input type="text" id="pastDose-vaginal" placeholder="e.g. twice weekly">
+                    <label>Form</label><select id="pastAdmin-vaginal"><option value="">Select form</option><option value="Cream">Cream</option><option value="Pessary">Pessary</option><option value="Ring">Ring</option><option value="Gel">Gel</option><option value="Other">Other</option></select>
+                    <label>Notes (optional)</label><textarea id="pastNotes-vaginal" placeholder="Any context about this entry..."></textarea>
+                    <div class="hrt-past-form-actions">
+                        <button class="hrt-past-save" onclick="savePastEntry('vaginal')">Save Entry</button>
+                        <button class="hrt-past-cancel" onclick="togglePastEntryForm('vaginal')">Cancel</button>
+                    </div>
+                </div>
+            </div>
             <div class="form-group"><label>Additional Notes</label><textarea id="hrtNotes" placeholder="Other medications, supplements, or general notes..."></textarea></div>
             <div class="hrt-change-date-row" id="hrtChangeDateRow">
                 <label>📅 When did this change actually start?</label>
@@ -4724,6 +4748,8 @@ function hrtSummaryStr(hormone, h) {
     return [h.estrogenName, h.estrogenDose, h.estrogenAdmin, h.estrogenFreq, h.estrogenSchedule].filter(Boolean).join(' · ');
   } else if (hormone === 'progesterone') {
     return [h.progName, h.progDose, h.progAdmin, h.progFreq, h.progSchedule].filter(Boolean).join(' · ');
+  } else if (hormone === 'vaginal') {
+    return [h.vagName, h.vagForm, h.vagDose].filter(Boolean).join(' · ');
   } else {
     return [h.testUsed === 'Yes' ? 'Active' : '', h.testName, h.testDose].filter(Boolean).join(' · ');
   }
@@ -4746,6 +4772,11 @@ function detectHRTChanges(oldH, newH) {
   var tNew = hrtSummaryStr('testosterone', newH);
   if (tNew && tOld && tOld !== tNew) {
     changes.push({ hormone: 'testosterone', date: today, previous: tOld, description: tNew });
+  }
+  var vOld = hrtSummaryStr('vaginal', oldH);
+  var vNew = hrtSummaryStr('vaginal', newH);
+  if (vNew && vOld && vOld !== vNew) {
+    changes.push({ hormone: 'vaginal', date: today, previous: vOld, description: vNew });
   }
   return changes;
 }
@@ -4785,7 +4816,10 @@ function showHRTChangeDateIfNeeded() {
     progSchedule: document.getElementById('progSchedule').value,
     testUsed: document.getElementById('testUsed').value,
     testName: document.getElementById('testName').value,
-    testDose: document.getElementById('testDose').value
+    testDose: document.getElementById('testDose').value,
+    vagName: document.getElementById('vagName').value,
+    vagForm: document.getElementById('vagForm').value,
+    vagDose: document.getElementById('vagDose').value
   };
   var hasChange = detectHRTChanges(oldH, newH).length > 0;
   var row = document.getElementById('hrtChangeDateRow');
@@ -4841,8 +4875,8 @@ function savePastEntry(hormone) {
 }
 function renderHRTHistory() {
   var hist = getHRTHistory();
-  ['estrogen', 'progesterone', 'testosterone'].forEach(function(hormone) {
-    var id = hormone === 'progesterone' ? 'progHistory' : (hormone === 'testosterone' ? 'testHistory' : 'estrogenHistory');
+  ['estrogen', 'progesterone', 'testosterone', 'vaginal'].forEach(function(hormone) {
+    var id = hormone === 'progesterone' ? 'progHistory' : (hormone === 'testosterone' ? 'testHistory' : (hormone === 'vaginal' ? 'vagHistory' : 'estrogenHistory'));
     var container = document.getElementById(id);
     if (!container) return;
     var entries = [];
@@ -4900,6 +4934,11 @@ function saveHRT() {
     testName: document.getElementById('testName').value,
     testDose: document.getElementById('testDose').value,
     testStart: document.getElementById('testStart').value,
+    vagName: document.getElementById('vagName').value,
+    vagForm: document.getElementById('vagForm').value,
+    vagDose: document.getElementById('vagDose').value,
+    vagStart: document.getElementById('vagStart').value,
+    vagNotes: document.getElementById('vagNotes').value,
     doseChangeDate: oldH.doseChangeDate || '',
     doseChangeWhat: oldH.doseChangeWhat || '',
     doseChangeReason: oldH.doseChangeReason || '',
@@ -4943,10 +4982,11 @@ function loadHRTForm() {
   migrateOldDoseChange();
   dedupHRTHistory();
   var h = getHRT();
-  if (!h.estrogenName && !h.progName && !h.testUsed) { renderHRTHistory(); return; }
+  if (!h.estrogenName && !h.progName && !h.testUsed && !h.vagName) { renderHRTHistory(); return; }
   ['estrogenName','estrogenDose','estrogenFreq','estrogenSchedule','estrogenStart',
    'progName','progDose','progFreq','progSchedule','progStart',
    'testUsed','testName','testDose','testStart',
+   'vagName','vagForm','vagDose','vagStart','vagNotes',
    'doseChangeDate','doseChangeWhat','doseChangeReason','doseChangeSideEffects'].forEach(function(f){
     var el = document.getElementById(f); if (el) el.value = h[f] || '';
   });
@@ -4971,7 +5011,8 @@ function loadHRTForm() {
   renderHRTHistory();
   ['estrogenName','estrogenDose','estrogenAdmin','estrogenFreq','estrogenSchedule',
    'progName','progDose','progAdmin','progFreq','progSchedule',
-   'testUsed','testName','testDose','estrogenOtherText','progOtherText'].forEach(function(fid) {
+   'testUsed','testName','testDose','estrogenOtherText','progOtherText',
+   'vagName','vagForm','vagDose'].forEach(function(fid) {
     var el = document.getElementById(fid);
     if (el) el.addEventListener('change', showHRTChangeDateIfNeeded);
   });
@@ -4979,7 +5020,7 @@ function loadHRTForm() {
 
 function checkHRTEmpty() {
   var h = getHRT();
-  var hasData = h.estrogenName || h.progName || h.testUsed || h.doseChangeDate;
+  var hasData = h.estrogenName || h.progName || h.testUsed || h.vagName || h.doseChangeDate;
   var empty = document.getElementById('hrtEmptyState');
   var form = document.getElementById('hrtFormSection');
   if (empty && form) {
@@ -5355,8 +5396,8 @@ function exportData() {
   var html='';
   html+='<h1>Menopause Impact Tracker - GP Clinical Summary Report</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Report Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
   html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob||'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod||'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
-  html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart||'—')+'</td></tr></table>';
-  var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
+  html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart||'—')+'</td></tr><tr><td>Vaginal / Local Treatment</td><td>'+(hrt.vagName||'—')+'</td><td>'+(hrt.vagDose||'—')+'</td><td>'+(hrt.vagForm||'—')+'</td><td>—</td><td>—</td><td>'+(hrt.vagStart||'—')+'</td></tr></table>';
+  var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
   var somCount7=function(){var r=[];SOMATIC.forEach(function(k){var n=s7.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s7.length+' days');});return r.length>0?r.join(', '):'None logged';}();
   html+='<h2>7-Day Symptom Summary ('+rng(s7)+', n='+s7.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Patience</td><td>'+avg(s7,'patience')+'/10</td><td>1=very impatient | 10=very patient</td></tr><tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s7)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s7,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b7+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a7+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t7.length>0?t7.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount7+'</td></tr></table>';
   if(s30.length>0){var somCount30=function(){var r=[];SOMATIC.forEach(function(k){var n=s30.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s30.length+' days');});return r.length>0?r.join(', '):'None logged';}();html+='<h2>30-Day Symptom Summary ('+rng(s30)+', n='+s30.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Patience</td><td>'+avg(s30,'patience')+'/10</td><td>1=very impatient | 10=very patient</td></tr><tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+'/3</td><td>0=none | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s30,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s30,'nightSweat')+'/3</td><td>0=none | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s30)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s30,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s30,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s30,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s30,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b30+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a30+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t30.length>0?t30.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount30+'</td></tr></table>';}
@@ -6221,10 +6262,11 @@ function renderReport() {
   // Section 3: Current HRT
   html += '<div class="gs-report__card gs-report__card--slate">';
   html += '<p class="gs-report__card-label gs-report__card-label--slate">CURRENT HRT REGIMEN</p>';
-  if (hrt.estrogenName || hrt.progName || hrt.testUsed) {
+  if (hrt.estrogenName || hrt.progName || hrt.testUsed || hrt.vagName) {
     if (hrt.estrogenName) html += '<p class="gs-report__text">Estrogen: ' + hrt.estrogenName + (hrt.estrogenDose ? ' ' + hrt.estrogenDose : '') + (hrt.estrogenAdmin ? ' · ' + hrt.estrogenAdmin : '') + (hrt.estrogenFreq ? ' · ' + hrt.estrogenFreq : '') + '</p>';
     if (hrt.progName) html += '<p class="gs-report__text">Progesterone: ' + hrt.progName + (hrt.progDose ? ' ' + hrt.progDose : '') + (hrt.progAdmin ? ' · ' + hrt.progAdmin : '') + (hrt.progFreq ? ' · ' + hrt.progFreq : '') + '</p>';
     if (hrt.testUsed === 'Yes' && hrt.testName) html += '<p class="gs-report__text">Testosterone: ' + hrt.testName + (hrt.testDose ? ' ' + hrt.testDose : '') + '</p>';
+    if (hrt.vagName) html += '<p class="gs-report__text">Vaginal / Local Treatment: ' + hrt.vagName + (hrt.vagForm ? ' · ' + hrt.vagForm : '') + (hrt.vagDose ? ' · ' + hrt.vagDose : '') + (hrt.vagStart ? ' · started ' + hrt.vagStart.split('-').reverse().join('/') : '') + '</p>';
   } else {
     html += '<p class="gs-report__text gs-report__text--muted">No HRT regimen recorded. Add it in the HRT Tracker.</p>';
   }
@@ -6324,7 +6366,7 @@ function renderReport() {
   if (hrtHist.length > 0) {
     html += '<div class="gs-report__card gs-report__card--slate">';
     html += '<p class="gs-report__card-label gs-report__card-label--slate">HRT CHANGE HISTORY</p>';
-    ['estrogen','progesterone','testosterone'].forEach(function(hormone) {
+    ['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone) {
       var entries = hrtHist.filter(function(e) { return e.hormone === hormone; })
         .sort(function(a,b) { return b.date.localeCompare(a.date); });
       if (entries.length === 0) return;
