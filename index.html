@@ -4334,12 +4334,21 @@ function loadCheckinForDate() {
     restoreMood('');
     restoreTriggers([]);
     restoreSomatic([]);
+    document.getElementById('sleep').value = 7;
+    document.getElementById('hotFlush').value = 0;
+    document.getElementById('hotFlushCount').value = 0;
+    document.getElementById('nightSweat').value = 0;
+    document.getElementById('urinary').value = 'none';
+    document.getElementById('bleeding').value = 'none';
+    document.getElementById('hrtTaken').checked = false;
+    document.getElementById('notes').value = '';
     if (sliderSetters.brainFog) sliderSetters.brainFog(5);
     if (sliderSetters.patience) sliderSetters.patience(5);
     if (sliderSetters.workImpact) sliderSetters.workImpact(5);
     if (sliderSetters.relImpact) sliderSetters.relImpact(5);
     if (sliderSetters.energyImpact) sliderSetters.energyImpact(5);
     if (sliderSetters.mentalClarity) sliderSetters.mentalClarity(5);
+    syncCheckinVisuals();
     return;
   }
   restoreMood(c.mood || '');
