@@ -6767,6 +6767,20 @@ document.fonts.ready.then(function() {
     });
   }
 });
+
+// Streak leaf fill — watches the streak text the dashboard already writes
+// and maps it to a fill level: 1-7 days low, 8-21 half, 22+ full.
+(function() {
+  var txt = document.getElementById('dashStreakText');
+  var leaf = document.querySelector('.gs-streak-leaf path');
+  if (!txt || !leaf) return;
+  function syncLeaf() {
+    var n = parseInt((txt.textContent.match(/\d+/) || ['0'])[0], 10);
+    leaf.setAttribute('fill-opacity', n >= 22 ? '1' : (n >= 8 ? '0.55' : '0.2'));
+  }
+  new MutationObserver(syncLeaf).observe(txt, { childList: true, characterData: true, subtree: true });
+  syncLeaf();
+})();
 </script>
 </body>
 </html>
