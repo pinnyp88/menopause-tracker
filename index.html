@@ -2525,7 +2525,16 @@ body {
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s ease;
 }
-.gs-tab__icon { font-size: 20px; line-height: 1; }
+.gs-tab__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: #3A5C4E;
+  transition: color 0.15s;
+}
+.gs-tab__icon svg { width: 22px; height: 22px; display: block; }
 .gs-tab__label {
   font-family: var(--font-body);
   font-size: 10px;
@@ -2536,6 +2545,7 @@ body {
 .gs-tab--active {
   background: var(--color-primary);
 }
+.gs-tab--active .gs-tab__icon { color: #F4F0E8; }
 .gs-tab--active .gs-tab__label { color: #F4F0E8; font-weight: 700; }
 .gs-more-backdrop {
   position: fixed;
@@ -3464,12 +3474,12 @@ body {
   <span class="gs-topbar__brand">Menopause Tracker</span>
 </div>
 <div class="gs-tabbar" id="gsTabbar" style="display:none;">
-  <button class="gs-tab gs-tab--active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="gs-tab__icon">🏠</span><span class="gs-tab__label">Home</span></button>
-  <button class="gs-tab" data-page="checkin" onclick="showPage('checkin',this)"><span class="gs-tab__icon">✏️</span><span class="gs-tab__label">Log</span></button>
-  <button class="gs-tab" data-page="hrt" onclick="showPage('hrt',this)"><span class="gs-tab__icon">💊</span><span class="gs-tab__label">HRT</span></button>
-  <button class="gs-tab" data-page="calendar" onclick="showPage('calendar',this)"><span class="gs-tab__icon">🗓</span><span class="gs-tab__label">Calendar</span></button>
-  <button class="gs-tab" data-page="report" onclick="showPage('report',this)"><span class="gs-tab__icon">📄</span><span class="gs-tab__label">Report</span></button>
-  <button class="gs-tab" onclick="openMoreSheet()"><span class="gs-tab__icon">⋯</span><span class="gs-tab__label">More</span></button>
+  <button class="gs-tab gs-tab--active" data-page="dashboard" onclick="showPage('dashboard',this)"><span class="gs-tab__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.2 C4 10.5 4.3 9.9 4.8 9.5 L11 4.4 C11.6 3.9 12.4 3.9 13 4.4 L19.2 9.5 C19.7 9.9 20 10.5 20 11.2 V18.5 C20 19.6 19.1 20.5 18 20.5 H15 V15.5 C15 14.4 14.1 13.5 13 13.5 H11 C9.9 13.5 9 14.4 9 15.5 V20.5 H6 C4.9 20.5 4 19.6 4 18.5 Z"/></svg></span><span class="gs-tab__label">Home</span></button>
+  <button class="gs-tab" data-page="checkin" onclick="showPage('checkin',this)"><span class="gs-tab__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 5.1 C15.9 4.3 17.1 4.2 17.9 4.9 L19 5.9 C19.8 6.6 19.9 7.8 19.2 8.6 L9.5 19.1 C9.2 19.4 8.9 19.6 8.5 19.7 L5.2 20.4 C4.8 20.5 4.5 20.2 4.6 19.8 L5.3 16.5 C5.4 16.1 5.6 15.8 5.9 15.5 Z"/><path d="M13.8 6.7 L17.7 10.2"/></svg></span><span class="gs-tab__label">Log</span></button>
+  <button class="gs-tab" data-page="hrt" onclick="showPage('hrt',this)"><span class="gs-tab__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.2" y="9.2" width="15.6" height="6.6" rx="3.3" transform="rotate(-38 12 12.5)"/><path d="M9.4 9.1 L14.6 15.9"/></svg></span><span class="gs-tab__label">HRT</span></button>
+  <button class="gs-tab" data-page="calendar" onclick="showPage('calendar',this)"><span class="gs-tab__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="2.5"/><path d="M4 10 H20"/><path d="M8.5 3.8 V7"/><path d="M15.5 3.8 V7"/><path d="M8.3 14 C9 13.3 10 13.6 10 14.5 C10 15.4 9 15.7 8.3 15"/></svg></span><span class="gs-tab__label">Calendar</span></button>
+  <button class="gs-tab" data-page="report" onclick="showPage('report',this)"><span class="gs-tab__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.8 H14 L18.5 8.3 V18.5 C18.5 19.6 17.6 20.5 16.5 20.5 H6.5 C5.9 20.5 5.5 19.6 5.5 18.5 V5.8 C5.5 4.7 5.9 3.8 6.5 3.8 Z"/><path d="M14 4 V8.5 H18.3"/><path d="M8.5 12.2 H15.5"/><path d="M8.5 15.4 H15.5"/><path d="M8.5 18 H12.5"/></svg></span><span class="gs-tab__label">Report</span></button>
+  <button class="gs-tab" onclick="openMoreSheet()"><span class="gs-tab__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="12" r="1.1"/><circle cx="12" cy="12" r="1.1"/><circle cx="18.5" cy="12" r="1.1"/></svg></span><span class="gs-tab__label">More</span></button>
 </div>
 <div class="gs-more-backdrop" id="gsMoreBackdrop" onclick="closeMoreSheet()" style="display:none;"></div>
 <div class="gs-more-sheet" id="gsMoreSheet" style="display:none;">
