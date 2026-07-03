@@ -84,9 +84,9 @@
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Type scale */
-  --text-xs:   10px;   /* card labels (uppercase, tracked) */
+  --text-xs:   12px;   /* card labels (uppercase, tracked) */
   --text-sm:   13px;   /* helper text, secondary info */
-  --text-base: 15px;   /* body copy */
+  --text-base: 16px;   /* body copy */
   --text-md:   18px;   /* section headings */
   --text-lg:   24px;   /* screen titles (use --font-heading) */
   --text-xl:   28px;   /* hero greetings (use --font-heading) */
@@ -3466,6 +3466,83 @@ body {
 /* --- Home screen: HRT regimen card body --- */
 .gs-dashboard__hrt-card-body { font-size: var(--text-sm); line-height: var(--leading-base); }
 
+/* ═══════════════════════════════════════════════════════════════
+   GARDEN SAGE — Direction 3: Home hero elevation
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Soft sage-to-cream wash behind the greeting block */
+.gs-dashboard__hero {
+  background: linear-gradient(180deg, rgba(143,181,163,0.16) 0%, rgba(232,240,235,0.10) 60%, rgba(244,240,232,0) 100%);
+  border-radius: 0 0 24px 24px;
+  margin: -20px -20px 8px;
+  padding: 28px 20px 12px;
+}
+
+/* Hero greeting: dominant Fraunces moment */
+.gs-dashboard__greeting {
+  font-size: 36px !important;
+  font-weight: 600 !important;
+  line-height: 1.15;
+}
+
+/* Botanical streak chip */
+.gs-dashboard__streak {
+  display: inline-flex !important;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.75);
+  border-left: none;
+  border: 1px solid rgba(58,92,78,0.25);
+  padding: 6px 14px 6px 10px;
+  box-shadow: none;
+}
+.gs-dashboard__streak[style*="display: none"],
+.gs-dashboard__streak[style*="display:none"] { display: none !important; }
+.gs-streak-leaf {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  color: #3A5C4E;
+  flex-shrink: 0;
+}
+.gs-streak-leaf svg { width: 18px; height: 18px; display: block; }
+.gs-dashboard__streak .gs-card__label {
+  font-family: var(--font-heading) !important;
+  font-style: italic;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+  color: #3A5C4E !important;
+  display: block;
+  line-height: 1.3;
+}
+/* Hide the JS-written flame emoji (first letter of the text node) */
+.gs-dashboard__streak .gs-card__label::first-letter {
+  font-size: 0;
+}
+
+/* Staggered card entrance on Home */
+@keyframes gsFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#dashboardPage.active .gs-card { animation: gsFadeUp 200ms ease both; }
+#dashboardPage.active .gs-dashboard__snapshot { animation-delay: 80ms; }
+#dashboardPage.active .gs-dashboard__insight { animation-delay: 160ms; }
+#dashboardPage.active .gs-dashboard__impact { animation-delay: 240ms; }
+#dashboardPage.active .gs-dashboard__detail-cards .gs-card:nth-child(1) { animation-delay: 80ms; }
+#dashboardPage.active .gs-dashboard__detail-cards .gs-card:nth-child(2) { animation-delay: 160ms; }
+#dashboardPage.active .gs-dashboard__detail-cards .gs-card:nth-child(3) { animation-delay: 240ms; }
+#dashboardPage.active .gs-dashboard__detail-cards .gs-card:nth-child(4) { animation-delay: 320ms; }
+#dashboardPage.active .gs-dashboard__detail-cards .gs-card:nth-child(5) { animation-delay: 400ms; }
+#dashboardPage.active .gs-dashboard__detail-cards .gs-card:nth-child(6) { animation-delay: 480ms; }
+#dashboardPage.active > .gs-card:last-of-type { animation-delay: 320ms; }
+@media (prefers-reduced-motion: reduce) {
+  #dashboardPage.active .gs-card { animation: none; }
+}
+
     </style>
 </head>
 <body>
@@ -3510,8 +3587,11 @@ body {
     </div>
     <div id="dashboardPage" class="page gs-dashboard">
 
+        <!-- Hero: streak + greeting -->
+        <div class="gs-dashboard__hero">
         <!-- Streak badge -->
         <div class="gs-card gs-card--reward gs-dashboard__streak" id="dashStreak" style="display:none;">
+          <span class="gs-streak-leaf"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C12 21 4.5 16.5 4.5 10 C4.5 5.5 8 3 12 3 C16 3 19.5 5.5 19.5 10 C19.5 16.5 12 21 12 21 Z" fill-opacity="0.18"/><path d="M12 20 V8" fill="none" stroke-width="1.5"/><path d="M12 12 C10.5 10.8 9.5 10.5 8.2 10.4" fill="none" stroke-width="1.5"/><path d="M12 15 C13.5 13.8 14.5 13.5 15.8 13.4" fill="none" stroke-width="1.5"/></svg></span>
           <span class="gs-card__label" id="dashStreakText">🔥 0 day streak</span>
         </div>
 
@@ -3522,6 +3602,7 @@ body {
 
         <!-- Motivational prompt -->
         <p class="gs-motivational" id="dashMotivational"></p>
+        </div>
 
         <!-- Primary CTA -->
         <button class="gs-btn gs-btn--primary gs-btn--full gs-dashboard__cta" onclick="showPage('checkin',null)">＋ Log today's check-in</button>
