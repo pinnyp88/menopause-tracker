@@ -3472,11 +3472,15 @@ body {
 
 /* Soft sage-to-cream wash behind the greeting block */
 .gs-dashboard__hero {
-  background: linear-gradient(180deg, rgba(143,181,163,0.16) 0%, rgba(232,240,235,0.10) 60%, rgba(244,240,232,0) 100%);
+  background: linear-gradient(180deg, rgba(143,181,163,0.35) 0%, rgba(232,240,235,0.22) 60%, rgba(244,240,232,0) 100%);
   border-radius: 0 0 24px 24px;
-  margin: -20px -20px 8px;
-  padding: 28px 20px 12px;
+  margin: -20px -20px 4px;
+  padding: 22px 20px 6px;
 }
+
+/* Tightened hero rhythm (~20%) */
+.gs-dashboard__hero .gs-dashboard__subtext { margin-bottom: 16px !important; }
+.gs-dashboard__hero .gs-motivational { margin-bottom: 8px; }
 
 /* Hero greeting: dominant Fraunces moment */
 .gs-dashboard__greeting {
@@ -3490,30 +3494,31 @@ body {
   display: inline-flex !important;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.75);
+  gap: 8px;
+  background: rgba(143,181,163,0.28);
   border-left: none;
-  border: 1px solid rgba(58,92,78,0.25);
-  padding: 6px 14px 6px 10px;
-  box-shadow: none;
+  border: 1px solid rgba(58,92,78,0.3);
+  border-radius: 50px;
+  padding: 8px 18px 8px 12px;
+  box-shadow: 0 1px 6px rgba(58,92,78,0.10);
 }
 .gs-dashboard__streak[style*="display: none"],
 .gs-dashboard__streak[style*="display:none"] { display: none !important; }
 .gs-streak-leaf {
   display: inline-flex;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   color: #3A5C4E;
   flex-shrink: 0;
 }
-.gs-streak-leaf svg { width: 18px; height: 18px; display: block; }
+.gs-streak-leaf svg { width: 24px; height: 24px; display: block; }
 .gs-dashboard__streak .gs-card__label {
   font-family: var(--font-heading) !important;
   font-style: italic;
   font-weight: 500;
   text-transform: none;
   letter-spacing: 0;
-  font-size: 13px;
+  font-size: 15px;
   color: #3A5C4E !important;
   display: block;
   line-height: 1.3;
