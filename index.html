@@ -4191,7 +4191,7 @@ body {
                 <div class="form-group"><label>Full Name</label><input type="text" id="profileName" placeholder="As it appears on your Medicare card"><p class="gs-profile-hint">Used on your GP report</p></div>
                 <div class="form-group"><label>Date of Birth</label><input type="date" id="profileDOB"></div>
                 <div class="form-group"><label>Date of Last Period</label><input type="date" id="profileLastPeriod"></div>
-                <div class="form-group"><label>Menstrual Status</label><select id="profileMenstrualStatus"><option value="">Select status</option><option value="Perimenopausal">Perimenopausal (still having periods, irregular)</option><option value="Menopausal">Menopausal (no period for 12+ months)</option><option value="Surgical menopause">Surgical menopause (hysterectomy / oophorectomy)</option><option value="Premature ovarian insufficiency">Premature ovarian insufficiency (POI)</option></select></div>
+                <div class="form-group"><label>Menstrual Status</label><select id="profileMenstrualStatus"><option value="">Select status</option><option value="Perimenopausal">Perimenopausal (still having periods, irregular)</option><option value="Menopausal">Menopausal (no period for 12+ months)</option><option value="Postmenopausal">Postmenopausal (more than 12 months past final period)</option><option value="Surgical menopause">Surgical menopause (hysterectomy / oophorectomy)</option><option value="Premature ovarian insufficiency">Premature ovarian insufficiency (POI)</option></select></div>
             </div>
             <button class="btn btn-primary" style="max-width:200px;" onclick="saveProfile()">Save Profile</button>
         </div>
@@ -5622,9 +5622,16 @@ function importMyData(input) {
       setHRT(State.hrt);
     }
     var curProfile = getProfile();
-    if (!curProfile.name && data.profile && data.profile.name) {
-      State.profile = data.profile;
+    if (data.profile && typeof data.profile === 'object') {
+      var mergedProfile = {
+        name: curProfile.name || data.profile.name || '',
+        dob: curProfile.dob || data.profile.dob || '',
+        lastPeriod: curProfile.lastPeriod || data.profile.lastPeriod || '',
+        menstrualStatus: curProfile.menstrualStatus || data.profile.menstrualStatus || ''
+      };
+      State.profile = mergedProfile;
       localStorage.setItem('profile', JSON.stringify(State.profile));
+      loadProfile();
     }
 
     // Merge notes (skip exact duplicates by id, else by text+date)
