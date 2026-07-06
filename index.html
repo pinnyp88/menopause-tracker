@@ -7045,6 +7045,158 @@ if (supabaseClient) {
     if (event === 'SIGNED_IN') supabaseSignIn(session);
   });
 }
+
+// ═══ Stage 3: cloud sync ═══
+// localStorage stays the fast/primary layer. Every write to a synced
+// key schedules a debounced push of the full snapshot to Supabase
+// (table: user_data, one jsonb row per user). On sign-in, cloud data
+// is pulled and merged into localStorage, then views refresh.
+var CLOUD_SYNC_KEYS = ['checkins', 'hrt', 'hrtHistory', 'profile', 'notes'];
+var _cloudUserId = null;
+var _cloudPushTimer = null;
+var _cloudApplying = false;
+
+// Intercept localStorage.setItem so every existing save path syncs —
+// no app functions are modified.
+var _origSetItem = localStorage.setItem.bind(localStorage);
+localStorage.setItem = function(key, value) {
+  _origSetItem(key, value);
+  if (!_cloudApplying && CLOUD_SYNC_KEYS.indexOf(key) >= 0) scheduleCloudPush();
+};
+
+function cloudSnapshot() {
+  function read(k, fallback) {
+    try { return JSON.parse(localStorage.getItem(k)) || fallback; } catch (e) { return fallback; }
+  }
+  return {
+    checkins: read('checkins', []),
+    hrt: read('hrt', {}),
+    hrtHistory: read('hrtHistory', []),
+    profile: read('profile', {}),
+    notes: read('notes', [])
+  };
+}
+
+function scheduleCloudPush() {
+  if (!_cloudUserId) return;
+  clearTimeout(_cloudPushTimer);
+  _cloudPushTimer = setTimeout(pushToCloud, 2000);
+}
+
+function pushToCloud() {
+  if (!_cloudUserId || !supabaseClient) return;
+  supabaseClient.from('user_data')
+    .upsert({ user_id: _cloudUserId, data: cloudSnapshot(), updated_at: new Date().toISOString() })
+    .then(function(res) {
+      if (res.error) console.error('Cloud sync push failed:', res.error.message);
+      else console.log('Cloud sync: data saved to Supabase');
+    });
+}
+
+function applyCloudSnapshot(cloud) {
+  if (!cloud || typeof cloud !== 'object') return;
+  _cloudApplying = true;
+  try {
+    // Check-ins: merge by date, local wins
+    var localCheckins = cloudSnapshot().checkins;
+    var haveDates = {};
+    localCheckins.forEach(function(c) { haveDates[c.date] = true; });
+    var added = (Array.isArray(cloud.checkins) ? cloud.checkins : [])
+      .filter(function(c) { return c && c.date && !haveDates[c.date]; });
+    if (added.length > 0) {
+      _origSetItem('checkins', JSON.stringify(localCheckins.concat(added)));
+      State.checkins = null; State._sample = null; State._sampleValid = false; State._calendarKey = null;
+    }
+    // HRT history: concat + dedup (hormone|date|description)
+    if (Array.isArray(cloud.hrtHistory) && cloud.hrtHistory.length > 0) {
+      var hist = [];
+      try { hist = JSON.parse(localStorage.getItem('hrtHistory')) || []; } catch (e) {}
+      var seen = {};
+      var merged = hist.concat(cloud.hrtHistory).filter(function(e) {
+        var k = e.hormone + '|' + e.date + '|' + e.description;
+        if (seen[k]) return false; seen[k] = true; return true;
+      });
+      _origSetItem('hrtHistory', JSON.stringify(merged));
+    }
+    // HRT regimen + profile: fill only when local is empty
+    var localHRT = cloudSnapshot().hrt;
+    if (!localHRT.estrogenName && !localHRT.progName && !localHRT.testUsed && !localHRT.vagName &&
+        cloud.hrt && (cloud.hrt.estrogenName || cloud.hrt.progName || cloud.hrt.testUsed || cloud.hrt.vagName)) {
+      _origSetItem('hrt', JSON.stringify(cloud.hrt));
+      State.hrt = null;
+    }
+    var localProfile = cloudSnapshot().profile;
+    if (cloud.profile && typeof cloud.profile === 'object') {
+      var mergedProfile = {
+        name: localProfile.name || cloud.profile.name || '',
+        dob: localProfile.dob || cloud.profile.dob || '',
+        lastPeriod: localProfile.lastPeriod || cloud.profile.lastPeriod || '',
+        menstrualStatus: localProfile.menstrualStatus || cloud.profile.menstrualStatus || ''
+      };
+      _origSetItem('profile', JSON.stringify(mergedProfile));
+      State.profile = null;
+    }
+    // Notes: merge, skip duplicates by id (or text+date)
+    if (Array.isArray(cloud.notes) && cloud.notes.length > 0) {
+      var notes = [];
+      try { notes = JSON.parse(localStorage.getItem('notes')) || []; } catch (e) {}
+      var seenN = {};
+      notes.forEach(function(n) { seenN[n.id || (n.text + '|' + n.date)] = true; });
+      cloud.notes.forEach(function(n) {
+        var k = n.id || (n.text + '|' + n.date);
+        if (!seenN[k]) { notes.push(n); seenN[k] = true; }
+      });
+      _origSetItem('notes', JSON.stringify(notes));
+    }
+  } finally {
+    _cloudApplying = false;
+  }
+  // Refresh views with merged data
+  updateDashboard();
+  loadHRTForm();
+  loadProfile();
+  updateCalendar();
+}
+
+function pullFromCloud() {
+  if (!_cloudUserId || !supabaseClient) return;
+  supabaseClient.from('user_data')
+    .select('data')
+    .eq('user_id', _cloudUserId)
+    .maybeSingle()
+    .then(function(res) {
+      if (res.error) { console.error('Cloud sync pull failed:', res.error.message); return; }
+      if (res.data && res.data.data) {
+        console.log('Cloud sync: data loaded from Supabase');
+        applyCloudSnapshot(res.data.data);
+      }
+      // Push the (possibly merged) local state so the cloud is current
+      scheduleCloudPush();
+    });
+}
+
+function startCloudSync(session) {
+  if (!session || !session.user) return;
+  _cloudUserId = session.user.id;
+  pullFromCloud();
+}
+
+if (supabaseClient) {
+  supabaseClient.auth.getSession().then(function(r) {
+    if (r.data && r.data.session) startCloudSync(r.data.session);
+  });
+  supabaseClient.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_IN') startCloudSync(session);
+    if (event === 'SIGNED_OUT') { _cloudUserId = null; clearTimeout(_cloudPushTimer); }
+  });
+  // Flush any pending push when the app is backgrounded/closed
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden' && _cloudUserId) {
+      clearTimeout(_cloudPushTimer);
+      pushToCloud();
+    }
+  });
+}
 </script>
 
 <script>
