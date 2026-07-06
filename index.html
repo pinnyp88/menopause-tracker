@@ -3597,7 +3597,7 @@ body {
             <div style="font-size:48px;margin-bottom:8px;">🌿</div>
             <h1 style="font-family:var(--font-heading);font-size:28px;font-weight:500;color:#3A5C4E;margin-bottom:24px;">HerTrace</h1>
             <h2 style="font-family:var(--font-heading);font-size:22px;font-weight:500;color:#3A5C4E;margin-bottom:8px;">Sign in with your email</h2>
-            <p style="font-family:var(--font-body);font-size:14px;color:#3A5C4E;font-style:italic;margin-bottom:24px;line-height:1.5;">We'll send you a 6-digit code.<br>No password needed.</p>
+            <p style="font-family:var(--font-body);font-size:14px;color:#3A5C4E;font-style:italic;margin-bottom:24px;line-height:1.5;">Enter your email — we'll send you a quick 6-digit code.<br>No password needed.</p>
             <input type="text" id="loginName" style="display:none;">
             <div id="emailStep">
               <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" style="width:100%;font-family:var(--font-body);font-size:16px;border:1.5px solid #8FB5A3;border-radius:12px;padding:14px 16px;min-height:44px;box-sizing:border-box;outline:none;transition:border-color 0.2s;background:#fff;" onfocus="this.style.borderColor='#3A5C4E'" onblur="this.style.borderColor='#8FB5A3'">
@@ -3609,7 +3609,6 @@ body {
               <button class="btn btn-primary" id="verifyCodeBtn" onclick="verifyOtpCode()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Verify code →</button>
             </div>
             <p id="magicLinkMsg" style="display:none;font-family:var(--font-body);font-size:14px;color:#3A5C4E;margin-top:16px;line-height:1.5;"></p>
-            <button class="btn" onclick="localStorage.setItem('userName','Guest');loadUser();" style="margin-top:16px;width:100%;font-family:var(--font-body);font-size:15px;font-weight:600;color:#3A5C4E;background:#fff;border:1.5px solid #3A5C4E;border-radius:50px;min-height:48px;">Continue without account</button>
             <p style="text-align:center;margin-top:16px;font-size:11px;color:#9ca3af;line-height:1.5;">This app tracks symptoms only.<br>It is not a medical service.</p>
         </div>
     </div>
