@@ -3596,10 +3596,12 @@ body {
         <div class="login-card" style="border-radius:20px;padding:40px 32px;max-width:360px;border-left:none;text-align:center;">
             <div style="font-size:48px;margin-bottom:8px;">🌿</div>
             <h1 style="font-family:var(--font-heading);font-size:28px;font-weight:500;color:#3A5C4E;margin-bottom:24px;">HerTrace</h1>
-            <h2 style="font-family:var(--font-heading);font-size:22px;font-weight:500;color:#3A5C4E;margin-bottom:8px;">Hello. What's your name?</h2>
-            <p style="font-family:var(--font-body);font-size:14px;color:#3A5C4E;font-style:italic;margin-bottom:24px;line-height:1.5;">Your data stays private on this device.<br>No account needed.</p>
-            <input type="text" id="loginName" placeholder="Your first name" style="width:100%;font-family:var(--font-body);font-size:16px;border:1.5px solid #8FB5A3;border-radius:12px;padding:14px 16px;min-height:44px;box-sizing:border-box;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3A5C4E'" onblur="this.style.borderColor='#8FB5A3'">
-            <button class="btn btn-primary" onclick="login()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Let's get started →</button>
+            <h2 style="font-family:var(--font-heading);font-size:22px;font-weight:500;color:#3A5C4E;margin-bottom:8px;">Sign in with your email</h2>
+            <p style="font-family:var(--font-body);font-size:14px;color:#3A5C4E;font-style:italic;margin-bottom:24px;line-height:1.5;">We'll send you a secure login link.<br>No password needed.</p>
+            <input type="text" id="loginName" style="display:none;">
+            <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" style="width:100%;font-family:var(--font-body);font-size:16px;border:1.5px solid #8FB5A3;border-radius:12px;padding:14px 16px;min-height:44px;box-sizing:border-box;outline:none;transition:border-color 0.2s;background:#fff;" onfocus="this.style.borderColor='#3A5C4E'" onblur="this.style.borderColor='#8FB5A3'">
+            <button class="btn btn-primary" id="magicLinkBtn" onclick="sendMagicLink()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Send magic link →</button>
+            <p id="magicLinkMsg" style="display:none;font-family:var(--font-body);font-size:14px;color:#3A5C4E;margin-top:16px;line-height:1.5;"></p>
             <p style="text-align:center;margin-top:16px;font-size:11px;color:#9ca3af;line-height:1.5;">This app tracks symptoms only.<br>It is not a medical service.</p>
         </div>
     </div>
@@ -6949,6 +6951,59 @@ if (supabaseClient) {
     .catch(function(err) {
       console.error('Supabase connection failed:', err);
     });
+}
+
+// ═══ Stage 2: magic link authentication ═══
+function sendMagicLink() {
+  var email = (document.getElementById('loginEmail').value || '').trim();
+  var msg = document.getElementById('magicLinkMsg');
+  var btn = document.getElementById('magicLinkBtn');
+  if (!email || email.indexOf('@') < 1) {
+    msg.textContent = 'Please enter a valid email address.';
+    msg.style.display = 'block';
+    return;
+  }
+  btn.disabled = true;
+  supabaseClient.auth.signInWithOtp({
+    email: email,
+    options: { emailRedirectTo: window.location.origin + window.location.pathname }
+  }).then(function(res) {
+    btn.disabled = false;
+    if (res.error) {
+      msg.textContent = 'Could not send the link: ' + res.error.message;
+    } else {
+      msg.textContent = "Check your email — we've sent you a login link.";
+    }
+    msg.style.display = 'block';
+  }).catch(function(err) {
+    btn.disabled = false;
+    msg.textContent = 'Could not send the link: ' + err.message;
+    msg.style.display = 'block';
+  });
+}
+
+function supabaseSignIn(session) {
+  if (!session || !session.user || !session.user.email) return;
+  var email = session.user.email;
+  localStorage.setItem('user', JSON.stringify({ name: email, email: email }));
+  // loadUser() gates on userName; set a friendly default from the email
+  // only if the user hasn't already chosen a name in Settings.
+  if (!localStorage.getItem('userName')) {
+    localStorage.setItem('userName', email.split('@')[0]);
+  }
+  State.user = null;
+  loadUser();
+}
+
+if (supabaseClient) {
+  // Existing session? Skip login entirely.
+  supabaseClient.auth.getSession().then(function(r) {
+    if (r.data && r.data.session) supabaseSignIn(r.data.session);
+  });
+  // Magic link landing → SIGNED_IN
+  supabaseClient.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_IN') supabaseSignIn(session);
+  });
 }
 </script>
 </body>
