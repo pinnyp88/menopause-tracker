@@ -4176,6 +4176,15 @@ body {
                 <button class="btn btn-primary" style="width:auto;" onclick="exportData()">Generate Report</button>
             </div>
             <div class="settings-item">
+                <div><p style="font-weight:500;font-family:var(--font-body);">Export My Data</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">Download a backup file of all your data</p></div>
+                <button class="btn btn-primary" style="width:auto;" onclick="exportMyData()">Export My Data</button>
+            </div>
+            <div class="settings-item">
+                <div><p style="font-weight:500;font-family:var(--font-body);">Import My Data</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">Restore from a previously exported backup file</p></div>
+                <button class="btn btn-primary" style="width:auto;" onclick="document.getElementById('importFileInput').click()">Import My Data</button>
+                <input type="file" id="importFileInput" accept=".json,application/json" style="display:none;" onchange="importMyData(this)">
+            </div>
+            <div class="settings-item">
                 <div><p style="font-weight:500;font-family:var(--font-body);">Delete All Data</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">This cannot be undone</p></div>
                 <button class="btn btn-danger" onclick="deleteAllData()">Delete</button>
             </div>
@@ -5517,6 +5526,92 @@ function exportData() {
 // ═══════════════════════════════════════════════════════════════
 // DELETE & iOS BANNER
 // ═══════════════════════════════════════════════════════════════
+function exportMyData() {
+  var payload = {
+    app: 'hertrace',
+    exportedAt: new Date().toISOString(),
+    checkins: getCheckins(),
+    hrt: getHRT(),
+    hrtHistory: getHRTHistory(),
+    profile: getProfile(),
+    notes: (function(){ try { return JSON.parse(localStorage.getItem('notes')) || []; } catch(e) { return []; } })()
+  };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'hertrace-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function importMyData(input) {
+  var file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onerror = function() {
+    alert("This file couldn't be read. Please check you selected the correct export file.");
+  };
+  reader.onload = function() {
+    var data;
+    try { data = JSON.parse(reader.result); } catch (e) { data = null; }
+    if (!data || typeof data !== 'object' ||
+        !Array.isArray(data.checkins) || typeof data.hrt !== 'object' ||
+        typeof data.profile !== 'object' || !('notes' in data)) {
+      alert("This file couldn't be read. Please check you selected the correct export file.");
+      return;
+    }
+    var existing = getCheckins();
+    var existingDates = {};
+    existing.forEach(function(c) { existingDates[c.date] = true; });
+    var newCheckins = data.checkins.filter(function(c) { return c && c.date && !existingDates[c.date]; });
+    var importedHist = Array.isArray(data.hrtHistory) ? data.hrtHistory : [];
+    if (!confirm('This will add ' + newCheckins.length + ' days of check-ins and your HRT history to what’s already here. Continue?')) return;
+
+    // Merge check-ins (existing days win)
+    setCheckins(existing.concat(newCheckins));
+
+    // Merge HRT history, then dedup by hormone|date|description
+    var hist = getHRTHistory().concat(importedHist);
+    setHRTHistory(hist);
+    dedupHRTHistory();
+
+    // HRT regimen and profile: only fill from import if nothing saved yet
+    var curHRT = getHRT();
+    if (!curHRT.estrogenName && !curHRT.progName && !curHRT.testUsed && !curHRT.vagName && data.hrt && (data.hrt.estrogenName || data.hrt.progName || data.hrt.testUsed || data.hrt.vagName)) {
+      State.hrt = data.hrt;
+      setHRT(State.hrt);
+    }
+    var curProfile = getProfile();
+    if (!curProfile.name && data.profile && data.profile.name) {
+      State.profile = data.profile;
+      localStorage.setItem('profile', JSON.stringify(State.profile));
+    }
+
+    // Merge notes (skip exact duplicates by id, else by text+date)
+    var curNotes = (function(){ try { return JSON.parse(localStorage.getItem('notes')) || []; } catch(e) { return []; } })();
+    var seenNotes = {};
+    curNotes.forEach(function(n) { seenNotes[n.id || (n.text + '|' + n.date)] = true; });
+    (Array.isArray(data.notes) ? data.notes : []).forEach(function(n) {
+      var key = n.id || (n.text + '|' + n.date);
+      if (!seenNotes[key]) { curNotes.push(n); seenNotes[key] = true; }
+    });
+    localStorage.setItem('notes', JSON.stringify(curNotes));
+
+    // Refresh views so imported data shows immediately
+    State.checkins = null; State._sample = null; State._sampleValid = false; State._calendarKey = null;
+    updateDashboard();
+    if (typeof renderTrends === 'function') renderTrends();
+    if (typeof renderReport === 'function') renderReport();
+    loadHRTForm();
+    updateCalendar();
+    alert('Import complete — ' + newCheckins.length + ' days of check-ins added.');
+  };
+  reader.readAsText(file);
+}
+
 function deleteAllData() {
   if (confirm('Delete ALL your data? This cannot be undone.')) {
     if (confirm('Are you absolutely sure?')) {
