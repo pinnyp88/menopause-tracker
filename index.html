@@ -3609,6 +3609,7 @@ body {
               <button class="btn btn-primary" id="verifyCodeBtn" onclick="verifyOtpCode()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Verify code →</button>
             </div>
             <p id="magicLinkMsg" style="display:none;font-family:var(--font-body);font-size:14px;color:#3A5C4E;margin-top:16px;line-height:1.5;"></p>
+            <button class="btn" onclick="localStorage.setItem('userName','Guest');loadUser();" style="margin-top:16px;width:100%;font-family:var(--font-body);font-size:15px;font-weight:600;color:#3A5C4E;background:#fff;border:1.5px solid #3A5C4E;border-radius:50px;min-height:48px;">Continue without account</button>
             <p style="text-align:center;margin-top:16px;font-size:11px;color:#9ca3af;line-height:1.5;">This app tracks symptoms only.<br>It is not a medical service.</p>
         </div>
     </div>
@@ -7044,6 +7045,21 @@ if (supabaseClient) {
   supabaseClient.auth.onAuthStateChange(function(event, session) {
     if (event === 'SIGNED_IN') supabaseSignIn(session);
   });
+}
+</script>
+
+<script>
+// Returning-user guard: if a userName is already saved, never show the
+// login screen — even if an error elsewhere stopped the normal startup
+// call to loadUser(). Runs in its own script tag so earlier script
+// failures cannot prevent it.
+try {
+  if (localStorage.getItem('userName') &&
+      document.getElementById('loginPage').classList.contains('active')) {
+    loadUser();
+  }
+} catch (e) {
+  console.error('Returning-user guard failed:', e);
 }
 </script>
 </body>
