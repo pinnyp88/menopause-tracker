@@ -6926,5 +6926,30 @@ document.fonts.ready.then(function() {
   syncLeaf();
 })();
 </script>
+
+<!-- ═══ Supabase — Stage 1: connection only. No data is read from or
+     written to Supabase yet; all app data remains in localStorage. ═══ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL = 'https://uenqxahaavdmcirfymay.supabase.co';
+var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_dOtNmFKCz3KXLS520S9Kjw_dV8chw4V';
+var supabaseClient = null;
+try {
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+} catch (e) {
+  console.error('Supabase client failed to initialise:', e);
+}
+// Temporary stage-one connection check — logs result to the console.
+if (supabaseClient) {
+  fetch(SUPABASE_URL + '/auth/v1/health', { headers: { apikey: SUPABASE_PUBLISHABLE_KEY } })
+    .then(function(res) {
+      if (res.ok) { console.log('Supabase connected successfully'); }
+      else { console.error('Supabase connection failed: HTTP ' + res.status + ' ' + res.statusText); }
+    })
+    .catch(function(err) {
+      console.error('Supabase connection failed:', err);
+    });
+}
+</script>
 </body>
 </html>
