@@ -4222,7 +4222,7 @@ body {
         <div class="settings-section">
             <h3>Your Name</h3>
             <div class="form-grid" style="padding:0;">
-                <div class="form-group"><label>First Name</label><input type="text" id="settingsUserName" placeholder="Your first name" onchange="localStorage.setItem('userName',this.value.trim()||'there')"><p class="gs-profile-hint">Used in your greeting</p></div>
+                <div class="form-group"><label>First Name</label><input type="text" id="settingsUserName" placeholder="Your first name" onchange="localStorage.setItem('userName',this.value.trim()||'there');updateDashboard();"><p class="gs-profile-hint">Used in your greeting</p></div>
             </div>
         </div>
         <div class="settings-section">
@@ -7057,10 +7057,11 @@ function supabaseSignIn(session) {
   var email = session.user.email;
   var emailPrefix = email.split('@')[0];
   localStorage.setItem('user', JSON.stringify({ name: emailPrefix, email: email }));
-  // loadUser() gates on userName; set a friendly default from the email
-  // only if the user hasn't already chosen a name in Settings.
+  // loadUser() gates on userName. Never use the email as a display name:
+  // 'there' is the app's existing "no name yet" sentinel, which makes the
+  // greeting generic until a first name is saved in Settings.
   if (!localStorage.getItem('userName')) {
-    localStorage.setItem('userName', emailPrefix);
+    localStorage.setItem('userName', 'there');
   }
   State.user = null;
   loadUser();
@@ -7231,6 +7232,24 @@ if (supabaseClient) {
 </script>
 
 <script>
+// One-time migration: earlier builds set userName to the email prefix
+// (e.g. "pinnyp"), which leaked into the greeting. If userName still
+// equals the signed-in email's prefix, replace it with the profile's
+// first name if one exists, else the generic sentinel — then refresh
+// the greeting.
+try {
+  var _mUser = JSON.parse(localStorage.getItem('user') || '{}');
+  var _mName = localStorage.getItem('userName');
+  if (_mUser.email && _mName && _mName === _mUser.email.split('@')[0]) {
+    var _mProfile = JSON.parse(localStorage.getItem('profile') || '{}');
+    var _mFirst = (_mProfile.name || '').trim().split(' ')[0];
+    localStorage.setItem('userName', _mFirst || 'there');
+    if (typeof updateDashboard === 'function') updateDashboard();
+  }
+} catch (e) {
+  console.error('Greeting name migration failed:', e);
+}
+
 // Returning-user guard: if a userName is already saved, never show the
 // login screen — even if an error elsewhere stopped the normal startup
 // call to loadUser(). Runs in its own script tag so earlier script
