@@ -3597,10 +3597,17 @@ body {
             <div style="font-size:48px;margin-bottom:8px;">🌿</div>
             <h1 style="font-family:var(--font-heading);font-size:28px;font-weight:500;color:#3A5C4E;margin-bottom:24px;">HerTrace</h1>
             <h2 style="font-family:var(--font-heading);font-size:22px;font-weight:500;color:#3A5C4E;margin-bottom:8px;">Sign in with your email</h2>
-            <p style="font-family:var(--font-body);font-size:14px;color:#3A5C4E;font-style:italic;margin-bottom:24px;line-height:1.5;">We'll send you a secure login link.<br>No password needed.</p>
+            <p style="font-family:var(--font-body);font-size:14px;color:#3A5C4E;font-style:italic;margin-bottom:24px;line-height:1.5;">We'll send you a 6-digit code.<br>No password needed.</p>
             <input type="text" id="loginName" style="display:none;">
-            <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" style="width:100%;font-family:var(--font-body);font-size:16px;border:1.5px solid #8FB5A3;border-radius:12px;padding:14px 16px;min-height:44px;box-sizing:border-box;outline:none;transition:border-color 0.2s;background:#fff;" onfocus="this.style.borderColor='#3A5C4E'" onblur="this.style.borderColor='#8FB5A3'">
-            <button class="btn btn-primary" id="magicLinkBtn" onclick="sendMagicLink()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Send magic link →</button>
+            <div id="emailStep">
+              <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" style="width:100%;font-family:var(--font-body);font-size:16px;border:1.5px solid #8FB5A3;border-radius:12px;padding:14px 16px;min-height:44px;box-sizing:border-box;outline:none;transition:border-color 0.2s;background:#fff;" onfocus="this.style.borderColor='#3A5C4E'" onblur="this.style.borderColor='#8FB5A3'">
+              <button class="btn btn-primary" id="magicLinkBtn" onclick="sendMagicLink()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Send code →</button>
+            </div>
+            <div id="otpStep" style="display:none;">
+              <label for="otpCode" style="display:block;font-family:var(--font-body);font-size:14px;font-weight:500;color:#3A5C4E;margin-bottom:8px;">Enter the 6-digit code from your email</label>
+              <input type="text" id="otpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" style="width:100%;font-family:var(--font-body);font-size:20px;letter-spacing:0.3em;text-align:center;border:1.5px solid #8FB5A3;border-radius:12px;padding:12px 16px;min-height:44px;box-sizing:border-box;outline:none;transition:border-color 0.2s;background:#fff;" onfocus="this.style.borderColor='#3A5C4E'" onblur="this.style.borderColor='#8FB5A3'">
+              <button class="btn btn-primary" id="verifyCodeBtn" onclick="verifyOtpCode()" style="margin-top:16px;font-family:var(--font-body);font-size:16px;font-weight:600;border-radius:50px;min-height:48px;">Verify code →</button>
+            </div>
             <p id="magicLinkMsg" style="display:none;font-family:var(--font-body);font-size:14px;color:#3A5C4E;margin-top:16px;line-height:1.5;"></p>
             <p style="text-align:center;margin-top:16px;font-size:11px;color:#9ca3af;line-height:1.5;">This app tracks symptoms only.<br>It is not a medical service.</p>
         </div>
@@ -3757,7 +3764,7 @@ body {
             </div>
             <div class="custom-slider-wrap"><div class="custom-track" id="brainFogTrack"><div class="custom-fill" id="brainFogFill"></div><div class="custom-thumb" id="brainFogThumb"></div></div></div>
             <input type="hidden" id="brainFog" value="5">
-            <div class="gs-slider__word-labels"><span>Crystal clear</span><span>Totally foggy</span></div>
+            <div class="gs-slider__word-labels"><span>Totally foggy</span><span>Crystal clear</span></div>
           </div>
 
           <!-- Patience -->
@@ -6166,7 +6173,7 @@ function renderTrends() {
   var insightParts = [];
   if (avgSleep !== null) insightParts.push('Your sleep averaged ' + avgSleep.toFixed(1) + ' hrs.');
   if (avgFog !== null) {
-    var fogWord = avgFog <= 3 ? 'low' : avgFog <= 6 ? 'moderate' : 'high';
+    var fogWord = avgFog >= 7 ? 'low' : avgFog >= 4 ? 'moderate' : 'high';
     insightParts.push('Brain fog was ' + fogWord + '.');
   }
   if (avgHF !== null) {
@@ -6179,7 +6186,7 @@ function renderTrends() {
   // Section 3: Metric cards with sparklines
   var metrics = [
     {field:'sleep', label:'SLEEP', unit:' hrs', upGood:true},
-    {field:'brainFog', label:'BRAIN FOG', unit:'/10', upGood:false},
+    {field:'brainFog', label:'BRAIN FOG', unit:'/10', upGood:true},
     {field:'patience', label:'PATIENCE', unit:'/10', upGood:true},
     {field:'hotFlushCount', label:'HOT FLUSHES', unit:'/day', upGood:false},
     {field:'nightSweat', label:'NIGHT SWEATS', unit:'/3', upGood:false},
@@ -6697,7 +6704,7 @@ function renderReflection() {
     if (qPct === 100 && qForm.length > 0) weekQuote = 'Perfect HRT adherence this week. Your consistency is doing the work.';
     else if (qSleep !== null && qSleep >= 7) weekQuote = 'Sleep held up well this week. That matters more than you think.';
     else if (qSleep !== null && qSleep < 5.5) weekQuote = 'A tough week for sleep. Worth mentioning to your GP.';
-    else if (qFog !== null && qFog >= 7) weekQuote = 'A foggy week. Be kind to yourself — this is the menopause, not you.';
+    else if (qFog !== null && qFog <= 4) weekQuote = 'A foggy week. Be kind to yourself — this is the menopause, not you.';
     else if (qPatience !== null && qPatience >= 7) weekQuote = 'Your patience held steady this week. That’s not nothing.';
     else if (qPatience !== null && qPatience < 4) weekQuote = 'A harder week emotionally. Every day you logged is useful data.';
     else weekQuote = 'A steadier week than last. Keep going — patterns take time.';
@@ -6738,8 +6745,8 @@ function renderReflection() {
     else frags.push('Sleep was mixed.');
   }
   if (avgFog !== null) {
-    if (avgFog <= 4) frags.push('Your mind felt clearer than usual.');
-    else if (avgFog >= 7) frags.push('Brain fog made things harder.');
+    if (avgFog >= 7) frags.push('Your mind felt clearer than usual.');
+    else if (avgFog <= 4) frags.push('Brain fog made things harder.');
     else frags.push('Mental clarity had its ups and downs.');
   }
   if (avgPatience !== null) {
@@ -6795,11 +6802,11 @@ function renderReflection() {
 
   // Brain fog
   if (avgFog !== null) {
-    var fogBorder = avgFog >= 7 ? 'reflection-card--peach' : avgFog <= 3 ? 'reflection-card--gold' : insightBorder(avgFog, pFog, true);
+    var fogBorder = avgFog <= 3 ? 'reflection-card--peach' : avgFog >= 7 ? 'reflection-card--gold' : insightBorder(avgFog, pFog, false);
     html += '<div class="reflection-card ' + fogBorder + '" style="' + cardDelay() + '">';
     html += '<p class="gs-reflect__insight-label">BRAIN FOG</p>';
     html += '<p class="gs-reflect__insight-val">' + avgFog.toFixed(1) + ' / 10</p>';
-    var fogNote = avgFog >= 7 ? 'Higher than usual' : avgFog <= 3 ? 'Clearer than most weeks' : compareNote(avgFog, pFog, '', true);
+    var fogNote = avgFog <= 3 ? 'Foggier than usual' : avgFog >= 7 ? 'Clearer than most weeks' : compareNote(avgFog, pFog, '', false);
     html += '<p class="gs-reflect__insight-note">' + fogNote + '</p>';
     html += '</div>';
   }
@@ -6953,7 +6960,8 @@ if (supabaseClient) {
     });
 }
 
-// ═══ Stage 2: magic link authentication ═══
+// ═══ Stage 2: email OTP (6-digit code) authentication ═══
+var otpEmail = '';
 function sendMagicLink() {
   var email = (document.getElementById('loginEmail').value || '').trim();
   var msg = document.getElementById('magicLinkMsg');
@@ -6966,30 +6974,62 @@ function sendMagicLink() {
   btn.disabled = true;
   supabaseClient.auth.signInWithOtp({
     email: email,
-    options: { emailRedirectTo: window.location.origin + window.location.pathname }
+    options: { shouldCreateUser: true }
   }).then(function(res) {
     btn.disabled = false;
     if (res.error) {
-      msg.textContent = 'Could not send the link: ' + res.error.message;
+      msg.textContent = 'Could not send the code: ' + res.error.message;
     } else {
-      msg.textContent = "Check your email — we've sent you a login link.";
+      otpEmail = email;
+      document.getElementById('emailStep').style.display = 'none';
+      document.getElementById('otpStep').style.display = 'block';
+      msg.textContent = "Check your email — we've sent you a 6-digit code.";
+      document.getElementById('otpCode').focus();
     }
     msg.style.display = 'block';
   }).catch(function(err) {
     btn.disabled = false;
-    msg.textContent = 'Could not send the link: ' + err.message;
+    msg.textContent = 'Could not send the code: ' + err.message;
     msg.style.display = 'block';
   });
+}
+
+function verifyOtpCode() {
+  var code = (document.getElementById('otpCode').value || '').trim();
+  var msg = document.getElementById('magicLinkMsg');
+  var btn = document.getElementById('verifyCodeBtn');
+  if (!code || code.length !== 6) {
+    msg.textContent = "That code didn't work — check your email and try again.";
+    msg.style.display = 'block';
+    return;
+  }
+  btn.disabled = true;
+  supabaseClient.auth.verifyOtp({ email: otpEmail, token: code, type: 'email' })
+    .then(function(res) {
+      btn.disabled = false;
+      if (res.error || !res.data || !res.data.session) {
+        msg.textContent = "That code didn't work — check your email and try again.";
+        msg.style.display = 'block';
+      } else {
+        msg.style.display = 'none';
+        supabaseSignIn(res.data.session);
+      }
+    }).catch(function(err) {
+      btn.disabled = false;
+      msg.textContent = "That code didn't work — check your email and try again.";
+      msg.style.display = 'block';
+    });
 }
 
 function supabaseSignIn(session) {
   if (!session || !session.user || !session.user.email) return;
   var email = session.user.email;
-  localStorage.setItem('user', JSON.stringify({ name: email, email: email }));
+  var emailPrefix = email.split('@')[0];
+  localStorage.setItem('user', JSON.stringify({ name: emailPrefix, email: email }));
   // loadUser() gates on userName; set a friendly default from the email
   // only if the user hasn't already chosen a name in Settings.
   if (!localStorage.getItem('userName')) {
-    localStorage.setItem('userName', email.split('@')[0]);
+    localStorage.setItem('userName', emailPrefix);
   }
   State.user = null;
   loadUser();
