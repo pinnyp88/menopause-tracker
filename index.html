@@ -3283,9 +3283,9 @@ body {
 }
 #gpReportContent h1 { font-size: 20px; text-align: center; border-bottom: 3px solid #7A8FA6; padding-bottom: 14px; margin-bottom: 6px; color: #3A5C4E; }
 #gpReportContent h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; background: #f8fafc; padding: 7px 10px; border-left: 4px solid #7A8FA6; margin: 24px 0 12px; color: #3A5C4E; }
-#gpReportContent table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-#gpReportContent th { background: #EFF3F7; text-align: left; padding: 8px 10px; font-size: 12px; border: 1px solid #ccc; color: #3A5C4E; }
-#gpReportContent td { padding: 7px 10px; border: 1px solid #ddd; font-size: 12px; vertical-align: top; }
+#gpReportContent table { width: 100%; border-collapse: collapse; margin-bottom: 16px; table-layout: fixed; }
+#gpReportContent th { background: #EFF3F7; text-align: left; padding: 8px 10px; font-size: 12px; border: 1px solid #ccc; color: #3A5C4E; word-break: break-word; overflow-wrap: anywhere; }
+#gpReportContent td { padding: 7px 10px; border: 1px solid #ddd; font-size: 12px; vertical-align: top; word-break: break-word; overflow-wrap: anywhere; }
 #gpReportContent tr:nth-child(even) td { background: #fafafa; }
 #gpReportContent .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 #gpReportContent .ir { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; font-size: 12px; }
@@ -3314,6 +3314,9 @@ body {
   }
   .gp-report-page { padding: 0 !important; }
   #gpReportContent { padding: 10px 20px; }
+  /* Restore natural (content-sized) column widths for paper/PDF —
+     the fixed layout is only to fit the phone screen. */
+  #gpReportContent table { table-layout: auto; }
   .page:not(#gpReportPage) { display: none !important; }
 }
 
@@ -3626,7 +3629,9 @@ body {
   min-height: 0;                                 /* let the shelf shrink so it can scroll */
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  /* No -webkit-overflow-scrolling: touch — that legacy momentum layer
+     re-composited and mis-pinned the flex header when Trends/Review/
+     Notes swap their innerHTML. iOS 13+ momentum-scrolls natively. */
   overscroll-behavior: contain;
 }
 .gs-tabbar { order: 2; flex: 0 0 auto; }         /* shelf 3: nav */
