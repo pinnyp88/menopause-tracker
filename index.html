@@ -857,7 +857,7 @@ body {
 }    
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #F4F0E8; min-height: 100vh; color: #1f2937; padding-bottom: 70px; padding-top: 52px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
         .navbar { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
         .nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 16px; }
         .nav-brand { font-size: 20px; font-weight: 700; color: #6d28d9; }
@@ -2495,6 +2495,8 @@ body {
   justify-content: center;
   gap: 1px;
   padding: env(safe-area-inset-top, 0px) 20px 0;
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
   z-index: 200;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -2521,6 +2523,8 @@ body {
   border-top: 1px solid #e5e7eb;
   padding-top: 8px;
   padding-bottom: 10px;
+  padding-left: max(0px, env(safe-area-inset-left));
+  padding-right: max(0px, env(safe-area-inset-right));
   display: flex;
   justify-content: space-around;
   z-index: 200;
@@ -3580,10 +3584,16 @@ body {
    Positioning/stability only; visual design untouched.
    ═══════════════════════════════════════════════════════════════ */
 
-/* No rubber-band bounce or edge shifting in standalone mode */
+/* No rubber-band bounce or edge shifting in standalone mode.
+   overflow-x: hidden + width: 100% constrain the horizontal axis so
+   viewport-fit=cover can't make the layout wider than the visual
+   viewport (which was shifting the whole page left and clipping the
+   header / dropping the fixed nav). */
 html, body {
   overscroll-behavior-y: none;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* The tab bar itself (position, safe-area bottom offset, and white
