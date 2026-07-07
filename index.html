@@ -3307,6 +3307,19 @@ body {
 
 @media print {
   .gs-tabbar, .clinical-footer, .gp-report-bar, .qa-overlay, .qa-toast { display: none !important; }
+  /* Undo the app-shell lock so the report flows and prints in full
+     instead of being clipped by the fixed/overflow:hidden shell. */
+  html, body {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  #gpReportPage.page.active {
+    position: static !important;
+    top: auto !important;
+    bottom: auto !important;
+    overflow: visible !important;
+  }
   .gp-report-page { padding: 0 !important; }
   #gpReportContent { padding: 10px 20px; }
   .page:not(#gpReportPage) { display: none !important; }
@@ -3586,19 +3599,38 @@ body {
    Positioning/stability only; visual design untouched.
    ═══════════════════════════════════════════════════════════════ */
 
-/* No rubber-band bounce or edge shifting in standalone mode.
-   The horizontal clip lives on <html> ONLY: putting overflow-x on
-   <body> forced body's overflow-y to auto, turning body into a scroll
-   container that swallowed desktop mouse-wheel scrolling. html is the
-   real scroller, so clipping X there still prevents the iPhone left-
-   shift while body scrolls normally. */
-html {
-  overflow-x: hidden;
-}
+/* ═══ APP-SHELL SCROLL ARCHITECTURE ═══
+   html and body are locked (fixed, full-viewport, no scroll). The only
+   scrolling element is the active page's content area, bounded between
+   the fixed header and the fixed bottom nav. This stops the iOS URL-bar
+   / rubber-band jitter that used to move the fixed bars during scroll,
+   and keeps desktop wheel scrolling working (the content area is a
+   normal overflow:auto scroller). */
 html, body {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   overscroll-behavior-y: none;
   -webkit-text-size-adjust: 100%;
-  width: 100%;
+}
+
+/* Active page = the scroll viewport, pinned below the 52px header and
+   above the 67px nav (plus safe-area insets). Login keeps its own
+   full-height flex centering; the GP report reverts to normal flow for
+   printing (see @media print). Header/nav themselves are already
+   position:fixed with insets + z-index:200 (.gs-topbar / .gs-tabbar). */
+.page.active:not(#loginPage) {
+  position: fixed;
+  top: calc(52px + env(safe-area-inset-top, 0px));
+  bottom: calc(67px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 /* The tab bar itself (position, safe-area bottom offset, and white
