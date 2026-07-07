@@ -856,7 +856,7 @@ body {
   margin-bottom: 16px;
 }    
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #F4F0E8; min-height: 100vh; color: #1f2937; padding-bottom: 70px; padding-top: 52px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #F4F0E8; min-height: 100vh; min-height: 100dvh; color: #1f2937; padding-bottom: 70px; padding-top: 52px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
         .navbar { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
         .nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 16px; }
@@ -869,7 +869,7 @@ body {
         .logout-btn:hover { background: #dc2626; }
         .page { display: none; padding: 32px 0 130px; }
         .page.active { display: block; }
-        .login-page.active { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding-bottom: 0 !important; }
+        .login-page.active { display: flex; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; padding-bottom: 0 !important; }
         .login-card { background: white; padding: 48px 32px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
         .login-card h1 { font-size: 28px; margin-bottom: 12px; }
         .login-card p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
@@ -2417,12 +2417,14 @@ body {
 .gs-report__note-row:last-child { border-bottom: none; }
 .gs-report__footer-bar {
   position: fixed;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
   left: 0;
   right: 0;
   background: #fff;
   border-top: 1px solid #e5e7eb;
   padding: 12px 20px;
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
   display: flex;
   gap: 10px;
   z-index: 100;
@@ -3237,7 +3239,7 @@ body {
 .emoji-opt.selected .emoji-label { color: #3A5C4E; font-weight: 600; }
 
 /* ═══ Custom Slider ═══ */
-.custom-slider-wrap { padding: 8px 0; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: none; }
+.custom-slider-wrap { padding: 8px 0; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y; }
 .custom-track { position: relative; height: 6px; background: #D4D0C8; border-radius: 3px; width: 100%; }
 .custom-fill { position: absolute; left: 0; top: 0; height: 6px; border-radius: 3px; background: #3A5C4E; pointer-events: none; width: 40%; }
 .custom-fill.peach { background: #D4836A; }
@@ -4579,11 +4581,44 @@ function initSlider(fieldId, min, max, defaultVal, isPeach) {
   });
 
   track.addEventListener('touchstart', function(e) {
-    onMove(e.touches[0].clientX);
-    var tm = function(e2) { e2.preventDefault(); onMove(e2.touches[0].clientX); };
-    var te = function() { window.removeEventListener('touchmove', tm); window.removeEventListener('touchend', te); };
+    // Do NOT commit a value on first contact — that made a scroll gesture
+    // that merely brushed the track jump the value. Only a deliberate
+    // horizontal drag, or a stationary tap, sets the value.
+    var startX = e.touches[0].clientX;
+    var startY = e.touches[0].clientY;
+    var TH = 8;            // px intent threshold
+    var dragging = false;  // became a deliberate horizontal drag
+    var moved = false;     // left the tap zone at all
+    function cleanup() {
+      window.removeEventListener('touchmove', tm);
+      window.removeEventListener('touchend', te);
+      window.removeEventListener('touchcancel', te);
+    }
+    var tm = function(e2) {
+      var t = e2.touches[0];
+      var dx = t.clientX - startX;
+      var dy = t.clientY - startY;
+      if (!dragging) {
+        if (Math.abs(dx) > TH && Math.abs(dx) > Math.abs(dy)) {
+          dragging = true;             // deliberate horizontal drag
+        } else if (Math.abs(dy) > TH) {
+          cleanup();                   // vertical scroll intent — let the page scroll
+          return;
+        }
+      }
+      if (Math.abs(dx) > TH || Math.abs(dy) > TH) moved = true;
+      if (dragging) {
+        e2.preventDefault();
+        onMove(t.clientX);
+      }
+    };
+    var te = function() {
+      if (!moved) onMove(startX);      // stationary tap = deliberate tap-to-set
+      cleanup();
+    };
     window.addEventListener('touchmove', tm, { passive: false });
     window.addEventListener('touchend', te);
+    window.addEventListener('touchcancel', te);
   }, { passive: true });
 
   return setVal;
