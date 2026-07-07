@@ -3571,24 +3571,38 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Tab bar: pinned to the visual viewport bottom on its own
-   compositor layer, clear of the home indicator */
+/* Tab bar: the WHOLE bar is lifted above the home indicator via its
+   bottom offset — not padded internally — so icons and labels are
+   always fully on-screen. Own compositor layer keeps it pinned. */
 .gs-tabbar {
-  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  bottom: env(safe-area-inset-bottom, 0px) !important;
+  padding-top: 8px !important;
+  padding-bottom: 10px !important;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   will-change: transform;
 }
 
-/* Clinical footer rides above the safe area too, so the gap
-   between it and the tab bar stays constant */
+/* Solid white filler between the lifted bar and the physical screen
+   edge, so page content never shows through the safe-area strip */
+.gs-tabbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: env(safe-area-inset-bottom, 0px);
+  background: #fff;
+}
+
+/* Clinical footer rides above the lifted bar with the same offset */
 .clinical-footer {
   bottom: calc(65px + env(safe-area-inset-bottom, 0px));
 }
 
-/* Keep page content clear of the taller safe-area tab bar */
+/* Keep page content clear of the lifted tab bar */
 body {
-  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
 }
 
     </style>
