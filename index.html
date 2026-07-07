@@ -4023,25 +4023,25 @@ body {
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="workImpactTrack"><div class="custom-fill" id="workImpactFill"></div><div class="custom-thumb" id="workImpactThumb"></div></div></div>
               <input type="hidden" id="workImpact" value="5">
-              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
+              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="relImpactTrack"><div class="custom-fill" id="relImpactFill"></div><div class="custom-thumb" id="relImpactThumb"></div></div></div>
               <input type="hidden" id="relImpact" value="5">
-              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
+              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="energyImpactTrack"><div class="custom-fill" id="energyImpactFill"></div><div class="custom-thumb" id="energyImpactThumb"></div></div></div>
               <input type="hidden" id="energyImpact" value="5">
-              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
+              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalClarityVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="mentalClarityTrack"><div class="custom-fill" id="mentalClarityFill"></div><div class="custom-thumb" id="mentalClarityThumb"></div></div></div>
               <input type="hidden" id="mentalClarity" value="5">
-              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
+              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
             </div>
           </div>
 
@@ -4575,7 +4575,7 @@ document.getElementById('calendarYear').value = new Date().getFullYear();
 // ═══════════════════════════════════════════════════════════════
 // CUSTOM SLIDER INITIALISER
 // ═══════════════════════════════════════════════════════════════
-function initSlider(fieldId, min, max, defaultVal, isPeach) {
+function initSlider(fieldId, min, max, defaultVal, isPeach, reversed) {
   var track = document.getElementById(fieldId + 'Track');
   var fill = document.getElementById(fieldId + 'Fill');
   var thumb = document.getElementById(fieldId + 'Thumb');
@@ -4587,11 +4587,16 @@ function initSlider(fieldId, min, max, defaultVal, isPeach) {
     thumb.classList.add('peach');
   }
 
+  // reversed sliders mirror only the VISUAL thumb/fill and the click
+  // mapping — the stored value (input.value) keeps its normal meaning,
+  // so save/load/report semantics are unchanged. Used for Life Impact
+  // so its labels read Severely affected (left) → No impact (right).
   function setVal(val) {
     val = Math.min(max, Math.max(min, Math.round(val)));
     var pct = ((val - min) / (max - min)) * 100;
-    fill.style.width = pct + '%';
-    thumb.style.left = pct + '%';
+    var displayPct = reversed ? (100 - pct) : pct;
+    fill.style.width = displayPct + '%';
+    thumb.style.left = displayPct + '%';
     input.value = val;
     var lbl = document.getElementById(fieldId + 'Val');
     if (lbl) lbl.textContent = val;
@@ -4602,6 +4607,7 @@ function initSlider(fieldId, min, max, defaultVal, isPeach) {
   function onMove(clientX) {
     var rect = track.getBoundingClientRect();
     var pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    if (reversed) pct = 1 - pct;
     var val = Math.round(min + pct * (max - min));
     setVal(val);
   }
@@ -4662,10 +4668,10 @@ function initSlider(fieldId, min, max, defaultVal, isPeach) {
 var sliderSetters = {
   brainFog: initSlider('brainFog', 1, 10, 5, false),
   patience: initSlider('patience', 1, 10, 5, false),
-  workImpact: initSlider('workImpact', 1, 10, 5, false),
-  relImpact: initSlider('relImpact', 1, 10, 5, false),
-  energyImpact: initSlider('energyImpact', 1, 10, 5, false),
-  mentalClarity: initSlider('mentalClarity', 1, 10, 5, false),
+  workImpact: initSlider('workImpact', 1, 10, 5, false, true),
+  relImpact: initSlider('relImpact', 1, 10, 5, false, true),
+  energyImpact: initSlider('energyImpact', 1, 10, 5, false, true),
+  mentalClarity: initSlider('mentalClarity', 1, 10, 5, false, true),
   sleepQuality: initSlider('sleepQuality', 1, 5, 3, false)
 };
 
