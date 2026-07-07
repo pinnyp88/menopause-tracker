@@ -4599,7 +4599,9 @@ function initSlider(fieldId, min, max, defaultVal, isPeach, reversed) {
     thumb.style.left = displayPct + '%';
     input.value = val;
     var lbl = document.getElementById(fieldId + 'Val');
-    if (lbl) lbl.textContent = val;
+    // Badge counts left-to-right 1->10 like every other slider. The
+    // stored value (input.value) is unchanged; only the badge mirrors.
+    if (lbl) lbl.textContent = reversed ? (min + max - val) : val;
   }
 
   setVal(defaultVal);
