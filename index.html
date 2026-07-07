@@ -3626,6 +3626,9 @@ body {
 .container {                                     /* shelf 2: the ONLY scroller */
   order: 1;
   flex: 1 1 auto;
+  width: 100%;                                   /* pin to viewport width so a non-shrinkable
+                                                    wide child (Notes filter row, Log pills)
+                                                    can't size the flex item beyond the screen */
   min-height: 0;                                 /* let the shelf shrink so it can scroll */
   overflow-y: auto;
   overflow-x: hidden;
