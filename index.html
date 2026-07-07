@@ -3855,7 +3855,7 @@ body {
             </div>
             <div class="custom-slider-wrap"><div class="custom-track" id="brainFogTrack"><div class="custom-fill" id="brainFogFill"></div><div class="custom-thumb" id="brainFogThumb"></div></div></div>
             <input type="hidden" id="brainFog" value="5">
-            <div class="gs-slider__word-labels"><span>Totally foggy</span><span>Crystal clear</span></div>
+            <div class="gs-slider__word-labels"><span>Crystal clear</span><span>Totally foggy</span></div>
           </div>
 
           <!-- Patience -->
@@ -3866,7 +3866,7 @@ body {
             </div>
             <div class="custom-slider-wrap"><div class="custom-track" id="patienceTrack"><div class="custom-fill" id="patienceFill"></div><div class="custom-thumb" id="patienceThumb"></div></div></div>
             <input type="hidden" id="patience" value="5">
-            <div class="gs-slider__word-labels"><span>Lost it completely</span><span>Completely calm</span></div>
+            <div class="gs-slider__word-labels"><span>Completely calm</span><span>Lost it completely</span></div>
           </div>
         </div>
 
@@ -3888,7 +3888,7 @@ body {
             </div>
             <div class="custom-slider-wrap"><div class="custom-track" id="sleepQualityTrack"><div class="custom-fill" id="sleepQualityFill"></div><div class="custom-thumb" id="sleepQualityThumb"></div></div></div>
             <input type="hidden" id="sleepQuality" value="3">
-            <div class="gs-slider__word-labels"><span>Poor</span><span>Excellent</span></div>
+            <div class="gs-slider__word-labels"><span>Excellent</span><span>Poor</span></div>
           </div>
 
           <!-- Times woken -->
@@ -4023,25 +4023,25 @@ body {
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Work</span></div><span class="gs-slider__value-badge" id="workImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="workImpactTrack"><div class="custom-fill" id="workImpactFill"></div><div class="custom-thumb" id="workImpactThumb"></div></div></div>
               <input type="hidden" id="workImpact" value="5">
-              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Relationships</span></div><span class="gs-slider__value-badge" id="relImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="relImpactTrack"><div class="custom-fill" id="relImpactFill"></div><div class="custom-thumb" id="relImpactThumb"></div></div></div>
               <input type="hidden" id="relImpact" value="5">
-              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Energy</span></div><span class="gs-slider__value-badge" id="energyImpactVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="energyImpactTrack"><div class="custom-fill" id="energyImpactFill"></div><div class="custom-thumb" id="energyImpactThumb"></div></div></div>
               <input type="hidden" id="energyImpact" value="5">
-              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
             <div class="gs-slider gs-slider--compact">
               <div class="gs-slider__header"><div class="gs-slider__label-row"><span class="gs-slider__label">Mental clarity</span></div><span class="gs-slider__value-badge" id="mentalClarityVal">5</span></div>
               <div class="custom-slider-wrap"><div class="custom-track" id="mentalClarityTrack"><div class="custom-fill" id="mentalClarityFill"></div><div class="custom-thumb" id="mentalClarityThumb"></div></div></div>
               <input type="hidden" id="mentalClarity" value="5">
-              <div class="gs-slider__word-labels"><span>Severely affected</span><span>No impact</span></div>
+              <div class="gs-slider__word-labels"><span>No impact</span><span>Severely affected</span></div>
             </div>
           </div>
 
@@ -4587,10 +4587,9 @@ function initSlider(fieldId, min, max, defaultVal, isPeach, reversed) {
     thumb.classList.add('peach');
   }
 
-  // reversed sliders mirror only the VISUAL thumb/fill and the click
-  // mapping — the stored value (input.value) keeps its normal meaning,
-  // so save/load/report semantics are unchanged. Used for Life Impact
-  // so its labels read Severely affected (left) → No impact (right).
+  // All sliders now use the unified clinical severity scale: 1 = mild
+  // (left) → high = severe (right), badge = raw stored value = "how bad".
+  // The `reversed` path is retained but currently unused by every slider.
   function setVal(val) {
     val = Math.min(max, Math.max(min, Math.round(val)));
     var pct = ((val - min) / (max - min)) * 100;
@@ -4599,8 +4598,6 @@ function initSlider(fieldId, min, max, defaultVal, isPeach, reversed) {
     thumb.style.left = displayPct + '%';
     input.value = val;
     var lbl = document.getElementById(fieldId + 'Val');
-    // Badge counts left-to-right 1->10 like every other slider. The
-    // stored value (input.value) is unchanged; only the badge mirrors.
     if (lbl) lbl.textContent = reversed ? (min + max - val) : val;
   }
 
@@ -4670,10 +4667,10 @@ function initSlider(fieldId, min, max, defaultVal, isPeach, reversed) {
 var sliderSetters = {
   brainFog: initSlider('brainFog', 1, 10, 5, false),
   patience: initSlider('patience', 1, 10, 5, false),
-  workImpact: initSlider('workImpact', 1, 10, 5, false, true),
-  relImpact: initSlider('relImpact', 1, 10, 5, false, true),
-  energyImpact: initSlider('energyImpact', 1, 10, 5, false, true),
-  mentalClarity: initSlider('mentalClarity', 1, 10, 5, false, true),
+  workImpact: initSlider('workImpact', 1, 10, 5, false),
+  relImpact: initSlider('relImpact', 1, 10, 5, false),
+  energyImpact: initSlider('energyImpact', 1, 10, 5, false),
+  mentalClarity: initSlider('mentalClarity', 1, 10, 5, false),
   sleepQuality: initSlider('sleepQuality', 1, 5, 3, false)
 };
 
@@ -5426,7 +5423,7 @@ function updateDashboard() {
     setEl('hrtAdherence', hdTotal > 0 ? Math.round((hd/hdTotal)*100) + '%' : '—');
 
     setElHTML('trendSleep',   trendBadge(s,'sleep',true));
-    setElHTML('trendPatience',trendBadge(s,'patience',true));
+    setElHTML('trendPatience',trendBadge(s,'patience',false));
     setElHTML('trendBrainFog',trendBadge(s,'brainFog',false));
     setElHTML('trendHotFlush',trendBadge(s,'hotFlush',false));
     setElHTML('trendNightSweat',trendBadge(s,'nightSweat',false));
@@ -5521,8 +5518,8 @@ function updateDashboard() {
     var tt = getTopTriggers(s);
     var insight = "You’re doing great. Keep logging daily.";
     if (sl < 5.5) insight = 'Sleep has been your biggest challenge.';
-    else if (bf < 4) insight = 'Brain fog is running high this week.';
-    else if (pa > 7) insight = 'Your patience is holding strong.';
+    else if (bf > 7) insight = 'Brain fog is running high this week.';
+    else if (pa < 4) insight = 'Your patience is holding strong.';
     else if (haPct < 70 && s.length >= 3) insight = 'HRT adherence dipped this week.';
     else if (tt.length > 0) insight = 'Your top trigger: ' + tt[0].split(' (')[0] + '.';
     else if (sl >= 7) insight = 'Sleep is looking solid this week.';
@@ -5691,8 +5688,8 @@ function exportData() {
   html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart||'—')+'</td></tr><tr><td>Vaginal / Local Treatment</td><td>'+(hrt.vagName||'—')+'</td><td>'+(hrt.vagDose||'—')+'</td><td>'+(hrt.vagForm||'—')+'</td><td>—</td><td>—</td><td>'+(hrt.vagStart||'—')+'</td></tr></table>';
   var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
   var somCount7=function(){var r=[];SOMATIC.forEach(function(k){var n=s7.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s7.length+' days');});return r.length>0?r.join(', '):'None logged';}();
-  html+='<h2>7-Day Symptom Summary ('+rng(s7)+', n='+s7.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s7,'sleepQuality')+'/5</td><td>1=poor | 5=excellent</td></tr><tr><td>Night Wakings</td><td>'+avg(s7,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s7,'patience')+'/10</td><td>1=very impatient | 10=very patient</td></tr><tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+'/10</td><td>1=severe | 10=none</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s7)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s7,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b7+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a7+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t7.length>0?t7.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount7+'</td></tr></table>';
-  if(s30.length>0){var somCount30=function(){var r=[];SOMATIC.forEach(function(k){var n=s30.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s30.length+' days');});return r.length>0?r.join(', '):'None logged';}();html+='<h2>30-Day Symptom Summary ('+rng(s30)+', n='+s30.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s30,'sleepQuality')+'/5</td><td>1=poor | 5=excellent</td></tr><tr><td>Night Wakings</td><td>'+avg(s30,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s30,'patience')+'/10</td><td>1=very impatient | 10=very patient</td></tr><tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+'/10</td><td>1=severe | 10=none</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+'/3</td><td>0=none | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s30,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s30,'nightSweat')+'/3</td><td>0=none | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s30)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s30,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s30,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s30,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s30,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b30+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a30+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t30.length>0?t30.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount30+'</td></tr></table>';}
+  html+='<h2>7-Day Symptom Summary ('+rng(s7)+', n='+s7.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s7,'sleepQuality')+'/5</td><td>1=excellent | 5=poor</td></tr><tr><td>Night Wakings</td><td>'+avg(s7,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s7,'patience')+'/10</td><td>1=very patient | 10=very impatient</td></tr><tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s7)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s7,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b7+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a7+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t7.length>0?t7.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount7+'</td></tr></table>';
+  if(s30.length>0){var somCount30=function(){var r=[];SOMATIC.forEach(function(k){var n=s30.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s30.length+' days');});return r.length>0?r.join(', '):'None logged';}();html+='<h2>30-Day Symptom Summary ('+rng(s30)+', n='+s30.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s30,'sleepQuality')+'/5</td><td>1=excellent | 5=poor</td></tr><tr><td>Night Wakings</td><td>'+avg(s30,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s30,'patience')+'/10</td><td>1=very patient | 10=very impatient</td></tr><tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+'/3</td><td>0=none | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s30,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s30,'nightSweat')+'/3</td><td>0=none | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s30)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s30,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s30,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s30,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s30,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b30+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a30+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t30.length>0?t30.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount30+'</td></tr></table>';}
   if(hrt.notes)html+='<h2>Additional Notes</h2><p style="font-size:12px;">'+hrt.notes+'</p>';
   html+='<div class="ft">This report is a clinical symptom tracking journal export. It does not constitute medical advice. Generated by HerTrace v2.0 | '+rd+'</div>';
   document.getElementById('gpReportContent').innerHTML = html;
@@ -5816,6 +5813,32 @@ function showIOSBanner() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// SCALE MIGRATION v2 — unified clinical severity scale
+// Older records stored brainFog/patience (1-10) and sleepQuality (1-5)
+// as "high = good". The unified scale is "high = bad" for every slider.
+// Each record is stamped scaleV:2 after conversion, so it can NEVER be
+// inverted twice — the stamp travels with the record through Supabase,
+// making this idempotent and cloud-safe. Impact fields already stored
+// severity (high = bad) and are left untouched.
+// ═══════════════════════════════════════════════════════════════
+function migrateScaleV2() {
+  var arr = getCheckins();
+  var changed = false;
+  arr.forEach(function(c) {
+    if (!c || c.scaleV === 2) return;               // already migrated → skip untouched
+    // Only invert genuinely-logged values (form sliders are >= 1).
+    // 0 / missing are "not logged" sentinels on calendar/quick-log stubs.
+    if (typeof c.brainFog === 'number' && c.brainFog >= 1) c.brainFog = 11 - c.brainFog;
+    if (typeof c.patience === 'number' && c.patience >= 1) c.patience = 11 - c.patience;
+    if (typeof c.sleepQuality === 'number' && c.sleepQuality >= 1) c.sleepQuality = 6 - c.sleepQuality;
+    c.scaleV = 2;
+    changed = true;
+  });
+  if (changed) setCheckins(arr);                    // persist locally + sync to cloud
+}
+
+migrateScaleV2();
 loadUser();
 
 /* ═══════════════════════════════════════════════════════════════
@@ -6318,8 +6341,8 @@ function renderTrends() {
   // Section 3: Metric cards with sparklines
   var metrics = [
     {field:'sleep', label:'SLEEP', unit:' hrs', upGood:true},
-    {field:'brainFog', label:'BRAIN FOG', unit:'/10', upGood:true},
-    {field:'patience', label:'PATIENCE', unit:'/10', upGood:true},
+    {field:'brainFog', label:'BRAIN FOG', unit:'/10', upGood:false},
+    {field:'patience', label:'PATIENCE', unit:'/10', upGood:false},
     {field:'hotFlushCount', label:'HOT FLUSHES', unit:'/day', upGood:false},
     {field:'nightSweat', label:'NIGHT SWEATS', unit:'/3', upGood:false},
     {field:'workImpact', label:'WORK IMPACT', unit:'/10', upGood:false},
@@ -6877,13 +6900,13 @@ function renderReflection() {
     else frags.push('Sleep was mixed.');
   }
   if (avgFog !== null) {
-    if (avgFog >= 7) frags.push('Your mind felt clearer than usual.');
-    else if (avgFog <= 4) frags.push('Brain fog made things harder.');
+    if (avgFog >= 7) frags.push('Brain fog made things harder.');
+    else if (avgFog <= 4) frags.push('Your mind felt clearer than usual.');
     else frags.push('Mental clarity had its ups and downs.');
   }
   if (avgPatience !== null) {
-    if (avgPatience >= 7) frags.push('Your patience held up well.');
-    else if (avgPatience <= 4) frags.push('Patience was in short supply.');
+    if (avgPatience >= 7) frags.push('Patience was in short supply.');
+    else if (avgPatience <= 4) frags.push('Your patience held up well.');
   }
   if (avgHFC !== null) {
     if (avgHFC > 3) frags.push('Hot flushes were frequent.');
@@ -7310,6 +7333,10 @@ function applyCloudSnapshot(cloud) {
   } finally {
     _cloudApplying = false;
   }
+  // Convert/stamp any records merged from the cloud that predate scaleV:2.
+  // The per-record stamp makes this safe even if the cloud copy was
+  // already migrated on another device.
+  if (typeof migrateScaleV2 === 'function') migrateScaleV2();
   // Refresh views with merged data
   updateDashboard();
   loadHRTForm();
