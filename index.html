@@ -2484,14 +2484,17 @@ body {
 .gs-topbar {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: 52px;
+  /* Reserve the iOS status-bar / notch inset so the top of the app
+     never shifts as iOS chrome settles — which is what dragged the
+     fixed bottom bar off-screen at scroll-top. */
+  height: calc(52px + env(safe-area-inset-top, 0px));
   background: #fff;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 1px;
-  padding: 0 20px;
+  padding: env(safe-area-inset-top, 0px) 20px 0;
   z-index: 200;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -3593,8 +3596,11 @@ html, body {
   bottom: calc(65px + env(safe-area-inset-bottom, 0px));
 }
 
-/* Keep page content clear of the lifted tab bar */
+/* Keep page content clear of the lifted tab bar and the top inset.
+   Reserving the top inset here stops the layout from shifting at
+   scroll-top, which is what pushed the fixed bottom bar off-screen. */
 body {
+  padding-top: calc(52px + env(safe-area-inset-top, 0px));
   padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
 }
 
@@ -7059,6 +7065,29 @@ function verifyOtpCode() {
     });
 }
 
+// The Settings Email field is display-only (a <p>, not an input) and
+// shows the Supabase login email. loadUser() (protected) writes the
+// userName into it, which is the 'there' sentinel — so we override it
+// here with the real email. Also backfills user.email if missing.
+function syncSettingsEmail(email) {
+  var el = document.getElementById('settingsEmail');
+  if (!el) return;
+  var resolved = email || '';
+  if (!resolved) {
+    try { resolved = (JSON.parse(localStorage.getItem('user') || '{}').email) || ''; } catch (e) {}
+  }
+  if (resolved) {
+    el.textContent = resolved;
+    try {
+      var u = JSON.parse(localStorage.getItem('user') || '{}');
+      if (u.email !== resolved) { u.email = resolved; localStorage.setItem('user', JSON.stringify(u)); }
+    } catch (e) {}
+  } else {
+    var cur = el.textContent.trim();
+    if (cur === 'there' || cur === '') el.textContent = '—';
+  }
+}
+
 function supabaseSignIn(session) {
   if (!session || !session.user || !session.user.email) return;
   var email = session.user.email;
@@ -7072,6 +7101,9 @@ function supabaseSignIn(session) {
   }
   State.user = null;
   loadUser();
+  // loadUser() just wrote userName into #settingsEmail — restore the
+  // real email.
+  syncSettingsEmail(email);
 }
 
 if (supabaseClient) {
@@ -7268,6 +7300,16 @@ try {
   }
 } catch (e) {
   console.error('Returning-user guard failed:', e);
+}
+
+// Ensure the Settings Email shows the real login email, not the
+// 'there' sentinel that loadUser() writes. Uses the stored user record
+// when no live session arg is available; the Supabase getSession /
+// SIGNED_IN handlers call syncSettingsEmail(email) with the live value.
+try {
+  if (typeof syncSettingsEmail === 'function') syncSettingsEmail();
+} catch (e) {
+  console.error('Settings email sync failed:', e);
 }
 
 </script>
