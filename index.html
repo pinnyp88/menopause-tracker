@@ -7211,9 +7211,16 @@ function supabaseSignIn(session) {
     localStorage.setItem('userName', 'there');
   }
   State.user = null;
-  loadUser();
-  // loadUser() just wrote userName into #settingsEmail — restore the
-  // real email.
+  // Only enter the app when the login screen is still showing. Async auth
+  // callbacks (getSession / SIGNED_IN) can fire after the user has already
+  // navigated to another tab; calling loadUser() then would re-activate
+  // the dashboard without clearing the current page, leaving two
+  // position:fixed pages overlapping. Guarding here avoids that.
+  if (document.getElementById('loginPage').classList.contains('active')) {
+    loadUser();
+  }
+  // loadUser() (when it runs) writes userName into #settingsEmail —
+  // restore the real email regardless.
   syncSettingsEmail(email);
 }
 
