@@ -3587,14 +3587,17 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 /* No rubber-band bounce or edge shifting in standalone mode.
-   overflow-x: hidden + width: 100% constrain the horizontal axis so
-   viewport-fit=cover can't make the layout wider than the visual
-   viewport (which was shifting the whole page left and clipping the
-   header / dropping the fixed nav). */
+   The horizontal clip lives on <html> ONLY: putting overflow-x on
+   <body> forced body's overflow-y to auto, turning body into a scroll
+   container that swallowed desktop mouse-wheel scrolling. html is the
+   real scroller, so clipping X there still prevents the iPhone left-
+   shift while body scrolls normally. */
+html {
+  overflow-x: hidden;
+}
 html, body {
   overscroll-behavior-y: none;
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
   width: 100%;
 }
 
