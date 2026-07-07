@@ -2512,14 +2512,26 @@ body {
 }
 .gs-tabbar {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  left: 0; right: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
   background: #fff;
   border-top: 1px solid #e5e7eb;
-  padding: 8px 0;
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  padding-top: 8px;
+  padding-bottom: 10px;
   display: flex;
   justify-content: space-around;
   z-index: 200;
+}
+/* Solid white filler between the lifted bar and the physical screen
+   edge, so page content never shows through the safe-area strip */
+.gs-tabbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: env(safe-area-inset-bottom, 0px);
+  background: #fff;
 }
 .gs-tab {
   display: flex;
@@ -3571,29 +3583,10 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Tab bar: the WHOLE bar is lifted above the home indicator via its
-   bottom offset — not padded internally — so icons and labels are
-   always fully on-screen. Own compositor layer keeps it pinned. */
-.gs-tabbar {
-  bottom: env(safe-area-inset-bottom, 0px) !important;
-  padding-top: 8px !important;
-  padding-bottom: 10px !important;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
-}
-
-/* Solid white filler between the lifted bar and the physical screen
-   edge, so page content never shows through the safe-area strip */
-.gs-tabbar::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: env(safe-area-inset-bottom, 0px);
-  background: #fff;
-}
+/* The tab bar itself (position, safe-area bottom offset, and white
+   filler strip) is defined once in the base .gs-tabbar rule above.
+   No transform/will-change here — layer promotion breaks fixed
+   positioning in iOS standalone mode. */
 
 /* Clinical footer rides above the lifted bar with the same offset */
 .clinical-footer {
@@ -7277,30 +7270,6 @@ try {
   console.error('Returning-user guard failed:', e);
 }
 
-// iOS standalone: after the keyboard closes or a momentum scroll ends,
-// fixed elements can be left composited off-screen. Re-pin the tab bar
-// whenever the visual viewport settles. Only touches elements that are
-// currently visible, so the login screen is unaffected.
-(function() {
-  var repinTimer = null;
-  function repinTabbar() {
-    var tb = document.getElementById('gsTabbar');
-    if (!tb || tb.style.display !== 'flex') return;
-    // Toggle the compositor layer to force a re-pin against the viewport
-    tb.style.transform = 'translateZ(0) translateY(0.01px)';
-    requestAnimationFrame(function() { tb.style.transform = 'translateZ(0)'; });
-  }
-  function scheduleRepin() {
-    clearTimeout(repinTimer);
-    repinTimer = setTimeout(repinTabbar, 120);
-  }
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', scheduleRepin);
-    window.visualViewport.addEventListener('scroll', scheduleRepin);
-  }
-  window.addEventListener('orientationchange', scheduleRepin);
-  window.addEventListener('focusout', scheduleRepin);
-})();
 </script>
 </body>
 </html>
