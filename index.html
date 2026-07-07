@@ -869,7 +869,7 @@ body {
         .logout-btn:hover { background: #dc2626; }
         .page { display: none; padding: 32px 0 130px; }
         .page.active { display: block; }
-        .login-page.active { display: flex; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; padding-bottom: 0 !important; }
+        .login-page.active { display: flex; align-items: center; justify-content: center; min-height: 100%; padding-bottom: 0 !important; }
         .login-card { background: white; padding: 48px 32px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
         .login-card h1 { font-size: 28px; margin-bottom: 12px; }
         .login-card p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
@@ -2484,11 +2484,9 @@ body {
    GARDEN SAGE — Top Bar & Bottom Tab Bar
    ═══════════════════════════════════════════════════════════════ */
 .gs-topbar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  /* Reserve the iOS status-bar / notch inset so the top of the app
-     never shifts as iOS chrome settles — which is what dragged the
-     fixed bottom bar off-screen at scroll-top. */
+  /* Top flex shelf (see body flex column) — not fixed. Reserve the iOS
+     status-bar / notch inset via padding-top so the title clears the
+     notch; white background covers the inset strip. */
   height: calc(52px + env(safe-area-inset-top, 0px));
   background: #fff;
   display: flex;
@@ -2518,29 +2516,18 @@ body {
   line-height: 1.1;
 }
 .gs-tabbar {
-  position: fixed;
-  left: 0; right: 0;
-  bottom: env(safe-area-inset-bottom, 0px);
+  /* Bottom flex shelf (see body flex column) — not fixed. It sits at
+     the physical bottom edge; padding-bottom folds in the home-indicator
+     inset so the tabs clear it, and the white background covers the strip. */
   background: #fff;
   border-top: 1px solid #e5e7eb;
   padding-top: 8px;
-  padding-bottom: 10px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   padding-left: max(0px, env(safe-area-inset-left));
   padding-right: max(0px, env(safe-area-inset-right));
   display: flex;
   justify-content: space-around;
   z-index: 200;
-}
-/* Solid white filler between the lifted bar and the physical screen
-   edge, so page content never shows through the safe-area strip */
-.gs-tabbar::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: env(safe-area-inset-bottom, 0px);
-  background: #fff;
 }
 .gs-tab {
   display: flex;
@@ -3307,17 +3294,22 @@ body {
 
 @media print {
   .gs-tabbar, .clinical-footer, .gp-report-bar, .qa-overlay, .qa-toast { display: none !important; }
-  /* Undo the app-shell lock so the report flows and prints in full
-     instead of being clipped by the fixed/overflow:hidden shell. */
+  /* Undo the app-shell flex/scroll so the report flows and prints in
+     full instead of being clipped by the shell's overflow:hidden. */
   html, body {
-    position: static !important;
+    display: block !important;
     height: auto !important;
+    overflow: visible !important;
+  }
+  .container {
+    display: block !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
     overflow: visible !important;
   }
   #gpReportPage.page.active {
     position: static !important;
-    top: auto !important;
-    bottom: auto !important;
     overflow: visible !important;
   }
   .gp-report-page { padding: 0 !important; }
@@ -3606,49 +3598,45 @@ body {
    / rubber-band jitter that used to move the fixed bars during scroll,
    and keeps desktop wheel scrolling working (the content area is a
    normal overflow:auto scroller). */
-html, body {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
+/* Nothing is position:fixed inside a locked body any more. The whole
+   app is a single natural flex column of three shelves — header,
+   scroll area, nav — so iOS has no fixed-in-fixed layers to drift, and
+   two briefly-active pages can never overlap in the same rectangle. */
+html {
   height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   overscroll-behavior-y: none;
   -webkit-text-size-adjust: 100%;
 }
-
-/* Active page = the scroll viewport, pinned below the 52px header and
-   above the 67px nav (plus safe-area insets). Login keeps its own
-   full-height flex centering; the GP report reverts to normal flow for
-   printing (see @media print). Header/nav themselves are already
-   position:fixed with insets + z-index:200 (.gs-topbar / .gs-tabbar). */
-.page.active:not(#loginPage) {
-  position: fixed;
-  top: calc(52px + env(safe-area-inset-top, 0px));
-  bottom: calc(67px + env(safe-area-inset-bottom, 0px));
-  left: 0;
-  right: 0;
+/* Three stacked shelves. Fixed overlays (iOS banner, more-sheet,
+   clinical footer, quick-add, toasts) stay out of flow — they are not
+   flex items and keep their own positioning. */
+.gs-topbar { order: 0; flex: 0 0 auto; }        /* shelf 1: header */
+.container {                                     /* shelf 2: the ONLY scroller */
+  order: 1;
+  flex: 1 1 auto;
+  min-height: 0;                                 /* let the shelf shrink so it can scroll */
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
+.gs-tabbar { order: 2; flex: 0 0 auto; }         /* shelf 3: nav */
+/* Pages are ordinary blocks inside the scroll shelf; showPage() still
+   toggles display via the active class. Never fixed → no overlap. */
+.page.active:not(#loginPage) { position: static; }
 
-/* The tab bar itself (position, safe-area bottom offset, and white
-   filler strip) is defined once in the base .gs-tabbar rule above.
-   No transform/will-change here — layer promotion breaks fixed
-   positioning in iOS standalone mode. */
-
-/* Clinical footer rides above the lifted bar with the same offset */
+/* Clinical footer still floats just above the nav (unchanged) */
 .clinical-footer {
   bottom: calc(65px + env(safe-area-inset-bottom, 0px));
-}
-
-/* Keep page content clear of the lifted tab bar and the top inset.
-   Reserving the top inset here stops the layout from shifting at
-   scroll-top, which is what pushed the fixed bottom bar off-screen. */
-body {
-  padding-top: calc(52px + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
 }
 
     </style>
