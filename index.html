@@ -2486,7 +2486,10 @@ body {
 .gs-topbar {
   /* Top flex shelf (see body flex column) — not fixed. Reserve the iOS
      status-bar / notch inset via padding-top so the title clears the
-     notch; white background covers the inset strip. */
+     notch; white background covers the inset strip. position:relative +
+     z-index keep the (now non-fixed) header painting above the fixed
+     #iosBanner (z-index 200), which only shows in Safari. */
+  position: relative;
   height: calc(52px + env(safe-area-inset-top, 0px));
   background: #fff;
   display: flex;
@@ -2497,7 +2500,7 @@ body {
   padding: env(safe-area-inset-top, 0px) 20px 0;
   padding-left: max(20px, env(safe-area-inset-left));
   padding-right: max(20px, env(safe-area-inset-right));
-  z-index: 200;
+  z-index: 300;
   border-bottom: 1px solid #e5e7eb;
 }
 .gs-topbar__brand {
@@ -3356,6 +3359,7 @@ body {
 .save-success-message {
   font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 14px;
   color: #3A5C4E; text-align: center; margin-top: 12px; opacity: 0; transition: opacity 0.3s ease;
+  line-height: 1.6; padding: 4px 0;
 }
 .save-success-message.show { opacity: 1; }
 
