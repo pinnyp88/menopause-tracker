@@ -5782,7 +5782,8 @@ function importMyData(input) {
     var curNotes = (function(){ try { return JSON.parse(localStorage.getItem('notes')) || []; } catch(e) { return []; } })();
     var seenNotes = {};
     curNotes.forEach(function(n) { seenNotes[n.id || (n.text + '|' + n.date)] = true; });
-    (Array.isArray(data.notes) ? data.notes : []).forEach(function(n) {
+    (Array.isArray(data.notes) ? data.notes : []).forEach(function(raw) {
+      var n = sanitiseNote(raw);
       var key = n.id || (n.text + '|' + n.date);
       if (!seenNotes[key]) { curNotes.push(n); seenNotes[key] = true; }
     });
@@ -6491,6 +6492,23 @@ function setNotes(arr) {
   localStorage.setItem('notes', JSON.stringify(arr));
 }
 
+// Normalises a note object coming from an external source (backup import,
+// cloud merge) so a shape gap there can never reach renderNotes() with
+// missing fields. Function declaration is hoisted, so it's callable from
+// importMyData (defined earlier in the file) and applyCloudSnapshot
+// (defined later) without reordering anything.
+function sanitiseNote(n) {
+  return {
+    id: n.id || (Date.now() + Math.random()),
+    date: n.date || new Date().toISOString().slice(0, 10),
+    category: n.category || 'other',
+    text: (n.text || '').toString(),
+    priority: n.priority || 'low',
+    askAtAppointment: !!n.askAtAppointment,
+    answered: !!n.answered
+  };
+}
+
 var _notesCatLabels = {
   'doctor-question': 'Doctor Question',
   'symptom': 'Symptom',
@@ -6601,12 +6619,15 @@ function renderNotes(filter) {
   }
   var html = '';
   filtered.forEach(function(n) {
-    html += '<div class="gs-notes__card gs-notes__card--' + n.category + (n.answered ? ' gs-notes__card--answered' : '') + '">';
-    html += '<div class="gs-notes__card-top"><span class="gs-notes__card-cat gs-notes__card-cat--' + n.category + '">' + (_notesCatLabels[n.category] || n.category) + '</span><span class="gs-notes__card-date">' + n.date + '</span></div>';
-    html += '<p class="gs-notes__card-text">' + n.text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+    var cat = n.category || 'other';
+    var pri = n.priority || 'low';
+    var txt = n.text || '';
+    html += '<div class="gs-notes__card gs-notes__card--' + cat + (n.answered ? ' gs-notes__card--answered' : '') + '">';
+    html += '<div class="gs-notes__card-top"><span class="gs-notes__card-cat gs-notes__card-cat--' + cat + '">' + (_notesCatLabels[cat] || cat) + '</span><span class="gs-notes__card-date">' + n.date + '</span></div>';
+    html += '<p class="gs-notes__card-text">' + txt.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
     var badges = '';
     if (n.askAtAppointment) badges += '<span class="gs-notes__badge gs-notes__badge--ask">Ask at appointment</span>';
-    badges += '<span class="gs-notes__badge gs-notes__badge--' + n.priority + '">' + n.priority.charAt(0).toUpperCase() + n.priority.slice(1) + '</span>';
+    badges += '<span class="gs-notes__badge gs-notes__badge--' + pri + '">' + pri.charAt(0).toUpperCase() + pri.slice(1) + '</span>';
     html += '<div class="gs-notes__card-badges">' + badges + '</div>';
     html += '<div class="gs-notes__card-actions">';
     html += '<button class="gs-notes__action-btn gs-notes__action-btn--edit" onclick="editNote(' + n.id + ')">Edit</button>';
@@ -7337,7 +7358,8 @@ function applyCloudSnapshot(cloud) {
       try { notes = JSON.parse(localStorage.getItem('notes')) || []; } catch (e) {}
       var seenN = {};
       notes.forEach(function(n) { seenN[n.id || (n.text + '|' + n.date)] = true; });
-      cloud.notes.forEach(function(n) {
+      cloud.notes.forEach(function(raw) {
+        var n = sanitiseNote(raw);
         var k = n.id || (n.text + '|' + n.date);
         if (!seenN[k]) { notes.push(n); seenN[k] = true; }
       });
