@@ -4742,7 +4742,7 @@ function showPage(n, b) {
   var activeTab = document.querySelector('.gs-tab[data-page="' + n + '"]');
   if (activeTab) activeTab.classList.add('gs-tab--active');
   if (n === 'dashboard') updateDashboard();
-  if (n === 'checkin') { loadCheckinForDate(); syncCheckinVisuals(); setMotivational('checkinMotivational', CHECKIN_PROMPTS[Math.floor(Math.random()*CHECKIN_PROMPTS.length)]); }
+  if (n === 'checkin') { document.getElementById('checkinDate').value = localDate(); loadCheckinForDate(); syncCheckinVisuals(); setMotivational('checkinMotivational', CHECKIN_PROMPTS[Math.floor(Math.random()*CHECKIN_PROMPTS.length)]); }
   if (n === 'trends') { renderTrends(); var tc=getCheckins(); setMotivational('trendsMotivational', tc.length<7 ? 'Patterns take time to appear. Keep going.' : 'Here’s what your data is telling you.'); }
   if (n === 'reflection') renderReflection();
   if (n === 'report') renderReport();
@@ -7420,6 +7420,25 @@ if (supabaseClient) {
     }
   });
 }
+
+// Data-integrity fix: #checkinDate is otherwise only set to today once, at
+// initial page load. If the app is backgrounded across a local midnight
+// rollover and resumed without a full reload, that field can still point at
+// the previous day — and saveCheckin() does a full-record replace keyed on
+// it, so a save meant for "today" would silently overwrite yesterday's real
+// record. If the Check-In page is the one currently shown (per showPage()'s
+// .active class), snap the date back to today and reload on resume.
+// Independent of the cloud-sync listener above — does not read/write any of
+// its state and works whether or not supabaseClient exists.
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    var checkinPage = document.getElementById('checkinPage');
+    if (checkinPage && checkinPage.classList.contains('active')) {
+      document.getElementById('checkinDate').value = localDate();
+      loadCheckinForDate();
+    }
+  }
+});
 </script>
 
 <script>
