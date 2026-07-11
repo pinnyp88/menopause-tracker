@@ -5425,7 +5425,7 @@ function updateDashboard() {
 
     var formEntries = s.filter(function(c){ return c.loggedViaForm !== false; }); // include legacy entries without flag
     var hd = formEntries.filter(function(c){ return c.hrtTaken; }).length;
-    var hdTotal = formEntries.length || s.length;
+    var hdTotal = formEntries.length;
     setEl('hrtAdherence', hdTotal > 0 ? Math.round((hd/hdTotal)*100) + '%' : '—');
 
     setElHTML('trendSleep',   trendBadge(s,'sleep',true));
@@ -5526,7 +5526,7 @@ function updateDashboard() {
     if (sl < 5.5) insight = 'Sleep has been your biggest challenge.';
     else if (bf > 7) insight = 'Brain fog is running high this week.';
     else if (pa < 4) insight = 'Your patience is holding strong.';
-    else if (haPct < 70 && s.length >= 3) insight = 'HRT adherence dipped this week.';
+    else if (haForm.length >= 3 && haPct < 70) insight = 'HRT adherence dipped this week.';
     else if (tt.length > 0) insight = 'Your top trigger: ' + tt[0].split(' (')[0] + '.';
     else if (sl >= 7) insight = 'Sleep is looking solid this week.';
     else if (bf < 4) insight = 'Mental clarity is on your side.';
@@ -5681,8 +5681,10 @@ function exportData() {
   var avg = function(a,f){ return a.length>0?(a.reduce(function(s,c){ return s+(parseFloat(c[f])||0); },0)/a.length).toFixed(1):'N/A'; };
   var b7=s7.filter(function(c){ return c.bleeding!=='none'; }).length;
   var b30=s30.filter(function(c){ return c.bleeding!=='none'; }).length;
-  var a7=s7.length>0?Math.round((s7.filter(function(c){ return c.hrtTaken&&c.loggedViaForm!==false; }).length/Math.max(1,s7.filter(function(c){ return c.loggedViaForm!==false; }).length))*100)+'%':'N/A';
-  var a30=s30.length>0?Math.round((s30.filter(function(c){ return c.hrtTaken&&c.loggedViaForm!==false; }).length/Math.max(1,s30.filter(function(c){ return c.loggedViaForm!==false; }).length))*100)+'%':'N/A';
+  var d7 = s7.filter(function(c){ return c.loggedViaForm !== false; }).length;
+  var a7 = d7 > 0 ? Math.round((s7.filter(function(c){ return c.hrtTaken && c.loggedViaForm !== false; }).length / d7) * 100) + '%' : '—';
+  var d30 = s30.filter(function(c){ return c.loggedViaForm !== false; }).length;
+  var a30 = d30 > 0 ? Math.round((s30.filter(function(c){ return c.hrtTaken && c.loggedViaForm !== false; }).length / d30) * 100) + '%' : '—';
   var rng=function(a){ if(!a.length)return'N/A'; var s=[].concat(a).sort(function(x,y){ return new Date(x.date)-new Date(y.date); }); return s[0].date+' to '+s[s.length-1].date; };
   var t7=getTopTriggers(s7);
   var t30=getTopTriggers(s30);
@@ -6432,7 +6434,7 @@ function renderTrends() {
   var totalLogged = hrtFormEntries.length;
   var hrtPct = totalLogged > 0 ? Math.round((hrtDays / totalLogged) * 100) : 0;
   html += '<svg width="100%" height="24" style="margin:8px 0;" role="img" aria-label="HRT adherence ' + hrtPct + ' percent"><rect x="0" y="0" width="100%" height="24" rx="12" fill="#F4F0E8"/><rect x="0" y="0" width="' + hrtPct + '%" height="24" rx="12" fill="#3A5C4E"/></svg>';
-  html += '<p class="gs-trends__card-body" style="font-size:13px;">' + hrtPct + '% — ' + hrtDays + ' of ' + totalLogged + ' logged days</p></div>';
+  html += '<p class="gs-trends__card-body" style="font-size:13px;">' + (totalLogged > 0 ? (hrtPct + '% — ' + hrtDays + ' of ' + totalLogged + ' logged days') : '— No HRT logged this period') + '</p></div>';
 
   container.innerHTML = html;
 
@@ -7030,7 +7032,7 @@ function renderReflection() {
   var hrtFormWeek = week.filter(function(c) { return c.loggedViaForm !== false; });
   var hrtTaken = hrtFormWeek.filter(function(c) { return c.hrtTaken; }).length;
   var hrtPct = hrtFormWeek.length > 0 ? Math.round((hrtTaken / hrtFormWeek.length) * 100) : 0;
-  if (hrtPct < 80) gpItems.push('HRT was missed on some days — ' + hrtPct + '% taken.');
+  if (hrtFormWeek.length > 0 && hrtPct < 80) gpItems.push('HRT was missed on some days — ' + hrtPct + '% taken.');
   if (avgFog !== null && avgFog >= 7) gpItems.push('Significant brain fog reported most days.');
   if (avgSleep !== null && avgSleep < 6) gpItems.push('Sleep averaged under 6 hours.');
   if (avgWork !== null && avgWork >= 7) gpItems.push('Menopause significantly affected work this week.');
