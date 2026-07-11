@@ -5685,15 +5685,15 @@ function exportData() {
   var a7 = d7 > 0 ? Math.round((s7.filter(function(c){ return c.hrtTaken && c.loggedViaForm !== false; }).length / d7) * 100) + '%' : '—';
   var d30 = s30.filter(function(c){ return c.loggedViaForm !== false; }).length;
   var a30 = d30 > 0 ? Math.round((s30.filter(function(c){ return c.hrtTaken && c.loggedViaForm !== false; }).length / d30) * 100) + '%' : '—';
-  var rng=function(a){ if(!a.length)return'N/A'; var s=[].concat(a).sort(function(x,y){ return new Date(x.date)-new Date(y.date); }); return s[0].date+' to '+s[s.length-1].date; };
+  var rng=function(a){ if(!a.length)return'N/A'; var s=[].concat(a).sort(function(x,y){ return new Date(x.date)-new Date(y.date); }); return fmtAUDate(s[0].date)+' to '+fmtAUDate(s[s.length-1].date); };
   var t7=getTopTriggers(s7);
   var t30=getTopTriggers(s30);
   var uri=function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+' days)'; }).join(', ')||'None reported'; };
 
   var html='';
   html+='<h1>HerTrace - GP Clinical Summary Report</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Report Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
-  html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob||'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod||'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
-  html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart||'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart||'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart||'—')+'</td></tr><tr><td>Vaginal / Local Treatment</td><td>'+(hrt.vagName||'—')+'</td><td>'+(hrt.vagDose||'—')+'</td><td>'+(hrt.vagForm||'—')+'</td><td>—</td><td>—</td><td>'+(hrt.vagStart||'—')+'</td></tr></table>';
+  html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob?fmtAUDate(prf.dob):'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod?fmtAUDate(prf.lastPeriod):'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
+  html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart?fmtAUDate(hrt.estrogenStart):'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart?fmtAUDate(hrt.progStart):'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart?fmtAUDate(hrt.testStart):'—')+'</td></tr><tr><td>Vaginal / Local Treatment</td><td>'+(hrt.vagName||'—')+'</td><td>'+(hrt.vagDose||'—')+'</td><td>'+(hrt.vagForm||'—')+'</td><td>—</td><td>—</td><td>'+(hrt.vagStart?fmtAUDate(hrt.vagStart):'—')+'</td></tr></table>';
   var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
   var somCount7=function(){var r=[];SOMATIC.forEach(function(k){var n=s7.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s7.length+' days');});return r.length>0?r.join(', '):'None logged';}();
   html+='<h2>7-Day Symptom Summary ('+rng(s7)+', n='+s7.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s7,'sleepQuality')+'/5</td><td>1=excellent | 5=poor</td></tr><tr><td>Night Wakings</td><td>'+avg(s7,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s7,'patience')+'/10</td><td>1=very patient | 10=very impatient</td></tr><tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s7)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s7,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b7+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a7+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t7.length>0?t7.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount7+'</td></tr></table>';
@@ -6625,7 +6625,7 @@ function renderNotes(filter) {
     var pri = n.priority || 'low';
     var txt = n.text || '';
     html += '<div class="gs-notes__card gs-notes__card--' + cat + (n.answered ? ' gs-notes__card--answered' : '') + '">';
-    html += '<div class="gs-notes__card-top"><span class="gs-notes__card-cat gs-notes__card-cat--' + cat + '">' + (_notesCatLabels[cat] || cat) + '</span><span class="gs-notes__card-date">' + n.date + '</span></div>';
+    html += '<div class="gs-notes__card-top"><span class="gs-notes__card-cat gs-notes__card-cat--' + cat + '">' + (_notesCatLabels[cat] || cat) + '</span><span class="gs-notes__card-date">' + fmtAUDate(n.date) + '</span></div>';
     html += '<p class="gs-notes__card-text">' + txt.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
     var badges = '';
     if (n.askAtAppointment) badges += '<span class="gs-notes__badge gs-notes__badge--ask">Ask at appointment</span>';
@@ -6642,6 +6642,14 @@ function renderNotes(filter) {
     html += '</div></div>';
   });
   container.innerHTML = html;
+}
+
+// Display-only AU date formatter (DD/MM/YYYY). Pure string manipulation on a
+// stored YYYY-MM-DD value — no Date parsing, so no timezone risk. Mirrors the
+// pattern already used in renderHRTHistory(). Never touches the stored value
+// itself; callers pass a copy and keep their own empty-value fallback text.
+function fmtAUDate(iso) {
+  return (iso && /^\d{4}-\d{2}-\d{2}/.test(iso)) ? iso.slice(0,10).split('-').reverse().join('/') : '';
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -6688,9 +6696,9 @@ function renderReport() {
   var hasProfile = prf.name || prf.dob || prf.menstrualStatus;
   if (hasProfile) {
     html += '<div class="gs-report__row"><span class="gs-report__row-label">Name</span><span class="gs-report__row-val">' + (prf.name || 'Not recorded') + '</span></div>';
-    html += '<div class="gs-report__row"><span class="gs-report__row-label">Date of Birth</span><span class="gs-report__row-val">' + (prf.dob || 'Not recorded') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Date of Birth</span><span class="gs-report__row-val">' + (prf.dob ? fmtAUDate(prf.dob) : 'Not recorded') + '</span></div>';
     html += '<div class="gs-report__row"><span class="gs-report__row-label">Menstrual Status</span><span class="gs-report__row-val">' + (prf.menstrualStatus || 'Not recorded') + '</span></div>';
-    html += '<div class="gs-report__row"><span class="gs-report__row-label">Last Period</span><span class="gs-report__row-val">' + (prf.lastPeriod || 'Not recorded') + '</span></div>';
+    html += '<div class="gs-report__row"><span class="gs-report__row-label">Last Period</span><span class="gs-report__row-val">' + (prf.lastPeriod ? fmtAUDate(prf.lastPeriod) : 'Not recorded') + '</span></div>';
   } else {
     html += '<p class="gs-report__text gs-report__text--muted">Complete your profile in Settings for a fuller report</p>';
   }
@@ -6827,7 +6835,7 @@ function renderReport() {
     html += '<div class="gs-report__card gs-report__card--gold">';
     html += '<p class="gs-report__card-label">YOUR NOTES</p>';
     notesArr.forEach(function(c) {
-      html += '<div class="gs-report__note-row"><span class="gs-report__note-date">' + c.date + '</span><span class="gs-report__note-text">' + c.notes + '</span></div>';
+      html += '<div class="gs-report__note-row"><span class="gs-report__note-date">' + fmtAUDate(c.date) + '</span><span class="gs-report__note-text">' + c.notes + '</span></div>';
     });
     html += '</div>';
   }
