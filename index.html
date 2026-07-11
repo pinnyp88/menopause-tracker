@@ -5678,7 +5678,13 @@ function exportData() {
   var rd = now.toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
   var s7 = getSample(arr).sample;
   var s30 = arr.filter(function(c){ return (now-new Date(c.date))<=30*86400000; });
-  var avg = function(a,f){ return a.length>0?(a.reduce(function(s,c){ return s+(parseFloat(c[f])||0); },0)/a.length).toFixed(1):'N/A'; };
+  var avg = function(a,f){
+    var vals = a.map(function(c){ return parseFloat(c[f]); })
+                .filter(function(v){ return !isNaN(v); });
+    return vals.length > 0
+      ? (vals.reduce(function(s,v){ return s+v; },0)/vals.length).toFixed(1)
+      : 'N/A';
+  };
   var b7=s7.filter(function(c){ return c.bleeding!=='none'; }).length;
   var b30=s30.filter(function(c){ return c.bleeding!=='none'; }).length;
   var d7 = s7.filter(function(c){ return c.loggedViaForm !== false; }).length;
