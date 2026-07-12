@@ -2273,7 +2273,7 @@ body {
    GARDEN SAGE — GP Report Screen
    ═══════════════════════════════════════════════════════════════ */
 .gs-report {
-  padding: 20px 16px 140px;
+  padding: 20px 16px 160px;
   max-width: 520px;
   margin: 0 auto;
 }
@@ -2416,18 +2416,11 @@ body {
 }
 .gs-report__note-row:last-child { border-bottom: none; }
 .gs-report__footer-bar {
-  position: fixed;
-  bottom: env(safe-area-inset-bottom, 0px);
-  left: 0;
-  right: 0;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
-  padding: 12px 20px;
-  padding-left: max(20px, env(safe-area-inset-left));
-  padding-right: max(20px, env(safe-area-inset-right));
   display: flex;
   gap: 10px;
-  z-index: 100;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
 }
 .gs-report__footer-btn {
   flex: 1;
