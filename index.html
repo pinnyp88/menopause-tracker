@@ -6366,7 +6366,7 @@ function renderTrends() {
   var insightParts = [];
   if (avgSleep !== null) insightParts.push('Your sleep averaged ' + avgSleep.toFixed(1) + ' hrs.');
   if (avgFog !== null) {
-    var fogWord = avgFog >= 7 ? 'low' : avgFog >= 4 ? 'moderate' : 'high';
+    var fogWord = avgFog >= 7 ? 'heavier' : avgFog >= 4 ? 'moderate' : 'clearer';
     insightParts.push('Brain fog was ' + fogWord + '.');
   }
   if (avgHF !== null) {
@@ -6405,16 +6405,15 @@ function renderTrends() {
   });
 
   // Section 4: HRT Change Markers
-  var hrt = getHRT();
+  var hrtHistInRange = getHRTHistory().filter(function(e) {
+    return (now - new Date(e.date)) <= cutoff;
+  }).sort(function(a,b) { return new Date(a.date) - new Date(b.date); });
   html += '<div class="gs-trends__card gs-trends__card--slate"><h3 class="gs-trends__card-heading">HRT Changes During This Period</h3>';
-  if (hrt.doseChangeDate) {
-    var changeDate = new Date(hrt.doseChangeDate);
-    var inRange = (now - changeDate) <= cutoff;
-    if (inRange) {
-      html += '<div class="gs-trends__hrt-event"><span class="gs-trends__hrt-date-pill">' + hrt.doseChangeDate + '</span><span class="gs-trends__hrt-desc">' + (hrt.doseChangeWhat || 'Dose change') + (hrt.doseChangeReason ? ' · ' + hrt.doseChangeReason : '') + '</span></div>';
-    } else {
-      html += '<p class="gs-trends__card-body">No HRT changes recorded in this period.</p>';
-    }
+  if (hrtHistInRange.length > 0) {
+    hrtHistInRange.forEach(function(e) {
+      var desc = (e.previous ? e.previous + ' → ' : '') + e.description + (e.reason ? ' · ' + e.reason : '');
+      html += '<div class="gs-trends__hrt-event"><span class="gs-trends__hrt-date-pill">' + e.date + '</span><span class="gs-trends__hrt-desc">' + desc + '</span></div>';
+    });
   } else {
     html += '<p class="gs-trends__card-body">No HRT changes recorded in this period.</p>';
   }
@@ -6925,9 +6924,10 @@ function renderReflection() {
     if (qPct === 100 && qForm.length > 0) weekQuote = 'Perfect HRT adherence this week. Your consistency is doing the work.';
     else if (qSleep !== null && qSleep >= 7) weekQuote = 'Sleep held up well this week. That matters more than you think.';
     else if (qSleep !== null && qSleep < 5.5) weekQuote = 'A tough week for sleep. Worth mentioning to your GP.';
-    else if (qFog !== null && qFog <= 4) weekQuote = 'A foggy week. Be kind to yourself — this is the menopause, not you.';
-    else if (qPatience !== null && qPatience >= 7) weekQuote = 'Your patience held steady this week. That’s not nothing.';
-    else if (qPatience !== null && qPatience < 4) weekQuote = 'A harder week emotionally. Every day you logged is useful data.';
+    else if (qFog !== null && qFog >= 7) weekQuote = 'Brain fog was heavier this week. Worth noting for your GP.';
+    else if (qFog !== null && qFog <= 3) weekQuote = 'Your mind felt clearer this week.';
+    else if (qPatience !== null && qPatience >= 7) weekQuote = 'A harder week for patience. You\'re not alone in that.';
+    else if (qPatience !== null && qPatience <= 3) weekQuote = 'Patience held steadier this week.';
     else weekQuote = 'A steadier week than last. Keep going — patterns take time.';
   }
   html += '<div class="review-quote-card"><p class="review-quote-text">“' + weekQuote + '”</p></div>';
@@ -7023,11 +7023,11 @@ function renderReflection() {
 
   // Brain fog
   if (avgFog !== null) {
-    var fogBorder = avgFog <= 3 ? 'reflection-card--peach' : avgFog >= 7 ? 'reflection-card--gold' : insightBorder(avgFog, pFog, false);
+    var fogBorder = avgFog >= 7 ? 'reflection-card--peach' : avgFog <= 3 ? 'reflection-card--gold' : insightBorder(avgFog, pFog, true);
     html += '<div class="reflection-card ' + fogBorder + '" style="' + cardDelay() + '">';
     html += '<p class="gs-reflect__insight-label">BRAIN FOG</p>';
     html += '<p class="gs-reflect__insight-val">' + avgFog.toFixed(1) + ' / 10</p>';
-    var fogNote = avgFog <= 3 ? 'Foggier than usual' : avgFog >= 7 ? 'Clearer than most weeks' : compareNote(avgFog, pFog, '', false);
+    var fogNote = avgFog >= 7 ? 'Brain fog was heavier this week. Worth noting for your GP.' : avgFog <= 3 ? 'Your mind felt clearer this week.' : compareNote(avgFog, pFog, '', true);
     html += '<p class="gs-reflect__insight-note">' + fogNote + '</p>';
     html += '</div>';
   }
