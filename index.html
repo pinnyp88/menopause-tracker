@@ -4726,6 +4726,9 @@ function login() {
 }
 function logout() {
   if (confirm('Log out? Your data will remain on this device.')) {
+    if (supabaseClient) {
+      supabaseClient.auth.signOut().then(function(){}).catch(function(){});
+    }
     localStorage.removeItem('user');
     localStorage.removeItem('userName');
     State.user = null; State.checkins = null; State.hrt = null; State.profile = null;
@@ -5818,10 +5821,24 @@ function importMyData(input) {
 function deleteAllData() {
   if (confirm('Delete ALL your data? This cannot be undone.')) {
     if (confirm('Are you absolutely sure?')) {
-      localStorage.clear();
-      State.checkins=null; State.hrt=null; State.profile=null;
-      State.user=null; State._sample=null; State._sampleValid=false;
-      alert('All data deleted.'); logout();
+      function _finishLocalWipe(cloudMsg) {
+        localStorage.clear();
+        State.checkins=null; State.hrt=null; State.profile=null;
+        State.user=null; State._sample=null; State._sampleValid=false;
+        alert(cloudMsg);
+        logout();
+      }
+      if (_cloudUserId && supabaseClient) {
+        supabaseClient.from('user_data').delete().eq('user_id', _cloudUserId).then(function(res) {
+          if (res.error) {
+            _finishLocalWipe('Data deleted from this device. The cloud copy could not be removed right now — please try again while online, or log in on another device to remove it.');
+          } else {
+            _finishLocalWipe('All data deleted, including your cloud copy.');
+          }
+        });
+      } else {
+        _finishLocalWipe('Data deleted from this device. If you are signed in elsewhere, log in there to remove the cloud copy.');
+      }
     }
   }
 }
