@@ -1109,7 +1109,7 @@ body {
    GARDEN SAGE — Daily Check-In
    ═══════════════════════════════════════════════════════════════ */
 .gs-checkin {
-  padding: var(--space-4) var(--space-4) 100px;
+  padding: var(--space-4) var(--space-4) 180px;
   max-width: 520px;
   margin: 0 auto;
 }
@@ -3202,12 +3202,22 @@ body {
 
 /* ═══ Custom Emoji Mood Selector ═══ */
 .emoji-row { display: flex; justify-content: space-between; gap: 8px; margin: 12px 0; }
-.emoji-opt { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 8px 4px; border-radius: 12px; border: 2px solid transparent; background: transparent; transition: all 0.15s ease; flex: 1; }
+.emoji-opt { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 8px 4px; border-radius: 12px; border: 2px solid transparent; background: transparent; transition: all 0.15s ease; flex: 1; min-width: 0; }
 .emoji-face { font-size: 32px; line-height: 1; display: block; transition: transform 0.15s ease; }
-.emoji-label { font-family: Inter, sans-serif; font-size: 10px; color: #3A5C4E; text-align: center; }
+.emoji-label { font-family: Inter, sans-serif; font-size: 10px; color: #3A5C4E; text-align: center; overflow-wrap: break-word; word-break: break-word; }
 .emoji-opt.selected { background: #EBF2EE; border: 2px solid #3A5C4E; }
 .emoji-opt.selected .emoji-face { transform: scale(1.15); }
 .emoji-opt.selected .emoji-label { color: #3A5C4E; font-weight: 600; }
+
+/* Narrow phones (iPhone SE / 320px): even with wrapping allowed, five
+   labels + gaps are tight, so tighten gap/padding/sizing just for this
+   breakpoint — 375px+ and desktop keep the original, more legible sizing. */
+@media (max-width: 360px) {
+  .emoji-row { gap: 2px; }
+  .emoji-opt { padding: 6px 2px; gap: 4px; }
+  .emoji-face { font-size: 26px; }
+  .emoji-label { font-size: 9px; }
+}
 
 /* ═══ Custom Slider ═══ */
 .custom-slider-wrap { padding: 8px 0; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y; }
@@ -3504,6 +3514,19 @@ body {
   padding: 22px 20px 6px;
 }
 
+/* De-emphasised secondary hero line — keeps the explanatory sentence
+   without giving it the same headline weight as the greeting, the
+   rotating subtext, and the motivational prompt right above/below it */
+.gs-dashboard__hero-note {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
 /* Tightened hero rhythm (~20%) */
 .gs-dashboard__hero .gs-dashboard__subtext { margin-bottom: 16px !important; }
 .gs-dashboard__hero .gs-motivational { margin-bottom: 8px; }
@@ -3703,7 +3726,7 @@ body {
         <!-- Greeting -->
         <h1 class="gs-dashboard__greeting screen-title" id="dashGreeting">Hello.</h1>
         <p class="gs-dashboard__subtext" id="dashSubtext">Ready for today?</p>
-        <p class="gs-dashboard__subtext" style="margin-top:2px;">Track your symptoms, whether you're working toward HRT or already on it.</p>
+        <p class="gs-dashboard__hero-note">Track your symptoms, whether you're working toward HRT or already on it.</p>
 
         <!-- Motivational prompt -->
         <p class="gs-motivational" id="dashMotivational"></p>
@@ -5685,7 +5708,7 @@ function exportData() {
   var uri=function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+' days)'; }).join(', ')||'None reported'; };
 
   var html='';
-  html+='<h1>HerTrace - GP Clinical Summary Report</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Report Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
+  html+='<h1>HerTrace GP Clinical Summary Report</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Report Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
   html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob?fmtAUDate(prf.dob):'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod?fmtAUDate(prf.lastPeriod):'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
   html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart?fmtAUDate(hrt.estrogenStart):'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart?fmtAUDate(hrt.progStart):'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart?fmtAUDate(hrt.testStart):'—')+'</td></tr><tr><td>Vaginal / Local Treatment</td><td>'+(hrt.vagName||'—')+'</td><td>'+(hrt.vagDose||'—')+'</td><td>'+(hrt.vagForm||'—')+'</td><td>—</td><td>—</td><td>'+(hrt.vagStart?fmtAUDate(hrt.vagStart):'—')+'</td></tr></table>';
   var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
