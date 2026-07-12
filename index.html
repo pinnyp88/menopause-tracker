@@ -5411,7 +5411,13 @@ function updateDashboard() {
   setEl('dashboardNotice', res.label);
 
   if (s.length > 0) {
-    var avg = function(f){ return (s.reduce(function(x,c){ return x+(parseFloat(c[f])||0); },0)/s.length).toFixed(1); };
+    var avg = function(f){
+      var vals = s.map(function(c){ return parseFloat(c[f]); })
+                  .filter(function(v){ return !isNaN(v); });
+      return vals.length > 0
+        ? (vals.reduce(function(x,v){ return x+v; },0)/vals.length).toFixed(1)
+        : '—';
+    };
     setEl('avgSleep', avg('sleep'));
     setEl('avgPatience', avg('patience'));
     setEl('avgBrainFog', avg('brainFog'));
