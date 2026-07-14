@@ -1,0 +1,8 @@
+{
+  "name": "hertrace",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "stripe": "^22.2.0"
+  }
+}
