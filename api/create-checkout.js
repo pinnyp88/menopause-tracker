@@ -26,8 +26,8 @@ export default async function handler(req, res) {
       subscription_data: {
         trial_period_days: 14,
       },
-      success_url: 'https://hertrace.com.au?checkout=success',
-      cancel_url: 'https://hertrace.com.au?checkout=cancel',
+      success_url: 'https://menopause-tracker-alpha.vercel.app?checkout=success',
+      cancel_url: 'https://menopause-tracker-alpha.vercel.app?checkout=cancel',
     };
 
     if (customerEmail) {
