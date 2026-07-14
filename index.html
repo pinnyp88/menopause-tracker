@@ -2635,6 +2635,44 @@ body {
 }
 .qa-toast.show { opacity: 1; }
 
+/* ═══ Paywall Overlay (Stripe) ═══ */
+.paywall-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4);
+  z-index: 350; display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.paywall-overlay.show { opacity: 1; pointer-events: auto; }
+.paywall-modal {
+  background: #FFFFFF; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%;
+  box-shadow: 0 8px 40px rgba(58,92,78,0.25);
+}
+.paywall-modal h2 {
+  font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 500;
+  color: #3A5C4E; text-align: center; margin: 0 0 8px;
+}
+.paywall-modal p {
+  font-family: 'Inter', sans-serif; font-size: 14px; color: #6B7280;
+  text-align: center; line-height: 1.5; margin: 0 0 22px;
+}
+.paywall-btn {
+  position: relative; width: 100%; min-height: 52px; border-radius: 50px;
+  font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;
+  margin-bottom: 12px; padding: 12px 20px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity 0.15s ease;
+}
+.paywall-btn[disabled] { opacity: 0.7; cursor: default; }
+.paywall-btn--primary { background: #3A5C4E; color: #F4F0E8; border: none; }
+.paywall-btn--secondary { background: #FFFFFF; color: #3A5C4E; border: 1.5px solid #3A5C4E; }
+.paywall-btn__badge {
+  font-size: 11px; font-weight: 700; background: #E8C87A; color: #633806;
+  border-radius: 50px; padding: 2px 8px; letter-spacing: 0.03em;
+}
+.paywall-dismiss {
+  display: block; margin: 8px auto 0; min-height: 44px; background: none; border: none;
+  color: #6B7280; font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer;
+}
+
 /* ═══ Save Delight ═══ */
 .btn-save-success { background: #4A6B5C !important; transition: background 0.3s ease, transform 0.4s ease; }
 .save-success-message {
@@ -4029,6 +4067,63 @@ function toggleOther(s, o) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// SUBSCRIPTION / PAYWALL (Stripe)
+// ═══════════════════════════════════════════════════════════════
+var FREE_ACCESS_EMAILS = ['jinu.bisaun@gmail.com', 'lenka.porkert@gmail.com',
+  'pinnyp88@gmail.com', 'ela-j@hotmail.com', 'kellwhittaker@outlook.com'];
+
+// Resolve the signed-in user's email synchronously, lowercased. The live
+// Supabase session email is mirrored into both #settingsEmail and
+// localStorage.user.email by syncSettingsEmail() at sign-in, so those two
+// are the synchronous source of truth (getSession() itself is async).
+function getUserEmail() {
+  var el = document.getElementById('settingsEmail');
+  if (el) {
+    var t = (el.textContent || '').trim();
+    if (t && t !== '—' && t !== 'there' && t.indexOf('@') > 0) return t.toLowerCase();
+  }
+  try {
+    var u = JSON.parse(localStorage.getItem('user') || '{}');
+    if (u.email && u.email.indexOf('@') > 0) return u.email.toLowerCase();
+  } catch (e) {}
+  return '';
+}
+
+function checkSubscription() {
+  var email = getUserEmail();
+  if (email && FREE_ACCESS_EMAILS.some(function(e){ return e.toLowerCase() === email; })) return true;
+  if (localStorage.getItem('hertrace_subscription') === 'active') return true;
+  return false;
+}
+
+function showPaywall() { var o = document.getElementById('paywallOverlay'); if (o) o.classList.add('show'); }
+function hidePaywall() { var o = document.getElementById('paywallOverlay'); if (o) o.classList.remove('show'); }
+
+function startCheckout(plan) {
+  var priceId = plan === 'yearly'
+    ? 'price_1TszNE2KFI3mowQ2SnmRaUGq'
+    : 'price_1TszNE2KFI3mowQ2jWqam0zp';
+  var btnId = plan === 'yearly' ? 'paywallYearlyBtn' : 'paywallMonthlyBtn';
+  var btn = document.getElementById(btnId);
+  var origHTML = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to checkout…'; }
+  fetch('/api/create-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ priceId: priceId, customerEmail: getUserEmail() })
+  })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data && data.url) { window.location.href = data.url; }
+      else { throw new Error((data && data.error) || 'No checkout URL returned'); }
+    })
+    .catch(function(err){
+      if (btn) { btn.disabled = false; btn.innerHTML = origHTML; }
+      alert('Sorry, we couldn’t start checkout just now. Please try again in a moment.');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
 // PROFILE
 // ═══════════════════════════════════════════════════════════════
 function saveProfile() {
@@ -4951,6 +5046,10 @@ function calNavMonth(dir) {
 // GP REPORT
 // ═══════════════════════════════════════════════════════════════
 function exportData() {
+  if (!checkSubscription()) {
+    showPaywall();
+    return;
+  }
   var arr = getCheckins();
   var hrt = getHRT();
   var usr = getUser();
@@ -5150,6 +5249,27 @@ function migrateScaleV2() {
 
 migrateScaleV2();
 loadUser();
+
+// ═══════════════════════════════════════════════════════════════
+// STRIPE RETURN — mark subscription active on successful checkout.
+// Stage-2's success_url redirects back with ?checkout=success.
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('checkout') === 'success') {
+    localStorage.setItem('hertrace_subscription', 'active');
+    // Strip the param so a later refresh doesn't re-toast.
+    params.delete('checkout');
+    var qs = params.toString();
+    history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
+    var toast = document.getElementById('qaToast');
+    if (toast) {
+      toast.textContent = 'Subscription active! Your GP Report is now unlocked.';
+      toast.classList.add('show');
+      setTimeout(function(){ toast.classList.remove('show'); }, 4000);
+    }
+  }
+})();
 
 /* ═══════════════════════════════════════════════════════════════
    GARDEN SAGE — Component Factories v2
@@ -6402,6 +6522,17 @@ function renderReflection() {
   </div>
 </div>
 <div class="qa-toast" id="qaToast"></div>
+
+<!-- Paywall (Stripe subscription gate for GP Report) -->
+<div class="paywall-overlay" id="paywallOverlay">
+  <div class="paywall-modal">
+    <h2>Unlock Your GP Report</h2>
+    <p>Get a print-ready clinical summary to share with your doctor. Try free for 14 days, cancel anytime.</p>
+    <button class="paywall-btn paywall-btn--primary" id="paywallYearlyBtn" onclick="startCheckout('yearly')"><span class="paywall-btn__badge">Best value</span>$29.99/year</button>
+    <button class="paywall-btn paywall-btn--secondary" id="paywallMonthlyBtn" onclick="startCheckout('monthly')">$4.99/month</button>
+    <button class="paywall-dismiss" onclick="hidePaywall()">Maybe later</button>
+  </div>
+</div>
 
 <script>
 document.fonts.ready.then(function() {
