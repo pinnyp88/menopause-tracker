@@ -4055,7 +4055,7 @@ function showPage(n, b) {
   if (activeTab) activeTab.classList.add('gs-tab--active');
   if (n === 'dashboard') updateDashboard();
   if (n === 'checkin') { document.getElementById('checkinDate').value = localDate(); loadCheckinForDate(); syncCheckinVisuals(); setMotivational('checkinMotivational', CHECKIN_PROMPTS[Math.floor(Math.random()*CHECKIN_PROMPTS.length)]); }
-  if (n === 'trends') { renderTrends(); var tc=getCheckins(); setMotivational('trendsMotivational', tc.length<7 ? 'Patterns take time to appear. Keep going.' : 'Here’s what your data is telling you.'); }
+  if (n === 'trends') { renderTrends(); var tc=getCheckins(); setMotivational('trendsMotivational', tc.length<7 ? 'Patterns take time to appear. Keep going.' : 'A summary of what you’ve logged.'); }
   if (n === 'reflection') renderReflection();
   if (n === 'report') renderReport();
   if (n === 'notes') renderNotes('all');
@@ -5807,7 +5807,7 @@ function renderTrends() {
   } else {
     html += '<p class="gs-trends__card-body">No HRT changes recorded in this period.</p>';
   }
-  html += '<p class="gs-trends__card-sub">HRT change markers help you spot symptom shifts after dose adjustments.</p></div>';
+  html += '<p class="gs-trends__card-sub">Changes you\'ve recorded to your HRT are marked on your timeline.</p></div>';
 
   // Section 5: Top Triggers
   html += '<div class="gs-trends__card gs-trends__card--peach"><h3 class="gs-trends__card-heading">What\'s Been Triggering You</h3>';
@@ -5877,7 +5877,7 @@ function renderTrends() {
       var y1 = h - 4 - ((vals[i] - mn) / range) * (h - 8);
       var y2 = h - 4 - ((vals[i + 1] - mn) / range) * (h - 8);
       ctx.beginPath();
-      ctx.strokeStyle = (vals[i] > 7 || vals[i + 1] > 7) ? '#D4836A' : '#3A5C4E';
+      ctx.strokeStyle = '#3A5C4E';
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
@@ -6343,7 +6343,7 @@ function renderReflection() {
   html += '</div>';
 
   // Section 3: Insight cards
-  html += '<h2 class="gs-reflect__section-heading">What we noticed</h2>';
+  html += '<h2 class="gs-reflect__section-heading">Your week in numbers</h2>';
 
   function compareNote(curr, prev, unit, lowerBetter) {
     if (prev === null || prev === undefined) return 'Not enough prior data to compare';
