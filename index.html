@@ -4730,10 +4730,10 @@ function trendBadge(s, f, up) {
   var f1 = sorted.slice(0,mid).reduce(function(x,c){ return x+(parseFloat(c[f])||0); },0)/mid;
   var f2 = sorted.slice(mid).reduce(function(x,c){ return x+(parseFloat(c[f])||0); },0)/(sorted.length-mid);
   var d = f2 - f1;
-  if (Math.abs(d) < 0.3) return '<span class="trend-indicator trend-stable">→ Stable</span>';
+  if (Math.abs(d) < 0.3) return '<span class="trend-indicator trend-stable">→ no change</span>';
   var ok = up ? d > 0 : d < 0;
-  return ok ? '<span class="trend-indicator trend-up">↑ Improving</span>'
-            : '<span class="trend-indicator trend-down">↓ Worsening</span>';
+  return ok ? '<span class="trend-indicator trend-stable">↑ vs last period</span>'
+            : '<span class="trend-indicator trend-stable">↓ vs last period</span>';
 }
 
 function getTopTriggers(s) {
