@@ -4898,14 +4898,14 @@ function updateDashboard() {
     var ha = haForm.filter(function(c){ return c.hrtTaken; }).length;
     var haPct = haForm.length > 0 ? Math.round((ha / haForm.length) * 100) : 0;
     var tt = getTopTriggers(s);
-    var insight = "You’re doing great. Keep logging daily.";
-    if (sl < 5.5) insight = 'Sleep has been your biggest challenge.';
-    else if (bf > 7) insight = 'Brain fog is running high this week.';
-    else if (pa < 4) insight = 'Your patience is holding strong.';
-    else if (haForm.length >= 3 && haPct < 70) insight = 'HRT adherence dipped this week.';
-    else if (tt.length > 0) insight = 'Your top trigger: ' + tt[0].split(' (')[0] + '.';
-    else if (sl >= 7) insight = 'Sleep is looking solid this week.';
-    else if (bf < 4) insight = 'Mental clarity is on your side.';
+    var insight = 'You logged ' + s.length + (s.length === 1 ? ' day' : ' days') + ' this week.';
+    if (sl < 5.5) insight = 'Sleep averaged ' + sl.toFixed(1) + ' hrs this week.';
+    else if (bf > 7) insight = 'Brain fog averaged ' + bf.toFixed(1) + ' / 10 this week.';
+    else if (pa < 4) insight = 'Patience averaged ' + pa.toFixed(1) + ' / 10 this week.';
+    else if (haForm.length >= 3 && haPct < 70) insight = 'HRT logged as taken on ' + ha + ' of ' + haForm.length + ' logged days this week.';
+    else if (tt.length > 0) insight = 'Most-logged trigger: ' + tt[0].split(' (')[0] + '.';
+    else if (sl >= 7) insight = 'Sleep averaged ' + sl.toFixed(1) + ' hrs this week.';
+    else if (bf < 4) insight = 'Brain fog averaged ' + bf.toFixed(1) + ' / 10 this week.';
     insightEl.textContent = insight;
   }
 
@@ -4919,13 +4919,13 @@ function updateDashboard() {
     var mc = avgFn2('mentalClarity');
     var areas = [{name:'Work',v:wi},{name:'Relationships',v:ri},{name:'Energy',v:ei},{name:'Mental clarity',v:mc}];
     areas.sort(function(a,b){ return b.v - a.v; });
-    var impactText = 'Life areas remained balanced this week.';
+    var impactText = areas[0].name + ' impact averaged ' + areas[0].v.toFixed(1) + ' / 10 this week.';
     if (areas[0].v > 6 && areas[1].v > 6) {
-      impactText = areas[0].name + ' and ' + areas[1].name.toLowerCase() + ' felt the strain this week.';
+      impactText = areas[0].name + ' ' + areas[0].v.toFixed(1) + ' and ' + areas[1].name.toLowerCase() + ' ' + areas[1].v.toFixed(1) + ' (impact avg / 10 this week).';
     } else if (areas[0].v > 6) {
-      impactText = areas[0].name + ' impact was significant. Other areas held steady.';
+      impactText = areas[0].name + ' impact averaged ' + areas[0].v.toFixed(1) + ' / 10 this week.';
     } else if (areas[0].v < 4) {
-      impactText = 'A steady week across all areas.';
+      impactText = areas[0].name + ' impact averaged ' + areas[0].v.toFixed(1) + ' / 10 this week.';
     }
     impactEl.textContent = impactText;
   }
@@ -5746,9 +5746,9 @@ function renderTrends() {
   }
 
   function trendBadgeHtml(dir) {
-    if (dir === 'up') return '<span class="gs-trends__trend-badge gs-trends__trend-badge--up">↑ Improving</span>';
-    if (dir === 'down') return '<span class="gs-trends__trend-badge gs-trends__trend-badge--down">↓ Worsening</span>';
-    return '<span class="gs-trends__trend-badge gs-trends__trend-badge--stable">→ Stable</span>';
+    if (dir === 'up') return '<span class="gs-trends__trend-badge gs-trends__trend-badge--stable">↑ vs last period</span>';
+    if (dir === 'down') return '<span class="gs-trends__trend-badge gs-trends__trend-badge--stable">↓ vs last period</span>';
+    return '<span class="gs-trends__trend-badge gs-trends__trend-badge--stable">→ no change</span>';
   }
 
   // Section 2: Main Insight Card
@@ -5758,12 +5758,10 @@ function renderTrends() {
   var insightParts = [];
   if (avgSleep !== null) insightParts.push('Your sleep averaged ' + avgSleep.toFixed(1) + ' hrs.');
   if (avgFog !== null) {
-    var fogWord = avgFog >= 7 ? 'heavier' : avgFog >= 4 ? 'moderate' : 'clearer';
-    insightParts.push('Brain fog was ' + fogWord + '.');
+    insightParts.push('Brain fog averaged ' + avgFog.toFixed(1) + ' / 10.');
   }
   if (avgHF !== null) {
-    var hfWord = avgHF < 1 ? 'rare' : avgHF <= 3 ? 'mild on most days' : 'frequent';
-    insightParts.push('Hot flushes were ' + hfWord + '.');
+    insightParts.push('Hot flushes averaged ' + avgHF.toFixed(1) + ' / day.');
   }
   var insightText = insightParts.length > 0 ? insightParts.join(' ') : 'Start logging daily to see your trends here.';
   html += '<div class="gs-trends__card gs-trends__card--gold"><h3 class="gs-trends__card-heading">This period at a glance</h3><p class="gs-trends__card-body">' + insightText + '</p></div>';
@@ -5783,7 +5781,7 @@ function renderTrends() {
     var a = avg(m.field);
     if (a === null) return;
     var dir = trendDir(m.field, m.upGood);
-    var borderClass = dir === 'up' ? 'gs-trends__card--gold' : dir === 'down' ? 'gs-trends__card--peach' : '';
+    var borderClass = '';
     html += '<div class="gs-trends__card ' + borderClass + '">';
     html += '<p class="gs-trends__metric-label">' + m.label + '</p>';
     html += '<div class="gs-trends__metric-row"><span class="gs-trends__metric-big">' + a.toFixed(1) + '</span><span style="font-size:13px;color:#6B7280;">' + m.unit + '</span>' + trendBadgeHtml(dir) + '</div>';
@@ -6106,8 +6104,7 @@ function renderReport() {
   }
   function fmt(v) { return v !== null ? v.toFixed(1) : 'N/A'; }
   function alertCls(v, thresh, isLow) {
-    if (v === null) return '';
-    return (isLow ? v < thresh : v >= thresh) ? ' gs-report__row-val--alert' : '';
+    return '';
   }
 
   // Section 2: Patient details
@@ -6156,7 +6153,7 @@ function renderReport() {
   var uriSum7 = (function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none') c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+')'; }).join(', ')||'None reported'; })(s7);
 
   html += '<div class="gs-report__card gs-report__card--slate">';
-  html += '<p class="gs-report__card-label gs-report__card-label--slate">LAST 7 DAYS</p>';
+  html += '<p class="gs-report__card-label gs-report__card-label--slate">WHAT YOU LOGGED — LAST 7 DAYS</p>';
   html += '<div class="gs-report__row"><span class="gs-report__row-label">Sleep</span><span class="gs-report__row-val' + alertCls(avgSleep7,6,true) + '">' + fmt(avgSleep7) + ' hrs</span></div>';
   html += '<div class="gs-report__row"><span class="gs-report__row-label">Brain Fog</span><span class="gs-report__row-val' + alertCls(avgFog7,7,false) + '">' + fmt(avgFog7) + ' / 10</span></div>';
   html += '<div class="gs-report__row"><span class="gs-report__row-label">Patience</span><span class="gs-report__row-val">' + fmt(avgPat7) + ' / 10</span></div>';
@@ -6205,26 +6202,6 @@ function renderReport() {
     html += '<div class="gs-report__row"><span class="gs-report__row-label">Urinary</span><span class="gs-report__row-val gs-report__text--sm">' + uriSum30 + '</span></div>';
     html += '</div>';
   }
-
-  // Section 6: Clinical flags
-  html += '<div class="gs-report__card gs-report__card--peach">';
-  html += '<p class="gs-report__card-label gs-report__card-label--peach">WORTH MENTIONING TO YOUR GP</p>';
-  var flags = [];
-  if ((avgHF7 !== null && avgHF7 >= 2) || (avgHFC7 !== null && avgHFC7 > 3)) flags.push('Hot flushes were frequent or moderate.');
-  if (b7 > 0) flags.push('Bleeding or spotting on ' + b7 + ' day' + (b7!==1?'s':'') + '.');
-  if (a7 !== null && a7 < 80) flags.push('HRT missed on some days — ' + a7 + '% taken.');
-  if (avgFog7 !== null && avgFog7 >= 7) flags.push('Significant brain fog most days.');
-  if (avgSleep7 !== null && avgSleep7 < 6) flags.push('Sleep averaged under 6 hours.');
-  if (avgWork7 !== null && avgWork7 >= 7) flags.push('Menopause significantly affected work.');
-  if (avgNS7 !== null && avgNS7 >= 2) flags.push('Moderate to severe night sweats.');
-  if (flags.length > 0) {
-    html += '<ul class="gs-report__flags-list">';
-    flags.forEach(function(f) { html += '<li>' + f + '</li>'; });
-    html += '</ul>';
-  } else {
-    html += '<p class="gs-report__text">No major flags in the last 7 days. Keep logging.</p>';
-  }
-  html += '</div>';
 
   // Section 7: HRT change history
   var hrtHist = getHRTHistory();
@@ -6305,7 +6282,7 @@ function renderReflection() {
   html += '<p class="gs-reflect__logged">' + week.length + ' day' + (week.length !== 1 ? 's' : '') + ' logged this week</p>';
 
   // Review quote card
-  var weekQuote = 'Start logging to see your weekly reflection.';
+  var weekQuote = 'Start logging to see your weekly summary.';
   if (week.length > 0) {
     var qSleep = wavg(week, 'sleep');
     var qFog = wavg(week, 'brainFog');
@@ -6313,16 +6290,16 @@ function renderReflection() {
     var qForm = week.filter(function(c){ return c.loggedViaForm !== false; });
     var qAdhered = qForm.filter(function(c){ return c.hrtTaken; }).length;
     var qPct = qForm.length > 0 ? Math.round((qAdhered / qForm.length) * 100) : 0;
-    if (qPct === 100 && qForm.length > 0) weekQuote = 'Perfect HRT adherence this week. Your consistency is doing the work.';
-    else if (qSleep !== null && qSleep >= 7) weekQuote = 'Sleep held up well this week. That matters more than you think.';
-    else if (qSleep !== null && qSleep < 5.5) weekQuote = 'A tough week for sleep. Worth mentioning to your GP.';
-    else if (qFog !== null && qFog >= 7) weekQuote = 'Brain fog was heavier this week. Worth noting for your GP.';
-    else if (qFog !== null && qFog <= 3) weekQuote = 'Your mind felt clearer this week.';
-    else if (qPatience !== null && qPatience >= 7) weekQuote = 'A harder week for patience. You\'re not alone in that.';
-    else if (qPatience !== null && qPatience <= 3) weekQuote = 'Patience held steadier this week.';
-    else weekQuote = 'A steadier week than last. Keep going — patterns take time.';
+    if (qPct === 100 && qForm.length > 0) weekQuote = 'HRT logged as taken on all ' + qForm.length + ' logged days this week.';
+    else if (qSleep !== null && qSleep >= 7) weekQuote = 'Sleep averaged ' + qSleep.toFixed(1) + ' hrs this week.';
+    else if (qSleep !== null && qSleep < 5.5) weekQuote = 'Sleep averaged ' + qSleep.toFixed(1) + ' hrs this week.';
+    else if (qFog !== null && qFog >= 7) weekQuote = 'Brain fog averaged ' + qFog.toFixed(1) + ' / 10 this week.';
+    else if (qFog !== null && qFog <= 3) weekQuote = 'Brain fog averaged ' + qFog.toFixed(1) + ' / 10 this week.';
+    else if (qPatience !== null && qPatience >= 7) weekQuote = 'Patience averaged ' + qPatience.toFixed(1) + ' / 10 this week.';
+    else if (qPatience !== null && qPatience <= 3) weekQuote = 'Patience averaged ' + qPatience.toFixed(1) + ' / 10 this week.';
+    else weekQuote = week.length + (week.length === 1 ? ' day' : ' days') + ' logged this week.';
   }
-  html += '<div class="review-quote-card"><p class="review-quote-text">“' + weekQuote + '”</p></div>';
+  html += '<div class="review-quote-card"><p class="review-quote-text">' + weekQuote + '</p></div>';
 
   if (week.length < 3) {
     html += '<div class="reflection-card reflection-card--sage gs-reflect__empty" style="' + cardDelay() + '"><h2>Not enough data yet</h2><p>Log at least 3 days this week to see your weekly reflection.</p><button class="gs-reflect__empty-btn" onclick="showPage(\'checkin\',null)">Go to Daily Log</button></div>';
@@ -6352,31 +6329,12 @@ function renderReflection() {
 
   // Section 2: Reflection quote
   var frags = [];
-  if (avgSleep !== null) {
-    if (avgSleep >= 7) frags.push('Sleep was kind to you this week.');
-    else if (avgSleep < 6) frags.push('Sleep was a struggle.');
-    else frags.push('Sleep was mixed.');
-  }
-  if (avgFog !== null) {
-    if (avgFog >= 7) frags.push('Brain fog made things harder.');
-    else if (avgFog <= 4) frags.push('Your mind felt clearer than usual.');
-    else frags.push('Mental clarity had its ups and downs.');
-  }
-  if (avgPatience !== null) {
-    if (avgPatience >= 7) frags.push('Patience was in short supply.');
-    else if (avgPatience <= 4) frags.push('Your patience held up well.');
-  }
-  if (avgHFC !== null) {
-    if (avgHFC > 3) frags.push('Hot flushes were frequent.');
-    else if (avgHFC <= 1) frags.push('Hot flushes were minimal.');
-  }
-  var quoteText = frags.slice(0, 3).join(' ') || 'Keep logging to build your weekly picture.';
+  if (avgSleep !== null) frags.push('Sleep averaged ' + avgSleep.toFixed(1) + ' hrs');
+  if (avgFog !== null) frags.push('brain fog ' + avgFog.toFixed(1) + ' / 10');
+  if (avgHFC !== null) frags.push('hot flushes ' + avgHFC.toFixed(1) + ' / day');
+  var quoteText = frags.length > 0 ? frags.join(', ') + ' this week.' : 'Keep logging to build your weekly summary.';
 
-  var closing = 'Every day you log is data that helps you.';
-  if (avgMood !== null) {
-    if (avgMood >= 4) closing = 'A stronger week than it might have felt.';
-    else if (avgMood <= 2) closing = 'You showed up every day. That matters.';
-  }
+  var closing = 'You logged ' + week.length + (week.length === 1 ? ' day' : ' days') + ' this week.';
 
   html += '<div class="reflection-card reflection-card--gold" style="' + cardDelay() + '">';
   html += '<p class="gs-reflect__card-label">THIS WEEK</p>';
@@ -6390,17 +6348,13 @@ function renderReflection() {
   function compareNote(curr, prev, unit, lowerBetter) {
     if (prev === null || prev === undefined) return 'Not enough prior data to compare';
     var diff = curr - prev;
-    if (Math.abs(diff) < 0.3) return 'Holding steady';
+    if (Math.abs(diff) < 0.3) return 'No change from last week';
     var dir = diff > 0 ? 'Up' : 'Down';
     return dir + ' from ' + prev.toFixed(1) + unit + ' last week';
   }
 
   function insightBorder(curr, prev, lowerBetter) {
-    if (prev === null || prev === undefined) return 'reflection-card--sage';
-    var diff = curr - prev;
-    if (Math.abs(diff) < 0.3) return 'reflection-card--sage';
-    var improved = lowerBetter ? diff < 0 : diff > 0;
-    return improved ? 'reflection-card--gold' : 'reflection-card--peach';
+    return 'reflection-card--sage';
   }
 
   // Sleep
@@ -6415,23 +6369,22 @@ function renderReflection() {
 
   // Brain fog
   if (avgFog !== null) {
-    var fogBorder = avgFog >= 7 ? 'reflection-card--peach' : avgFog <= 3 ? 'reflection-card--gold' : insightBorder(avgFog, pFog, true);
+    var fogBorder = 'reflection-card--sage';
     html += '<div class="reflection-card ' + fogBorder + '" style="' + cardDelay() + '">';
     html += '<p class="gs-reflect__insight-label">BRAIN FOG</p>';
     html += '<p class="gs-reflect__insight-val">' + avgFog.toFixed(1) + ' / 10</p>';
-    var fogNote = avgFog >= 7 ? 'Brain fog was heavier this week. Worth noting for your GP.' : avgFog <= 3 ? 'Your mind felt clearer this week.' : compareNote(avgFog, pFog, '', true);
+    var fogNote = compareNote(avgFog, pFog, '', true);
     html += '<p class="gs-reflect__insight-note">' + fogNote + '</p>';
     html += '</div>';
   }
 
   // Hot flushes
   if (avgHFC !== null) {
-    var hfBorder = insightBorder(avgHFC, pHFC, true);
-    if (avgHFC > 3) hfBorder = 'reflection-card--peach';
+    var hfBorder = 'reflection-card--sage';
     html += '<div class="reflection-card ' + hfBorder + '" style="' + cardDelay() + '">';
     html += '<p class="gs-reflect__insight-label">HOT FLUSHES</p>';
     html += '<p class="gs-reflect__insight-val">' + avgHFC.toFixed(1) + ' / day</p>';
-    var hfNote = avgHFC > 3 ? 'Frequent this week' : avgHFC <= 1 ? 'Minimal this week' : compareNote(avgHFC, pHFC, '/day', true);
+    var hfNote = compareNote(avgHFC, pHFC, '/day', true);
     html += '<p class="gs-reflect__insight-note">' + hfNote + '</p>';
     html += '</div>';
   }
@@ -6442,7 +6395,7 @@ function renderReflection() {
     var impLabel = useWork ? 'WORK IMPACT' : 'RELATIONSHIP IMPACT';
     var impVal = useWork ? avgWork : avgRel;
     var impPrior = useWork ? pWork : pRel;
-    var impBorder = (impVal || 0) >= 7 ? 'reflection-card--peach' : insightBorder(impVal, impPrior, true);
+    var impBorder = 'reflection-card--sage';
     html += '<div class="reflection-card ' + impBorder + '" style="' + cardDelay() + '">';
     html += '<p class="gs-reflect__insight-label">' + impLabel + '</p>';
     html += '<p class="gs-reflect__insight-val">' + (impVal || 0).toFixed(1) + ' / 10</p>';
@@ -6450,29 +6403,25 @@ function renderReflection() {
     html += '</div>';
   }
 
-  // Section 4: GP note
-  html += '<div class="reflection-card reflection-card--slate" style="' + cardDelay() + '">';
-  html += '<p class="gs-reflect__card-label gs-reflect__card-label--slate">FOR YOUR NEXT GP VISIT</p>';
-  html += '<h3 class="gs-reflect__gp-heading">Worth mentioning</h3>';
-  var gpItems = [];
-  if ((avgHF !== null && avgHF >= 2) || (avgHFC !== null && avgHFC > 3)) gpItems.push('Hot flushes were frequent or moderate this week.');
-  var bleedDays = week.filter(function(c) { return c.bleeding && c.bleeding !== 'none'; }).length;
-  if (bleedDays > 0) gpItems.push('Bleeding or spotting occurred on ' + bleedDays + ' day' + (bleedDays !== 1 ? 's' : '') + '.');
+  // Section 4: What you logged this week (neutral, complete — no selection)
+  html += '<div class="reflection-card reflection-card--sage" style="' + cardDelay() + '">';
+  html += '<p class="gs-reflect__card-label">WHAT YOU LOGGED THIS WEEK</p>';
   var hrtFormWeek = week.filter(function(c) { return c.loggedViaForm !== false; });
   var hrtTaken = hrtFormWeek.filter(function(c) { return c.hrtTaken; }).length;
   var hrtPct = hrtFormWeek.length > 0 ? Math.round((hrtTaken / hrtFormWeek.length) * 100) : 0;
-  if (hrtFormWeek.length > 0 && hrtPct < 80) gpItems.push('HRT was missed on some days — ' + hrtPct + '% taken.');
-  if (avgFog !== null && avgFog >= 7) gpItems.push('Significant brain fog reported most days.');
-  if (avgSleep !== null && avgSleep < 6) gpItems.push('Sleep averaged under 6 hours.');
-  if (avgWork !== null && avgWork >= 7) gpItems.push('Menopause significantly affected work this week.');
-
-  if (gpItems.length > 0) {
-    html += '<ul class="gs-reflect__gp-list">';
-    gpItems.forEach(function(item) { html += '<li>' + item + '</li>'; });
-    html += '</ul>';
-  } else {
-    html += '<p class="gs-reflect__card-body">No major clinical flags this week. Keep logging to build a fuller picture.</p>';
-  }
+  var bleedDays = week.filter(function(c) { return c.bleeding && c.bleeding !== 'none'; }).length;
+  var wl = [];
+  wl.push(week.length + (week.length === 1 ? ' day' : ' days') + ' logged');
+  if (avgSleep !== null) wl.push('Sleep averaged ' + avgSleep.toFixed(1) + ' hrs');
+  if (avgFog !== null) wl.push('Brain fog averaged ' + avgFog.toFixed(1) + ' / 10');
+  if (avgHFC !== null) wl.push('Hot flushes averaged ' + avgHFC.toFixed(1) + ' / day' + (avgHF !== null ? ' (severity ' + avgHF.toFixed(1) + ' / 3)' : ''));
+  if (avgNS !== null) wl.push('Night sweats averaged ' + avgNS.toFixed(1) + ' / 3');
+  if (avgWork !== null) wl.push('Work impact averaged ' + avgWork.toFixed(1) + ' / 10');
+  wl.push('Bleeding or spotting on ' + bleedDays + ' of ' + week.length + ' logged days');
+  wl.push('HRT logged as taken on ' + hrtTaken + ' of ' + hrtFormWeek.length + ' logged days (' + hrtPct + '%)');
+  html += '<ul class="gs-reflect__gp-list">';
+  wl.forEach(function(item) { html += '<li>' + item + '</li>'; });
+  html += '</ul>';
   html += '<button class="gs-reflect__gp-btn" onclick="exportData()">Add to GP Report</button>';
   html += '</div>';
 
