@@ -423,7 +423,7 @@ body {
         .checkbox-group { display: flex; gap: 12px; align-items: center; }
         input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
         .trigger-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 4px; }
-        .trigger-item { display: flex; align-items: center; gap: 8px; background: #f9f7ff; border: 1px solid #ede9fe; border-radius: 8px; padding: 8px 12px; cursor: pointer; transition: all 0.2s; }
+        .trigger-item { display: flex; align-items: center; gap: 8px; background: #f9f7ff; border: 1px solid #ede9fe; border-radius: 8px; padding: 8px 12px; min-height: 44px; cursor: pointer; transition: all 0.2s; }
         .trigger-item:hover { background: #ede9fe; border-color: #6d28d9; }
         .trigger-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
         .trigger-item label { font-size: 13px; cursor: pointer; margin: 0; font-weight: 400; color: #374151; }
@@ -3272,17 +3272,51 @@ body {
           <!-- Other Symptoms -->
           <div class="gs-checkin__field">
             <span class="gs-slider__label">🩹 Other Symptoms Today</span>
-            <div class="trigger-grid" id="somaticGrid">
-              <div class="trigger-item"><input type="checkbox" id="som-headache"><label for="som-headache">🤕 Headache</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-jointpain"><label for="som-jointpain">🦴 Joint / Muscle Pain</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-palpitations"><label for="som-palpitations">💓 Heart Palpitations</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-dizziness"><label for="som-dizziness">💫 Dizziness</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-breasttenderness"><label for="som-breasttenderness">🌷 Breast Tenderness</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-bloating"><label for="som-bloating">🎈 Bloating</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-backache"><label for="som-backache">🔙 Backache</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-hairloss"><label for="som-hairloss">🪮 Hair Loss</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-digestive"><label for="som-digestive">🌀 Digestive Issues</label></div>
-              <div class="trigger-item"><input type="checkbox" id="som-itchyskin"><label for="som-itchyskin">🐜 Itchy/Crawly Skin</label></div>
+            <div style="margin-top:12px;">
+              <span class="gs-slider__label">🧠 Head &amp; mind</span>
+              <div class="trigger-grid" id="somaticGrid">
+                <div class="trigger-item"><input type="checkbox" id="som-headache"><label for="som-headache">🤕 Headache</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-dizziness"><label for="som-dizziness">💫 Dizziness</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-sensoryoverload"><label for="som-sensoryoverload">🌪️ Sensory Overload</label></div>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <span class="gs-slider__label">💪 Body &amp; aches</span>
+              <div class="trigger-grid">
+                <div class="trigger-item"><input type="checkbox" id="som-jointpain"><label for="som-jointpain">🦴 Joint / Muscle Pain</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-backache"><label for="som-backache">🔙 Backache</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-palpitations"><label for="som-palpitations">💓 Heart Palpitations</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-frozenshoulder"><label for="som-frozenshoulder">🧊 Frozen Shoulder</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-breasttenderness"><label for="som-breasttenderness">🌷 Breast Tenderness</label></div>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <span class="gs-slider__label">🍽️ Tummy &amp; weight</span>
+              <div class="trigger-grid">
+                <div class="trigger-item"><input type="checkbox" id="som-bloating"><label for="som-bloating">🎈 Bloating</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-digestive"><label for="som-digestive">🌀 Digestive Issues</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-nausea"><label for="som-nausea">🤢 Nausea</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-weightgain"><label for="som-weightgain">⚖️ Weight Gain</label></div>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <span class="gs-slider__label">✨ Skin, hair &amp; senses</span>
+              <div class="trigger-grid">
+                <div class="trigger-item"><input type="checkbox" id="som-itchyskin"><label for="som-itchyskin">🐜 Itchy/Crawly Skin</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-dryskin"><label for="som-dryskin">🌵 Dry Skin</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-hairloss"><label for="som-hairloss">🪮 Hair Loss</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-facialhair"><label for="som-facialhair">🧔‍♀️ New Facial Hair</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-dryeyes"><label for="som-dryeyes">👁️ Dry Eyes</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-smell"><label for="som-smell">👃 Changes in Sense of Smell</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-gums"><label for="som-gums">🦷 Bleeding or Sensitive Gums</label></div>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <span class="gs-slider__label">🌡️ Temperature &amp; cycle</span>
+              <div class="trigger-grid">
+                <div class="trigger-item"><input type="checkbox" id="som-coldflashes"><label for="som-coldflashes">🥶 Cold Flashes</label></div>
+                <div class="trigger-item"><input type="checkbox" id="som-cyclelength"><label for="som-cyclelength">📅 Irregular Cycle Length</label></div>
+              </div>
             </div>
             <div style="margin-top:16px;">
               <span class="gs-slider__label">🌷 Intimate Health <span style="font-weight:400;font-size:12px;color:#3A5C4E;">(optional)</span></span>
@@ -3872,8 +3906,8 @@ var TRIGGERS = ['stress','alcohol','caffeine','poorsleep','misseddose','exercise
 var TLABELS = {stress:'Stress',alcohol:'Alcohol',caffeine:'Caffeine',poorsleep:'Poor Sleep',
   misseddose:'Missed HRT Dose',exercise:'Exercise',illness:'Illness',
   spicyfood:'Spicy Food',hotweather:'Hot Weather',other:'Other'};
-var SOMATIC = ['headache','jointpain','palpitations','dizziness','breasttenderness','bloating','backache','hairloss','digestive','itchyskin','libido','vaginaldryness','paininintercourse'];
-var SLABELS = {headache:'Headache',jointpain:'Joint/Muscle Pain',palpitations:'Heart Palpitations',dizziness:'Dizziness',breasttenderness:'Breast Tenderness',bloating:'Bloating',backache:'Backache',hairloss:'Hair Loss',digestive:'Digestive Issues',itchyskin:'Itchy/Crawly Skin',libido:'Reduced Libido',vaginaldryness:'Vaginal Dryness',paininintercourse:'Painful Intercourse'};
+var SOMATIC = ['headache','dizziness','sensoryoverload','jointpain','backache','palpitations','frozenshoulder','breasttenderness','bloating','digestive','nausea','weightgain','itchyskin','dryskin','hairloss','facialhair','dryeyes','smell','gums','coldflashes','cyclelength','libido','vaginaldryness','paininintercourse'];
+var SLABELS = {headache:'Headache',dizziness:'Dizziness',sensoryoverload:'Sensory Overload',jointpain:'Joint/Muscle Pain',backache:'Backache',palpitations:'Heart Palpitations',frozenshoulder:'Frozen Shoulder',breasttenderness:'Breast Tenderness',bloating:'Bloating',digestive:'Digestive Issues',nausea:'Nausea',weightgain:'Weight Gain',itchyskin:'Itchy/Crawly Skin',dryskin:'Dry Skin',hairloss:'Hair Loss',facialhair:'New Facial Hair',dryeyes:'Dry Eyes',smell:'Changes in Sense of Smell',gums:'Bleeding or Sensitive Gums',coldflashes:'Cold Flashes',cyclelength:'Irregular Cycle Length',libido:'Reduced Libido',vaginaldryness:'Vaginal Dryness',paininintercourse:'Painful Intercourse'};
 
 // ═══════════════════════════════════════════════════════════════
 // LOCAL DATE — device timezone, not UTC
