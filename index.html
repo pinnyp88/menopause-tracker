@@ -3597,6 +3597,15 @@ body {
       <div id="reflectionContent"></div>
     </div>
     <div id="reportPage" class="page gs-report">
+      <div class="gs-trends__controls">
+        <select id="reportRange" class="gs-trends__range-select" onchange="renderReport()">
+          <option value="30" selected>Last 30 days</option>
+          <option value="45">Last 45 days</option>
+          <option value="60">Last 60 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="all">All data</option>
+        </select>
+      </div>
       <div id="reportContent"></div>
       <div class="gs-report__footer-bar">
         <button class="gs-report__footer-btn gs-report__footer-btn--primary" onclick="exportData()">Print / Save PDF</button>
@@ -5091,7 +5100,10 @@ function exportData() {
   var now = new Date();
   var rd = now.toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
   var s7 = getSample(arr).sample;
-  var s30 = arr.filter(function(c){ return (now-new Date(c.date))<=30*86400000; });
+  var reportRangeEl = document.getElementById('reportRange');
+  var reportRange = reportRangeEl ? reportRangeEl.value : '30';
+  var s30 = reportRange === 'all' ? arr.slice() : arr.filter(function(c){ return (now-new Date(c.date))<=parseInt(reportRange,10)*86400000; });
+  var rangeTitle = reportRange === 'all' ? 'All Data' : reportRange + '-Day';
   var avg = function(a,f){
     var vals = a.map(function(c){ return parseFloat(c[f]); })
                 .filter(function(v){ return !isNaN(v); });
@@ -5117,7 +5129,7 @@ function exportData() {
   var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
   var somCount7=function(){var r=[];SOMATIC.forEach(function(k){var n=s7.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s7.length+' days');});return r.length>0?r.join(', '):'None logged';}();
   html+='<h2>7-Day Symptom Summary ('+rng(s7)+', n='+s7.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s7,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s7,'sleepQuality')+'/5</td><td>1=excellent | 5=poor</td></tr><tr><td>Night Wakings</td><td>'+avg(s7,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s7,'patience')+'/10</td><td>1=very patient | 10=very impatient</td></tr><tr><td>Brain Fog</td><td>'+avg(s7,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s7,'hotFlush')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s7,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s7,'nightSweat')+'/3</td><td>0=none | 1=mild | 2=moderate | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s7)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s7,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s7,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s7,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s7,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b7+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a7+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t7.length>0?t7.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount7+'</td></tr></table>';
-  if(s30.length>0){var somCount30=function(){var r=[];SOMATIC.forEach(function(k){var n=s30.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s30.length+' days');});return r.length>0?r.join(', '):'None logged';}();html+='<h2>30-Day Symptom Summary ('+rng(s30)+', n='+s30.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s30,'sleepQuality')+'/5</td><td>1=excellent | 5=poor</td></tr><tr><td>Night Wakings</td><td>'+avg(s30,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s30,'patience')+'/10</td><td>1=very patient | 10=very impatient</td></tr><tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+'/3</td><td>0=none | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s30,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s30,'nightSweat')+'/3</td><td>0=none | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s30)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s30,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s30,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s30,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s30,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b30+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a30+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t30.length>0?t30.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount30+'</td></tr></table>';}
+  if(s30.length>0){var somCount30=function(){var r=[];SOMATIC.forEach(function(k){var n=s30.filter(function(c){return c.somaticSymptoms&&c.somaticSymptoms.indexOf(k)>=0;}).length;if(n>0)r.push(SLABELS[k]+': '+n+' of '+s30.length+' days');});return r.length>0?r.join(', '):'None logged';}();html+='<h2>'+rangeTitle+' Symptom Summary ('+rng(s30)+', n='+s30.length+')</h2><table><tr><th>Metric</th><th>Average</th><th>Scale</th></tr><tr><td>Sleep</td><td>'+avg(s30,'sleep')+' hrs</td><td>Hours per night</td></tr><tr><td>Sleep Quality</td><td>'+avg(s30,'sleepQuality')+'/5</td><td>1=excellent | 5=poor</td></tr><tr><td>Night Wakings</td><td>'+avg(s30,'nightWakings')+'/night</td><td>Average times woken per night</td></tr><tr><td>Patience</td><td>'+avg(s30,'patience')+'/10</td><td>1=very patient | 10=very impatient</td></tr><tr><td>Brain Fog</td><td>'+avg(s30,'brainFog')+'/10</td><td>1=none | 10=severe</td></tr><tr><td>Hot Flush Severity</td><td>'+avg(s30,'hotFlush')+'/3</td><td>0=none | 3=severe</td></tr><tr><td>Hot Flush Count</td><td>'+avg(s30,'hotFlushCount')+'/day</td><td>Average flushes per day</td></tr><tr><td>Night Sweats</td><td>'+avg(s30,'nightSweat')+'/3</td><td>0=none | 3=drenching</td></tr><tr><td>Urinary Symptoms</td><td colspan="2">'+uri(s30)+'</td></tr><tr><td>Work Impact</td><td>'+avg(s30,'workImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Relationship Impact</td><td>'+avg(s30,'relImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Energy Impact</td><td>'+avg(s30,'energyImpact')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Mental Clarity</td><td>'+avg(s30,'mentalClarity')+'/10</td><td>1=not affected | 10=severely affected</td></tr><tr><td>Bleeding Days</td><td>'+b30+' days</td><td>Days with any bleeding/spotting</td></tr><tr><td>HRT Adherence</td><td>'+a30+'</td><td>% of logged days HRT taken</td></tr><tr><td>Top Triggers</td><td colspan="2">'+(t30.length>0?t30.join(', '):'None logged')+'</td></tr><tr><td>Other Symptoms</td><td colspan="2">'+somCount30+'</td></tr></table>';}
   if(hrt.notes)html+='<h2>Additional Notes</h2><p style="font-size:12px;">'+hrt.notes+'</p>';
   html+='<div class="ft">This report is a symptom tracking journal export. It does not constitute medical advice. Generated by HerTrace v2.0 | '+rd+'</div>';
   document.getElementById('gpReportContent').innerHTML = html;
@@ -6129,7 +6141,10 @@ function renderReport() {
   }
 
   var s7 = getSample(arr).sample;
-  var s30 = arr.filter(function(c){ return (now - new Date(c.date)) <= 30*86400000; });
+  var reportRangeEl = document.getElementById('reportRange');
+  var reportRange = reportRangeEl ? reportRangeEl.value : '30';
+  var s30 = reportRange === 'all' ? arr.slice() : arr.filter(function(c){ return (now - new Date(c.date)) <= parseInt(reportRange,10)*86400000; });
+  var rangeLabel = reportRange === 'all' ? 'ALL DATA' : 'LAST ' + reportRange + ' DAYS';
 
   function avg(a, f) {
     var vals = a.map(function(c){ return parseFloat(c[f]); }).filter(function(v){ return !isNaN(v); });
@@ -6218,7 +6233,7 @@ function renderReport() {
     var uriSum30=(function(a){var c={};a.forEach(function(e){if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1;});return Object.entries(c).sort(function(x,y){return y[1]-x[1];}).map(function(e){return e[0]+' ('+e[1]+')';}).join(', ')||'None reported';})(s30);
 
     html += '<div class="gs-report__card gs-report__card--sage">';
-    html += '<p class="gs-report__card-label">LAST 30 DAYS</p>';
+    html += '<p class="gs-report__card-label">' + rangeLabel + '</p>';
     html += '<div class="gs-report__row"><span class="gs-report__row-label">Sleep</span><span class="gs-report__row-val">' + fmt(avgSleep30) + ' hrs</span></div>';
     html += '<div class="gs-report__row"><span class="gs-report__row-label">Brain Fog</span><span class="gs-report__row-val">' + fmt(avgFog30) + ' / 10</span></div>';
     html += '<div class="gs-report__row"><span class="gs-report__row-label">Patience</span><span class="gs-report__row-val">' + fmt(avgPat30) + ' / 10</span></div>';
