@@ -6572,6 +6572,10 @@ document.fonts.ready.then(function() {
   var loginPage = document.getElementById('loginPage');
   if (!loginPage) return;
   function resetLoginCard() {
+    // Clear any pending-code state whenever the login card is reset to the
+    // clean email step. This fires when #loginPage gains 'active' (e.g. after
+    // logout()), so otpPending is cleared without editing protected logout().
+    try { localStorage.removeItem('otpPending'); } catch (e) {}
     var otpStep = document.getElementById('otpStep');
     var emailStep = document.getElementById('emailStep');
     var otpCode = document.getElementById('otpCode');
@@ -6632,6 +6636,11 @@ function sendMagicLink() {
       msg.textContent = 'Could not send the code: ' + res.error.message;
     } else {
       otpEmail = email;
+      // Persist the pending-code state so an Android PWA reload (user
+      // switching to their email app) can restore the code-entry screen
+      // instead of dropping back to email entry and firing a duplicate
+      // code. Local-only; NOT a protected key and NOT cloud-synced.
+      try { localStorage.setItem('otpPending', JSON.stringify({ email: email, ts: Date.now() })); } catch (e) {}
       document.getElementById('emailStep').style.display = 'none';
       document.getElementById('otpStep').style.display = 'block';
       msg.textContent = "Check your email — we've sent you a 6-digit code.";
@@ -6662,6 +6671,7 @@ function verifyOtpCode() {
         msg.textContent = "That code didn't work — check your email and try again.";
         msg.style.display = 'block';
       } else {
+        try { localStorage.removeItem('otpPending'); } catch (e) {}
         msg.style.display = 'none';
         supabaseSignIn(res.data.session);
       }
@@ -6938,6 +6948,42 @@ try {
   }
 } catch (e) {
   console.error('Returning-user guard failed:', e);
+}
+
+// OTP resume guard: if a 6-digit code was requested just before an Android
+// PWA reload wiped the in-memory otpEmail, restore the code-entry screen so
+// the user can finish — instead of dropping to email entry, firing a
+// duplicate code, and hitting Supabase's 3-request rate limit. Runs only
+// when NOT already signed in (no userName and the login screen is still
+// showing), and AFTER the returning-user check above. Restores the screen
+// by setting element display directly — it does NOT toggle #loginPage
+// 'active', so the login-card-reset observer can't wipe it. Standalone
+// try/catch so a failure here can't break startup. otpEmail is already
+// declared earlier in this script.
+try {
+  var _otpLoginPage = document.getElementById('loginPage');
+  if (!localStorage.getItem('userName') && _otpLoginPage && _otpLoginPage.classList.contains('active')) {
+    var _otpPend = null;
+    try { _otpPend = JSON.parse(localStorage.getItem('otpPending') || 'null'); } catch (e) { _otpPend = null; }
+    if (_otpPend && _otpPend.email && _otpPend.ts && (Date.now() - _otpPend.ts) <= 30 * 60 * 1000) {
+      otpEmail = _otpPend.email; // restore the in-memory var verifyOtpCode() reads
+      var _otpEmailField = document.getElementById('loginEmail');
+      var _otpEmailStep = document.getElementById('emailStep');
+      var _otpStepEl = document.getElementById('otpStep');
+      var _otpMsg = document.getElementById('magicLinkMsg');
+      var _otpCodeField = document.getElementById('otpCode');
+      if (_otpEmailField) _otpEmailField.value = _otpPend.email;
+      if (_otpEmailStep) _otpEmailStep.style.display = 'none';
+      if (_otpStepEl) _otpStepEl.style.display = 'block';
+      if (_otpMsg) { _otpMsg.textContent = 'Enter the 6-digit code we emailed to ' + _otpPend.email + '.'; _otpMsg.style.display = 'block'; }
+      if (_otpCodeField) _otpCodeField.focus();
+    } else if (_otpPend) {
+      // Stale (older than 30 minutes) or malformed — discard and keep email entry.
+      try { localStorage.removeItem('otpPending'); } catch (e) {}
+    }
+  }
+} catch (e) {
+  console.error('OTP resume guard failed:', e);
 }
 
 // Ensure the Settings Email shows the real login email, not the
