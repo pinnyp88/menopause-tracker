@@ -3702,7 +3702,7 @@ body {
             </div>
             <div class="settings-item">
                 <div><p style="font-weight:500;font-family:var(--font-body);">Delete All Data</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">This cannot be undone</p></div>
-                <button class="btn btn-danger" onclick="deleteAllData()">Delete</button>
+                <button class="btn btn-danger" onclick="deleteAllDataEverywhere()">Delete</button>
             </div>
         </div>
     </div>
@@ -5257,6 +5257,30 @@ function deleteAllData() {
         _finishLocalWipe('Data deleted from this device. If you are signed in elsewhere, log in there to remove the cloud copy.');
       }
     }
+  }
+}
+// Cloud-delete hardening (calls the protected deleteAllData(); does NOT modify it).
+// deleteAllData() already deletes the Supabase user_data row, clears localStorage,
+// and signs out — but it SKIPS the cloud delete when the in-memory _cloudUserId is
+// null (e.g. the auth session hadn't finished resolving on this load), which lets a
+// "deleted" account's data reappear after signing back in. This wrapper resolves the
+// user id from the LIVE session first and hydrates _cloudUserId, so deleteAllData()'s
+// existing cloud-delete branch runs with the correct id. getSession() is read-only,
+// so the actual delete still happens inside deleteAllData(), behind its two confirms.
+// If there is genuinely no session and no _cloudUserId, deleteAllData()'s local-only
+// path is preserved unchanged.
+function deleteAllDataEverywhere() {
+  if (supabaseClient && !_cloudUserId) {
+    supabaseClient.auth.getSession().then(function(r) {
+      if (r && r.data && r.data.session && r.data.session.user && r.data.session.user.id) {
+        _cloudUserId = r.data.session.user.id;
+      }
+      deleteAllData();
+    }).catch(function() {
+      deleteAllData();   // session lookup failed → fall back to _cloudUserId → local-only skip
+    });
+  } else {
+    deleteAllData();     // already have _cloudUserId (or no Supabase) → run as-is
   }
 }
 function showIOSBanner() {
