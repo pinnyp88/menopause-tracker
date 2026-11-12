@@ -3654,7 +3654,7 @@ body {
     <div id="gpReportPage" class="page gp-report-page">
       <div class="gp-report-bar">
         <button class="gp-report-back" onclick="showPage('report',null)">← Back</button>
-        <button class="gp-report-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+        <button class="gp-report-print" onclick="printGpReport()">🖨 Print / Save as PDF</button>
       </div>
       <div id="gpReportContent"></div>
     </div>
@@ -5330,6 +5330,40 @@ function showIOSBanner() {
     document.getElementById('iosBanner').style.display = 'block';
   }
 }
+
+// Hide the bottom tab bar while the GP report prints, then restore it.
+// iOS Safari prints #gsTabbar on page 1 of the PDF even with the @media print
+// rules, because it won't let them override the inline display the app sets on
+// the bar. Setting the inline style to hidden *before* window.print() is the
+// reliable fix. A shared saved-state guard (_gpTabbarPrev) keeps hide/restore
+// correct whether printing starts from the button (printGpReport) or any other
+// way (Cmd/Ctrl+P, iOS Share -> Print) — it captures the real prior inline
+// values once and only restores what it changed, so the bar always comes back.
+// Does not touch any protected function or any CSS.
+var _gpTabbarPrev = null; // {display, visibility} saved while hidden for print; null when not hidden
+function _gpHideTabbarForPrint() {
+  var tb = document.getElementById('gsTabbar');
+  if (!tb || _gpTabbarPrev) return; // nothing to hide, or already hidden by us
+  _gpTabbarPrev = { display: tb.style.display, visibility: tb.style.visibility };
+  tb.style.display = 'none';
+  tb.style.visibility = 'hidden';
+}
+function _gpRestoreTabbarAfterPrint() {
+  var tb = document.getElementById('gsTabbar');
+  if (!tb || !_gpTabbarPrev) return; // not hidden by us — leave as-is
+  tb.style.display = _gpTabbarPrev.display;
+  tb.style.visibility = _gpTabbarPrev.visibility;
+  _gpTabbarPrev = null;
+}
+function printGpReport() {
+  _gpHideTabbarForPrint();
+  window.addEventListener('afterprint', _gpRestoreTabbarAfterPrint, { once: true });
+  setTimeout(_gpRestoreTabbarAfterPrint, 2000); // fallback if iOS never fires afterprint
+  window.print();
+}
+// Cover prints triggered another way (Cmd/Ctrl+P, iOS Share -> Print):
+window.addEventListener('beforeprint', _gpHideTabbarForPrint);
+window.addEventListener('afterprint', _gpRestoreTabbarAfterPrint);
 
 // ═══════════════════════════════════════════════════════════════
 // SCALE MIGRATION v2 — unified clinical severity scale
