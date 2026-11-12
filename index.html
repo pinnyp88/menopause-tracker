@@ -2602,6 +2602,23 @@ body {
      the fixed layout is only to fit the phone screen. */
   #gpReportContent table { table-layout: auto; }
   .page:not(#gpReportPage) { display: none !important; }
+  /* Paper sizing: force A4 width so columns aren't cramped (esp. on iPhone,
+     which otherwise prints at the narrow device width). */
+  @page { size: A4; margin: 14mm; }
+  #gpReportContent { max-width: none; }
+  /* Stop breaking inside words/numbers/dates ("Frequ ency", "16/05/2 026").
+     Only break a word if it genuinely cannot fit. */
+  #gpReportContent th, #gpReportContent td {
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+  /* Keep each row (and each Patient-Details line) intact across page breaks;
+     keep a section heading with its table. Tables may still span pages. */
+  #gpReportContent tr, #gpReportContent .ir { break-inside: avoid; }
+  #gpReportContent h2 { break-after: avoid; }
+  #gpReportContent table { break-inside: auto; }
+  /* Footer stays with the content instead of spilling onto its own page. */
+  #gpReportContent .ft { margin-top: 16px; break-inside: avoid; }
 }
 
 /* ═══ Quick-Add Button & Modal ═══ */
