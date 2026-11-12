@@ -2578,6 +2578,26 @@ body {
 
 @media print {
   .gs-tabbar, .clinical-footer, .gp-report-bar, .qa-overlay, .qa-toast { display: none !important; }
+  /* iOS Safari can ignore `display:none` in print when the element carries an
+     inline `display` value (#gsTabbar gets inline display:flex from JS), which
+     left the bottom tab bar printing on page 1 of the GP report. Hide it in a
+     way that does not depend on `display` winning: also collapse size, move it
+     off-page, and make it invisible/transparent. */
+  #gsTabbar,
+  .gs-tabbar {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+  }
   /* Undo the app-shell flex/scroll so the report flows and prints in
      full instead of being clipped by the shell's overflow:hidden. */
   html, body {
