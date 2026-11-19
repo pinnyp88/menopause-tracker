@@ -3477,7 +3477,7 @@ body {
         <h1 class="gs-screen-title screen-title" style="padding:0 20px;">HRT Tracker</h1>
         <div class="gs-hrt-empty" id="hrtEmptyState" style="display:none;margin:0 20px;">
           <div class="gs-hrt-empty__icon">💊</div>
-          <p class="gs-hrt-empty__text">Your HRT details aren't saved yet. Add your current regimen so your GP record is complete.</p>
+          <p class="gs-hrt-empty__text">Your HRT details aren't saved yet. Add your current regimen so your Personal Symptom Record is complete.</p>
           <button class="gs-hrt-empty__btn" onclick="document.getElementById('hrtEmptyState').style.display='none';document.getElementById('hrtFormSection').style.display='block';">Add HRT details</button>
         </div>
         <div class="form-section" id="hrtFormSection">
@@ -3562,7 +3562,7 @@ body {
             </div>
             <div class="hormone-section">
                 <h3>🌸 Vaginal / Local Treatment (optional)</h3>
-                <p style="font-family:var(--font-body);font-size:12px;color:#3A5C4E;font-style:italic;margin:0 0 14px;line-height:1.5;">Local treatments like Vagifem, Intrarosa or DHEA cream are separate from systemic HRT — your GP needs to see these too.</p>
+                <p style="font-family:var(--font-body);font-size:12px;color:#3A5C4E;font-style:italic;margin:0 0 14px;line-height:1.5;">Local treatments like Vagifem, Intrarosa or DHEA cream are separate from systemic HRT — your doctor needs to see these too.</p>
                 <div class="form-grid">
                     <div class="form-group"><label>Product Name</label><input type="text" id="vagName" placeholder="e.g. Vagifem, Intrarosa, Ovestin, DHEA cream"></div>
                     <div class="form-group"><label>Form</label><select id="vagForm"><option value="">Select form</option><option value="Cream">Cream</option><option value="Pessary">Pessary</option><option value="Ring">Ring</option><option value="Gel">Gel</option><option value="Other">Other</option></select></div>
@@ -3713,7 +3713,7 @@ body {
         <div class="settings-section">
             <h3>Patient Profile</h3>
             <div class="form-grid" style="padding:0;">
-                <div class="form-group"><label>Full Name</label><input type="text" id="profileName" placeholder="As it appears on your Medicare card"><p class="gs-profile-hint">Used on your GP record</p></div>
+                <div class="form-group"><label>Full Name</label><input type="text" id="profileName" placeholder="As it appears on your Medicare card"><p class="gs-profile-hint">Used on your Personal Symptom Record</p></div>
                 <div class="form-group"><label>Date of Birth</label><input type="date" id="profileDOB"></div>
                 <div class="form-group"><label>Date of Last Period</label><input type="date" id="profileLastPeriod"></div>
                 <div class="form-group"><label>Menstrual Status</label><select id="profileMenstrualStatus"><option value="">Select status</option><option value="Perimenopausal">Perimenopausal (still having periods, irregular)</option><option value="Menopausal">Menopausal (no period for 12+ months)</option><option value="Postmenopausal">Postmenopausal (more than 12 months past final period)</option><option value="Surgical menopause">Surgical menopause (hysterectomy / oophorectomy)</option><option value="Premature ovarian insufficiency">Premature ovarian insufficiency (POI)</option></select></div>
@@ -3727,7 +3727,7 @@ body {
         <div class="settings-section">
             <h3>Records and Data</h3>
             <div class="settings-item">
-                <div><p style="font-weight:500;font-family:var(--font-body);">Generate GP Record</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">Opens a printable record of your entries for your doctor</p></div>
+                <div><p style="font-weight:500;font-family:var(--font-body);">Personal Symptom Record</p><p style="font-size:14px;color:#6b7280;font-family:var(--font-body);">Opens a printable record of your entries for your doctor</p></div>
                 <button class="btn btn-primary" style="width:auto;" onclick="exportData()">Generate Record</button>
             </div>
             <div class="settings-item">
@@ -4401,7 +4401,7 @@ function saveCheckin() {
 
   var saveBtn = document.getElementById('saveCheckinBtn');
   var saveMsg = document.getElementById('saveDelightMsg');
-  var SAVE_MSGS = ['Saved. That’s helpful data for your GP.','Logged. Every day adds to the picture.','Done. See you tomorrow.'];
+  var SAVE_MSGS = ['Saved. That’s helpful data for your record.','Logged. Every day adds to the picture.','Done. See you tomorrow.'];
   saveBtn.textContent = '✓ Saved';
   saveBtn.classList.add('btn-save-success');
   saveBtn.style.transform = 'scale(1.03)';
@@ -4832,7 +4832,7 @@ var CHECKIN_PROMPTS = [
   'No wrong answers. Log what feels true today.',
   'Be honest — this is just for you.',
   'Even a rough day logged is useful data.',
-  'You’re building a picture your GP can use.',
+  'You’re building a picture you can share with your doctor.',
   'Thirty seconds. You’ve got this.'
 ];
 
@@ -4845,7 +4845,7 @@ function getDashPrompt() {
   var h = new Date().getHours();
   if (h < 12) return 'Small steps count. How are you feeling today?';
   if (h < 17) return 'Checking in takes 30 seconds. You’ve got this.';
-  return 'End the day with a quick log — your GP will thank you.';
+  return 'End the day with a quick log — your future self will thank you.';
 }
 
 function updateDashboard() {
@@ -5162,7 +5162,7 @@ function exportData() {
   var uri=function(a){ var c={}; a.forEach(function(e){ if(e.urinary&&e.urinary!=='none')c[e.urinary]=(c[e.urinary]||0)+1; }); return Object.entries(c).sort(function(x,y){ return y[1]-x[1]; }).map(function(e){ return e[0]+' ('+e[1]+' days)'; }).join(', ')||'None reported'; };
 
   var html='';
-  html+='<h1>HerTrace GP Symptom Record</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
+  html+='<h1>HerTrace Personal Symptom Record</h1><div style="text-align:center;font-size:12px;color:#555;margin-bottom:28px;">Date: '+rd+' | Patient: '+(prf.name||localStorage.getItem('userName')||'Not recorded')+'</div>';
   html+='<h2>Patient Details</h2><div class="two-col"><div><div class="ir"><span class="lb">Full Name:</span><span>'+(prf.name||'Not recorded')+'</span></div><div class="ir"><span class="lb">Date of Birth:</span><span>'+(prf.dob?fmtAUDate(prf.dob):'Not recorded')+'</span></div><div class="ir"><span class="lb">Email:</span><span>'+(usr.email||'Guest')+'</span></div></div><div><div class="ir"><span class="lb">Menstrual Status:</span><span>'+(prf.menstrualStatus||'Not recorded')+'</span></div><div class="ir"><span class="lb">Last Period:</span><span>'+(prf.lastPeriod?fmtAUDate(prf.lastPeriod):'Not recorded')+'</span></div><div class="ir"><span class="lb">Report Date:</span><span>'+rd+'</span></div></div></div>';
   html+='<h2>Current HRT Regimen</h2><table><tr><th>Hormone</th><th>Medication</th><th>Dose</th><th>Admin Type</th><th>Frequency</th><th>Schedule</th><th>Start Date</th></tr><tr><td>Estrogen</td><td>'+(hrt.estrogenName||'—')+'</td><td>'+(hrt.estrogenDose||'—')+'</td><td>'+(hrt.estrogenAdmin||'—')+'</td><td>'+(hrt.estrogenFreq||'—')+'</td><td>'+(hrt.estrogenSchedule||'—')+'</td><td>'+(hrt.estrogenStart?fmtAUDate(hrt.estrogenStart):'—')+'</td></tr><tr><td>Progesterone</td><td>'+(hrt.progName||'—')+'</td><td>'+(hrt.progDose||'—')+'</td><td>'+(hrt.progAdmin||'—')+'</td><td>'+(hrt.progFreq||'—')+'</td><td>'+(hrt.progSchedule||'—')+'</td><td>'+(hrt.progStart?fmtAUDate(hrt.progStart):'—')+'</td></tr><tr><td>Testosterone</td><td>'+(hrt.testName||'—')+'</td><td>'+(hrt.testDose||'—')+'</td><td>—</td><td>—</td><td>—</td><td>'+(hrt.testStart?fmtAUDate(hrt.testStart):'—')+'</td></tr><tr><td>Vaginal / Local Treatment</td><td>'+(hrt.vagName||'—')+'</td><td>'+(hrt.vagDose||'—')+'</td><td>'+(hrt.vagForm||'—')+'</td><td>—</td><td>—</td><td>'+(hrt.vagStart?fmtAUDate(hrt.vagStart):'—')+'</td></tr></table>';
   var gpHist=getHRTHistory();if(gpHist.length>0){html+='<h2>HRT Change History</h2>';['estrogen','progesterone','testosterone','vaginal'].forEach(function(hormone){var entries=gpHist.filter(function(e){return e.hormone===hormone;}).sort(function(a,b){return b.date.localeCompare(a.date);});if(entries.length===0)return;html+='<p style="font-size:12px;font-weight:700;margin:10px 0 4px;">'+hormone.charAt(0).toUpperCase()+hormone.slice(1)+'</p>';entries.forEach(function(e){html+='<p style="font-size:12px;">'+e.date.split('-').reverse().join('/')+' — '+(e.previous?e.previous+' → ':'')+e.description+(e.reason?' · '+e.reason:'')+'</p>';if(e.sideEffects)html+='<p style="font-size:12px;color:#555;font-style:italic;">'+e.sideEffects+'</p>';});});}
@@ -5407,7 +5407,7 @@ loadUser();
     history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
     var toast = document.getElementById('qaToast');
     if (toast) {
-      toast.textContent = 'Subscription active! Your GP Record is now unlocked.';
+      toast.textContent = 'Subscription active! Your Personal Symptom Record is now unlocked.';
       toast.classList.add('show');
       setTimeout(function(){ toast.classList.remove('show'); }, 4000);
     }
@@ -6226,9 +6226,9 @@ function renderReport() {
   var rd = now.toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
 
   var html = '';
-  html += '<h1 class="gs-report__title screen-title">GP Record</h1>';
+  html += '<h1 class="gs-report__title screen-title">Personal Symptom Record</h1>';
   html += '<p class="gs-report__text gs-report__text--muted" style="margin-bottom:12px;">HerTrace does not review, evaluate or provide advice on what you record. This is a transcript of your own entries.</p>';
-  html += '<p class="gs-report__subtitle screen-subtitle">A summary ready to share with your doctor</p>';
+  html += '<p class="gs-report__subtitle screen-subtitle">A summary of your own entries, ready to share.</p>';
   html += '<p class="gs-report__date">Generated ' + rd + '</p>';
   html += '<button class="gs-report__cta" onclick="exportData()">Generate &amp; Print Record</button>';
 
@@ -6569,7 +6569,7 @@ function renderReflection() {
   html += '<ul class="gs-reflect__gp-list">';
   wl.forEach(function(item) { html += '<li>' + item + '</li>'; });
   html += '</ul>';
-  html += '<button class="gs-reflect__gp-btn" onclick="exportData()">Add to GP Record</button>';
+  html += '<button class="gs-reflect__gp-btn" onclick="exportData()">Add to Personal Symptom Record</button>';
   html += '</div>';
 
   // Section 5: Triggers
@@ -6622,7 +6622,7 @@ function renderReflection() {
 <!-- Paywall (Stripe subscription gate for GP Report) -->
 <div class="paywall-overlay" id="paywallOverlay">
   <div class="paywall-modal">
-    <h2>Unlock Your GP Record</h2>
+    <h2>Unlock Your Personal Symptom Record</h2>
     <p>Get a printable summary of your own entries to share with your doctor. Try free for 14 days, cancel anytime.</p>
     <button class="paywall-btn paywall-btn--primary" id="paywallYearlyBtn" onclick="startCheckout('yearly')"><span class="paywall-btn__badge">Best value</span>$29.99/year</button>
     <button class="paywall-btn paywall-btn--secondary" id="paywallMonthlyBtn" onclick="startCheckout('monthly')">$4.99/month</button>
